@@ -1,130 +1,107 @@
 # Optimization of Photovoltaic and Battery Storage Systems
 
-**Kurs:** Simulation and Modelling II
-**Datum:** Mai 2025
-**Autoren:** Robert Leichtl, Florian Merlau, Jakob Haberstock, Christian Besold
+**Course:** Simulation and Modelling II
+**Date:** May 2025
+**Authors:** Robert Leichtl, Florian Merlau, Jakob Haberstock, Christian Besold
 
 ---
 
-## Projektübersicht
+## Project Overview
 
-In diesem Projekt entwickeln wir ein simulationsbasiertes Optimierungsmodell für Photovoltaik- (PV) und Batteriespeichersysteme. Ziel ist es, unter Berücksichtigung von Budget-, Kapazitäts- und Lastprofil-Restriktionen die Kombination aus PV-Modulanzahl, Batteriespeicherkapazität und Handelsstrategie so zu wählen, dass der Nettogewinn (Einsparungen abzüglich Investitions- und Betriebskosten) maximiert wird.
+In this project, we develop a simulation-based optimization model for photovoltaic (PV) and battery storage systems. The objective is to determine the optimal combination of PV module count, battery capacity, and trading strategy to maximize net savings (cost reductions minus investment and operating costs), subject to budget, capacity, and load-profile constraints.
 
 ---
 
 ## Motivation
 
-Dezentrale Energiesysteme gewinnen zunehmend an Bedeutung, um Kosten zu senken und die Energie­autarkie zu erhöhen. Eine optimal dimensionierte Kombination aus PV-Anlage und Batteriespeicher erlaubt:
+Decentralized energy systems are becoming increasingly important for reducing costs and enhancing energy self-sufficiency. An optimally sized PV and battery system enables:
 
-* Minimierung von Netzbezugskosten
-* Maximierung des Eigenverbrauchs
-* Flexiblen Handel von Überschuss­energie
-
----
-
-## Kernelemente der Simulation
-
-1. **Saisonale Einstrahlungsprofile**
-2. **Stromverbrauch von Haushalt, E-Mobilität und Wärmepumpe**
-3. **Leistungskennlinie und COP (Coefficient Of Performance) der Wärmepumpe**
-4. **Tarifmodell mit variablen Einspeise- und Bezugspreisen**
-5. **Entscheidungsvariablen**
-
-   * Anzahl und Leistung der PV-Module
-   * Batterie­kapazität und C-Rate
-   * Handelsstrategie (Zeitpunkte für Einspeisung bzw. Netzbezug)
+* Minimization of grid purchase costs
+* Maximization of self-consumption
+* Flexible trading of surplus energy
 
 ---
 
-## Implementierungsdetails
+## Core Simulation Elements
 
-* **Simulationsframework:** AnyLogic (mit JavaScript- und Python-Scripting)
-* **Optimierung:** parametrische Suche / heuristische Verfahren
-* **Dateninput:**
+1. **Seasonal solar irradiation profiles**
+2. **Electricity consumption of household, EV charging, and heat pump**
+3. **Performance curve and COP (Coefficient of Performance) of the heat pump**
+4. **Tariff model with variable feed-in and purchase prices**
+5. **Decision Variables:**
 
-  * Zeitreihen für Globalstrahlung (1-h Auflösung)
-  * Verbrauchsprofile (24-h-Lastkurven)
-  * Preis- und Tarifdaten
-* **Visualisierung & Auswertung:**
-
-  * AnyLogic-Charts
-  * Externe Python-Skripte für Batch-Runs und Ergebnis­aggregation
+   * Number and capacity of PV modules
+   * Battery capacity and C-rate
+   * Trading strategy (timing of feed-in vs. grid draw)
 
 ---
 
-## Projektstruktur
+## Implementation Details
+
+* **Simulation Framework:** AnyLogic (with JavaScript and Python scripting)
+* **Optimization Method:** Parametric search / heuristic algorithms
+* **Data Inputs:**
+
+  * Time series of global horizontal irradiance (1-hour resolution)
+  * Load profiles (24-hour curves)
+  * Price and tariff data
+* **Visualization & Analysis:**
+
+  * AnyLogic built-in charts
+  * External Python scripts for batch runs and result aggregation
+
+---
+
+## Project Structure
 
 ```
 .
-├── model/                       # AnyLogic-Projektdateien
+├── model/                       # AnyLogic project files
 │   ├── PV_Battery_Optimization.als
-│   └── scripts/                # JavaScript- & Python-Skripte
+│   └── scripts/                # JavaScript & Python scripts
 │       ├── run_simulation.js
 │       └── analyze_results.py
-├── docs/                        # Hintergrunddokumentation
-│   ├── Simulation_and_Modelling2_Project.pdf  # LaTeX-Report (Overleaf)
-│   └── UML_Diagramm.png         # UML (Lucidchart-Export)
-├── data/                        # Input-Daten (CSV, JSON)
-├── project-plan/                # GitHub-Projektplan-Link
-├── README.md                    # Projekt-Übersicht
+├── docs/                        # Background documentation
+│   ├── Simulation_and_Modelling2_Project.pdf  # LaTeX report (Overleaf)
+│   └── UML_Diagram.png          # UML diagram (Lucidchart export)
+├── data/                        # Input data (CSV, JSON)
+├── project-plan/                # GitHub project board link
+├── README.md                    # Project overview (this file)
 └── LICENSE
 ```
 
 ---
 
-## Installation & Start
+## Installation & Usage
 
-1. **AnyLogic Community Edition** oder **University License** installieren.
+1. Install **AnyLogic Community Edition** or **University License**.
 
-2. Repository klonen:
+2. Clone the repository:
 
    ```bash
-   git clone https://github.com/<ihr-github-user>/SimulationAndModelling2Project.git
+   git clone https://github.com/<your-github-username>/SimulationAndModelling2Project.git
    cd SimulationAndModelling2Project
    ```
+3. Open the simulation in AnyLogic:
 
-3. **Python-Umgebung** einrichten (optional für Batch-Skripte):
-
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate
-   pip install -r requirements.txt
-   ```
-
-4. **Simulation in AnyLogic** öffnen:
-
-   * Datei `model/PV_Battery_Optimization.als` öffnen
-   * Parameter (Budget, Modulpreise, Tarifdaten) anpassen
-   * Run Configuration auswählen und Simulation starten
-
-5. **Batch-Runs** per Kommandozeile:
-
-   ```bash
-   # Einzelnen Szenario-Run
-   python model/scripts/analyze_results.py --input data/results_run1.csv
-   ```
+   * Open `model/PV_Battery_Optimization.als`
+   * Adjust parameters (budget, module prices, tariff data)
+   * Select run configuration and launch simulation
 
 ---
 
-## Weiterführende Dokumentation
+## Further Documentation
 
-* **LaTeX-Report (Overleaf):**
+* **LaTeX Report (Overleaf):**
   [https://www.overleaf.com/read/pjqyfxrzmhpv#ac28a1](https://www.overleaf.com/read/pjqyfxrzmhpv#ac28a1)
 
-* **UML-Diagramm (Lucidchart):**
+* **UML Diagram (Lucidchart):**
   [https://lucid.app/lucidchart/37222884-5f2d-4537-a731-513d22f26cf5/edit?page=HWEp-vi-RSFO\&invitationId=inv\_09532988-f101-4204-8e33-1ce2f0ec578a#](https://lucid.app/lucidchart/37222884-5f2d-4537-a731-513d22f26cf5/edit?page=HWEp-vi-RSFO&invitationId=inv_09532988-f101-4204-8e33-1ce2f0ec578a#)
 
 ---
 
-## Projektplan
+## Project Plan
 
-Der detaillierte Projektplan ist unter folgendem GitHub Project Board erreichbar:
+The detailed project plan is accessible via the GitHub Project board:
 [https://github.com/users/XplorodoX/projects/6/views/1](https://github.com/users/XplorodoX/projects/6/views/1)
 
----
-
-## Lizenz
-
-Dieses Projekt steht unter der MIT-Lizenz. Details siehe [LICENSE](LICENSE).
-
----
