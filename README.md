@@ -94,7 +94,7 @@ Decentralized energy systems are becoming increasingly important for reducing co
 
 * **LaTeX Report (Overleaf):**
   [https://www.overleaf.com/read/pjqyfxrzmhpv#ac28a1](https://www.overleaf.com/read/pjqyfxrzmhpv#ac28a1)
-* **LaTeX intermediant Presentation (Overleaf):**
+* **LaTeX intermediate Presentation (Overleaf):**
   [https://www.overleaf.com/read/hzhfkzznyqty#d170c5](https://www.overleaf.com/read/hzhfkzznyqty#d170c5)
 
 * **UML Diagram (Lucidchart):**
