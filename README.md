@@ -100,10 +100,8 @@ Decentralized energy systems are becoming increasingly important for reducing co
 * **UML Diagram (Lucidchart):**
   [https://lucid.app/lucidchart/37222884-5f2d-4537-a731-513d22f26cf5/edit?page=HWEp-vi-RSFO\&invitationId=inv\_09532988-f101-4204-8e33-1ce2f0ec578a#](https://lucid.app/lucidchart/37222884-5f2d-4537-a731-513d22f26cf5/edit?page=HWEp-vi-RSFO&invitationId=inv_09532988-f101-4204-8e33-1ce2f0ec578a#)
 
-  **Template Presentation:**
-  https://gitlab.cs.fau.de/schaefer/i7-beamer-latex-template
-
-  ** 
+* **Template Presentation:**
+  [https://gitlab.cs.fau.de/schaefer/i7-beamer-latex-template][https://gitlab.cs.fau.de/schaefer/i7-beamer-latex-template]
 
 ---
 
