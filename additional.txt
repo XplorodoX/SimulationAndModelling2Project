@@ -1,0 +1,19 @@
+Panel:
+
+https://solarhandel24.de/products/pv-komplettset-10-kwp-24x-trina-440w-full-black-bifazial-goodwe-gw10kn-et-plus-16a-mit-speicheroption
+
+Width: 1,134m
+Length: 1,762m
+0,44 kWp
+Cost: 57,90€
+Temperature coefficient: -0,24 %/°C
+
+Basic kWh / kWp:
+
+https://regional-photovoltaik.de/planung-installation/pv-ertrag-tabelle-aktuelle-daten/
+ca 900 kWh / kWp
+
+Inverter Conversion Efficiency:
+
+https://batterlution.com/quicklycorrect-and-simple-estimation-of-photovoltaic-power-generation/
+ca 95%
