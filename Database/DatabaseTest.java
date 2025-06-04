@@ -2,19 +2,18 @@ import java.io.File;
 
 public class DatabaseTest {
     public static void main(String[] args) throws Exception {
-        Databank db = new Databank();
-        db.setElectricityPrice(42.0);
+        double electricityPrice = 42.0;
 
         String url = args.length > 0 ? args[0] : "jdbc:hsqldb:mem:testdb";
         try (var conn = AnyLogicDBUtil.openConnection(url)) {
             AnyLogicDBUtil.createSchema(conn);
-            AnyLogicDBUtil.insertDatabank(conn, "test", db);
+            AnyLogicDBUtil.insertDatabank(conn, "test", electricityPrice);
 
             double price = AnyLogicDBUtil.loadElectricityPrice(conn, "test");
-            if (price == db.getElectricityPrice()) {
+            if (price == electricityPrice) {
                 System.out.println("Test passed: price=" + price);
             } else {
-                System.err.println("Test failed: expected " + db.getElectricityPrice() + " but got " + price);
+                System.err.println("Test failed: expected " + electricityPrice + " but got " + price);
             }
 
             // Import sample CSV file and verify row count
