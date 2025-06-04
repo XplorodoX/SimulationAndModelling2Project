@@ -1,4 +1,7 @@
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import java.io.*;
 import java.sql.*;
@@ -121,8 +124,11 @@ public class AnyLogicDBUtil {
         if (name.endsWith(".csv")) {
             return readCsv(file);
         }
-        if (name.endsWith(".xls") || name.endsWith(".xlsx")) {
+        if (name.endsWith(".xls")) {
             return readExcel(file);
+        }
+        if (name.endsWith(".xlsx")) {
+            throw new IOException("XLSX files are not supported with the bundled POI library");
         }
         throw new IOException("Unsupported file type: " + file);
     }
@@ -140,12 +146,22 @@ public class AnyLogicDBUtil {
 
     private static List<String[]> readExcel(File file) throws IOException {
         List<String[]> rows = new ArrayList<>();
-        try (InputStream in = new FileInputStream(file); Workbook wb = WorkbookFactory.create(in)) {
-            Sheet sheet = wb.getSheetAt(0);
-            for (Row row : sheet) {
+        try (InputStream in = new FileInputStream(file)) {
+            HSSFWorkbook wb = new HSSFWorkbook(in);
+            HSSFSheet sheet = wb.getSheetAt(0);
+            int firstRow = sheet.getFirstRowNum();
+            int lastRow = sheet.getLastRowNum();
+            for (int r = firstRow; r <= lastRow; r++) {
+                HSSFRow row = sheet.getRow(r);
+                if (row == null) {
+                    continue;
+                }
+                int firstCell = row.getFirstCellNum();
+                int lastCell = row.getLastCellNum();
                 List<String> values = new ArrayList<>();
-                for (Cell cell : row) {
-                    values.add(cell.toString());
+                for (int c = firstCell; c < lastCell; c++) {
+                    HSSFCell cell = row.getCell((short) c);
+                    values.add(cell != null ? cell.toString() : null);
                 }
                 rows.add(values.toArray(new String[0]));
             }
