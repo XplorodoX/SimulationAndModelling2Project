@@ -1,0 +1,65 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+/**
+ * Utility helper to work with AnyLogic's internal database.
+ * <p>
+ * The internal database is essentially a regular JDBC database (e.g. H2 or SQLite).
+ * This class demonstrates how one might create tables and store values from
+ * {@link Databank} in that database.
+ */
+public class AnyLogicDBUtil {
+
+    /**
+     * Opens a connection to the internal database. For simplicity this
+     * example uses an in-memory SQLite database. In an actual AnyLogic
+     * model you would use the provided database connection URL.
+     */
+    public static Connection openConnection() throws SQLException {
+        // In a real AnyLogic model the JDBC URL is provided by the engine
+        return DriverManager.getConnection("jdbc:sqlite::memory:");
+    }
+
+    /**
+     * Creates the schema used to persist {@link Databank} information.
+     */
+    public static void createSchema(Connection conn) throws SQLException {
+        try (Statement st = conn.createStatement()) {
+            st.executeUpdate(
+                "CREATE TABLE IF NOT EXISTS databank (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "name TEXT, " +
+                "electricityPrice REAL" +
+                ")");
+        }
+    }
+
+    /**
+     * Inserts a new databank entry into the database.
+     */
+    public static void insertDatabank(Connection conn, String name, Databank data) throws SQLException {
+        String sql = "INSERT INTO databank(name, electricityPrice) VALUES (?, ?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, name);
+            ps.setDouble(2, data.getElectricityPrice());
+            ps.executeUpdate();
+        }
+    }
+
+    /**
+     * Reads the electricity price for the given databank entry.
+     */
+    public static double loadElectricityPrice(Connection conn, String name) throws SQLException {
+        String sql = "SELECT electricityPrice FROM databank WHERE name = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, name);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getDouble(1) : 0;
+            }
+        }
+    }
+}
