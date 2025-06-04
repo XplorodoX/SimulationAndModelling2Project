@@ -15,7 +15,7 @@ the file headers, so no manual schema setup is required.
 Compile the helper classes and run `CsvImporter` to create a table from a file:
 
 ```bash
-javac CsvImporter.java AnyLogicDBUtil.java
+javac CsvImporter.java CsvDirImporter.java AnyLogicDBUtil.java
 java -cp .:hsqldb-2.7.4.jar CsvImporter <tableName> <file.csv> [jdbcUrl]
 ```
 
@@ -33,3 +33,10 @@ AnyLogicDBUtil.importTableFromFile("jdbc:hsqldb:mem:test", "my_table",
 ```
 
 This automatically creates the table and inserts all rows from the CSV file.
+
+To import all CSV files from a directory at once, use `CsvDirImporter`. Table
+names are derived from the file names without the extension:
+
+```bash
+java -cp .:hsqldb-2.7.4.jar CsvDirImporter path/to/csv/dir [jdbcUrl]
+```

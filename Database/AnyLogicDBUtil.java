@@ -50,6 +50,40 @@ public class AnyLogicDBUtil {
     }
 
     /**
+     * Imports all CSV files in the given directory using the file name (without
+     * extension) as the table name. Existing tables are reused.
+     */
+    public static void importTablesFromDirectory(Connection conn, File dir)
+            throws SQLException, IOException {
+        if (!dir.isDirectory()) {
+            throw new IOException(dir + " is not a directory");
+        }
+        File[] files = dir.listFiles((d, name) -> name.toLowerCase().endsWith(".csv"));
+        if (files == null) {
+            return;
+        }
+        for (File f : files) {
+            String table = f.getName();
+            int idx = table.lastIndexOf('.');
+            if (idx > 0) {
+                table = table.substring(0, idx);
+            }
+            importTableFromFile(conn, table, f);
+        }
+    }
+
+    /**
+     * Opens a connection to the given JDBC URL and imports all CSV files in the
+     * directory. The connection is closed automatically afterwards.
+     */
+    public static void importTablesFromDirectory(String url, File dir)
+            throws SQLException, IOException {
+        try (Connection conn = openConnection(url)) {
+            importTablesFromDirectory(conn, dir);
+        }
+    }
+
+    /**
      * Convenience method to connect to a running HSQLDB instance.
      * The connection string is based on the one provided in the README.
      */
