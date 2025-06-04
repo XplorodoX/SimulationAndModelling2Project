@@ -1,0 +1,22 @@
+name: Java Test
+
+on:
+  push:
+    branches: [ main, work ]
+  pull_request:
+    branches: [ main, work ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Compile Java sources
+        run: javac Database/*.java PV/*.java
+      - name: Run DatabaseTest
+        run: java -cp "Database:Database/hsqldb-2.7.4.jar" DatabaseTest "jdbc:hsqldb:mem:test"
