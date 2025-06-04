@@ -13,8 +13,8 @@ import java.util.List;
  * Utility helper to work with AnyLogic's internal database.
  * <p>
  * The internal database is essentially a regular JDBC database (e.g. H2 or SQLite).
- * This class demonstrates how one might create tables and store values from
- * {@link Databank} in that database.
+ * This class demonstrates how one might create tables and store values in
+ * that database.
  */
 public class AnyLogicDBUtil {
 
@@ -45,7 +45,7 @@ public class AnyLogicDBUtil {
     }
 
     /**
-     * Creates the schema used to persist {@link Databank} information.
+     * Creates the schema used to persist databank information.
      */
     public static void createSchema(Connection conn) throws SQLException {
         try (Statement st = conn.createStatement()) {
@@ -61,11 +61,11 @@ public class AnyLogicDBUtil {
     /**
      * Inserts a new databank entry into the database.
      */
-    public static void insertDatabank(Connection conn, String name, Databank data) throws SQLException {
+    public static void insertDatabank(Connection conn, String name, double electricityPrice) throws SQLException {
         String sql = "INSERT INTO databank(name, electricityPrice) VALUES (?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, name);
-            ps.setDouble(2, data.getElectricityPrice());
+            ps.setDouble(2, electricityPrice);
             ps.executeUpdate();
         }
     }
