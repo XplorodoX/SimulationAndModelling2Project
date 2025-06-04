@@ -18,7 +18,7 @@ public class DatabaseTest {
             }
 
             // Import sample CSV file and verify row count
-            File csv = new File("sample_data.csv");
+            File csv = new File("Database/sample_data.csv");
             AnyLogicDBUtil.importTableFromFile(conn, "sample_table", csv);
             try (var st = conn.createStatement();
                  var rs = st.executeQuery("SELECT COUNT(*) FROM sample_table")) {
