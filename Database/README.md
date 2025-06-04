@@ -23,5 +23,13 @@ If no `jdbcUrl` is supplied, the importer uses a default in-memory database.
 When running inside an AnyLogic model, pass the model's database connection URL
 to store the table directly in the model database.
 
-You can also call `AnyLogicDBUtil.importTableFromFile` from your own code to
-perform the same operation programmatically.
+You can also call `AnyLogicDBUtil.importTableFromFile` directly from your own
+code. A variant of this method accepts a JDBC URL and handles opening and
+closing the connection for you:
+
+```java
+AnyLogicDBUtil.importTableFromFile("jdbc:hsqldb:mem:test", "my_table",
+        new File("data.csv"));
+```
+
+This automatically creates the table and inserts all rows from the CSV file.

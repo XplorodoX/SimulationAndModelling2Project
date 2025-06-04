@@ -25,7 +25,9 @@ public class AnyLogicDBUtil {
      */
     public static Connection openConnection() throws SQLException {
         // In a real AnyLogic model the JDBC URL is provided by the engine
-        return DriverManager.getConnection("jdbc:sqlite::memory:");
+        // Default to an in-memory HSQLDB instance so the code also works
+        // outside of AnyLogic without additional setup.
+        return DriverManager.getConnection("jdbc:hsqldb:mem:default");
     }
 
     /**
@@ -33,6 +35,18 @@ public class AnyLogicDBUtil {
      */
     public static Connection openConnection(String url) throws SQLException {
         return DriverManager.getConnection(url);
+    }
+
+    /**
+     * Convenience method that opens a connection using the provided JDBC URL
+     * and imports the table from the given file. The connection is closed
+     * automatically afterwards.
+     */
+    public static void importTableFromFile(String url, String tableName, File file)
+            throws SQLException, IOException {
+        try (Connection conn = openConnection(url)) {
+            importTableFromFile(conn, tableName, file);
+        }
     }
 
     /**
