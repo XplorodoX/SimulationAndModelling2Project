@@ -105,6 +105,15 @@ Decentralized energy systems are becoming increasingly important for reducing co
 
 ---
 
+## Database Example
+
+The `Database` folder contains a small Java program that demonstrates how to
+store simulation output in an external HSQLDB instance. A step-by-step guide is
+available in [`Database/README.md`](Database/README.md). The same approach can
+be applied when connecting an AnyLogic model to a relational database.
+
+---
+
 ## Project Plan
 
 The detailed project plan is accessible via the GitHub Project board:
