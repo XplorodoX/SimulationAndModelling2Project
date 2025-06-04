@@ -3,7 +3,10 @@ public class DatabaseTest {
         Databank db = new Databank();
         db.setElectricityPrice(42.0);
 
-        try (var conn = AnyLogicDBUtil.openConnection()) {
+        String url = args.length > 0 ? args[0] : null;
+        try (var conn = (url != null)
+                ? AnyLogicDBUtil.openConnection(url)
+                : AnyLogicDBUtil.openHSQLDBConnection()) {
             AnyLogicDBUtil.createSchema(conn);
             AnyLogicDBUtil.insertDatabank(conn, "test", db);
 
