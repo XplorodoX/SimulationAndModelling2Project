@@ -2,7 +2,6 @@ public class Databank {
     private WeatherData weatherForecast;
     private double electricityPrice;
     private double[] pvProductionCurve;
-    private double[] evConsumptionCurve;
     private double[] heatPumpConsumptionCurve;
     private double[] generalConsumptionCurve;
     private double[] batteryLoadingCurve;
@@ -35,13 +34,6 @@ public class Databank {
         this.pvProductionCurve = pvProductionCurve;
     }
 
-    public double[] getEvConsumptionCurve() {
-        return evConsumptionCurve;
-    }
-
-    public void setEvConsumptionCurve(double[] evConsumptionCurve) {
-        this.evConsumptionCurve = evConsumptionCurve;
-    }
 
     public double[] getHeatPumpConsumptionCurve() {
         return heatPumpConsumptionCurve;
@@ -78,7 +70,6 @@ public class Databank {
     public double getValue(String type, int index) {
         return switch (type) {
             case "PV" -> pvProductionCurve[index];
-            case "EV" -> evConsumptionCurve[index];
             case "HeatPump" -> heatPumpConsumptionCurve[index];
             case "General" -> generalConsumptionCurve[index];
             case "BatteryLoad" -> batteryLoadingCurve[index];

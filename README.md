@@ -25,7 +25,7 @@ Decentralized energy systems are becoming increasingly important for reducing co
 ## Core Simulation Elements
 
 1. **Seasonal solar irradiation profiles**
-2. **Electricity consumption of household, EV charging, and heat pump**
+2. **Electricity consumption of household and heat pump**
 3. **Performance curve and COP (Coefficient of Performance) of the heat pump**
 4. **Tariff model with variable feed-in and purchase prices**
 5. **Decision Variables:**
@@ -107,10 +107,11 @@ Decentralized energy systems are becoming increasingly important for reducing co
 
 ## Database Example
 
-The `Database` folder contains a small Java program that demonstrates how to
-store simulation output in an external HSQLDB instance. A step-by-step guide is
-available in [`Database/README.md`](Database/README.md). The same approach can
-be applied when connecting an AnyLogic model to a relational database.
+The `Database` folder now contains a lightweight Java utility that imports CSV
+or Excel files directly into AnyLogic's internal database. Table structures are
+created automatically from the file headers, so no manual schema definition is
+required. Usage instructions can be found in
+[`Database/README.md`](Database/README.md).
 
 ---
 
