@@ -5,6 +5,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+
 /**
  * Utility helper to work with AnyLogic's internal database.
  * <p>
@@ -77,5 +93,108 @@ public class AnyLogicDBUtil {
                 return rs.next() ? rs.getDouble(1) : 0;
             }
         }
+    }
+
+    /**
+     * Imports the given CSV or Excel file into a newly created table.
+     * <p>
+     * The first row must contain the column headers. Columns are created as
+     * {@code VARCHAR(255)}. Unsupported characters in column names are removed
+     * and whitespace is replaced with underscores.
+     *
+     * @param conn the database connection
+     * @param tableName the name of the table to create
+     * @param file the CSV or Excel file to import
+     */
+    public static void importTableFromFile(Connection conn, String tableName, File file)
+            throws SQLException, IOException {
+        List<String[]> rows = readFile(file);
+        if (rows.isEmpty()) {
+            return;
+        }
+
+        String[] headers = rows.get(0);
+        try (Statement st = conn.createStatement()) {
+            st.executeUpdate(buildCreateStatement(tableName, headers));
+        }
+
+        String insert = buildInsertStatement(tableName, headers.length);
+        try (PreparedStatement ps = conn.prepareStatement(insert)) {
+            for (int i = 1; i < rows.size(); i++) {
+                String[] data = rows.get(i);
+                for (int c = 0; c < headers.length; c++) {
+                    String value = c < data.length ? data[c] : null;
+                    ps.setString(c + 1, value);
+                }
+                ps.executeUpdate();
+            }
+        }
+    }
+
+    private static List<String[]> readFile(File file) throws IOException {
+        String name = file.getName().toLowerCase();
+        if (name.endsWith(".csv")) {
+            return readCsv(file);
+        }
+        if (name.endsWith(".xls") || name.endsWith(".xlsx")) {
+            return readExcel(file);
+        }
+        throw new IOException("Unsupported file type: " + file);
+    }
+
+    private static List<String[]> readCsv(File file) throws IOException {
+        List<String[]> rows = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                rows.add(line.split(","));
+            }
+        }
+        return rows;
+    }
+
+    private static List<String[]> readExcel(File file) throws IOException {
+        List<String[]> rows = new ArrayList<>();
+        try (InputStream in = new FileInputStream(file); Workbook wb = WorkbookFactory.create(in)) {
+            Sheet sheet = wb.getSheetAt(0);
+            for (Row row : sheet) {
+                List<String> values = new ArrayList<>();
+                for (Cell cell : row) {
+                    values.add(cell.toString());
+                }
+                rows.add(values.toArray(new String[0]));
+            }
+        }
+        return rows;
+    }
+
+    private static String buildCreateStatement(String tableName, String[] headers) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("CREATE TABLE IF NOT EXISTS ").append(tableName).append(" (");
+        for (int i = 0; i < headers.length; i++) {
+            if (i > 0) {
+                sb.append(", ");
+            }
+            sb.append(sanitize(headers[i])).append(" VARCHAR(255)");
+        }
+        sb.append(")");
+        return sb.toString();
+    }
+
+    private static String buildInsertStatement(String table, int columns) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("INSERT INTO ").append(table).append(" VALUES (");
+        sb.append(String.join(",", Collections.nCopies(columns, "?")));
+        sb.append(")");
+        return sb.toString();
+    }
+
+    private static String sanitize(String header) {
+        String name = header.trim().replaceAll("\\s+", "_")
+                .replaceAll("[^A-Za-z0-9_]", "");
+        if (name.isEmpty() || Character.isDigit(name.charAt(0))) {
+            name = "c_" + name;
+        }
+        return name;
     }
 }
