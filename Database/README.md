@@ -28,6 +28,18 @@ java -cp .:hsqldb-2.7.4.jar DatabaseTest
 
 If everything works you will see `Test passed` in the console.
 
+### Importing CSV files
+
+You can create a new table from any CSV file with the `CsvImporter` helper:
+
+```bash
+javac CsvImporter.java AnyLogicDBUtil.java
+java -cp .:hsqldb-2.7.4.jar CsvImporter <tableName> <file.csv> [jdbcUrl]
+```
+
+If no `jdbcUrl` is supplied, the importer connects to the local HSQLDB instance
+started above.
+
 ## Connecting from AnyLogic
 
 1. Copy `hsqldb-2.7.4.jar` into the `<AnyLogic>/lib/` directory or add it to the model's classpath.
