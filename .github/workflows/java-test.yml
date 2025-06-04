@@ -17,6 +17,9 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: Compile Java sources
-        run: javac Database/*.java PV/*.java
+        run: |
+          javac -cp "Database/hsqldb-2.7.4.jar:Database/poi-3.0-FINAL.jar:Database/poi-ooxml-full-5.0.0.jar" Database/*.java PV/*.java
       - name: Run DatabaseTest
-        run: java -cp "Database:Database/hsqldb-2.7.4.jar" DatabaseTest "jdbc:hsqldb:mem:test"
+        working-directory: Database
+        run: |
+          java -cp ".:hsqldb-2.7.4.jar:poi-3.0-FINAL.jar:poi-ooxml-full-5.0.0.jar" DatabaseTest "jdbc:hsqldb:mem:test"
