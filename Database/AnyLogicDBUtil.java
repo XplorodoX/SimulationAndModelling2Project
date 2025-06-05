@@ -36,7 +36,7 @@ public class AnyLogicDBUtil {
      */
     public static Connection openHSQLDBConnection() throws SQLException {
         // Der Pfad sollte für Ihre Umgebung korrekt sein oder konfigurierbar gemacht werden.
-        String url = "jdbc:hsqldb:hsql://localhost:9001/projectx;file:/Users/merluee/Models/ProjectX//database/db";
+        String url = "jdbc:hsqldb:hsql://localhost:9001/projekty;file:/Users/merluee/Models/ProjektY//database/db";
         // Standardmäßig verwendet HSQLDB den Benutzer "SA" mit einem leeren Passwort.
         return DriverManager.getConnection(url, "SA", "");
     }
