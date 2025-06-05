@@ -329,8 +329,8 @@ public class AnyLogicDBUtil {
         return null;
     }
 
+    //************************************************************************
     // Private helper methods
-
     private static List<String[]> readFile(File file) throws IOException {
         String name = file.getName().toLowerCase();
         if (name.endsWith(".csv")) {
