@@ -7,7 +7,7 @@ import org.apache.poi.ss.usermodel.CellType;
 import java.io.*;
 import java.sql.*;
 import java.util.*;
-import java.nio.charset.StandardCharsets; // Import for Charset
+import java.nio.charset.StandardCharsets;
 
 /**
  * Extended utility class for AnyLogic database operations.
@@ -16,7 +16,7 @@ import java.nio.charset.StandardCharsets; // Import for Charset
  */
 public class AnyLogicDBUtil {
 
-    // URL for the target database (ProjektY)
+    // URL for the target database
     // Ensure that the HSQLDB server for this database is running
     // if AnyLogic is to access it.
     private static final String PROJEKT_Y_DB_URL = "jdbc:hsqldb:hsql://localhost:9001/neuewelle;file:/Users/merluee/Models/NeueWelle//database/db";
@@ -60,13 +60,10 @@ public class AnyLogicDBUtil {
     public static Connection openProjektYDBConnection() throws SQLException {
         System.out.println("Versuche, Verbindung zur ProjektY HSQLDB herzustellen: " + PROJEKT_Y_DB_URL); // Attempting to establish connection to ProjektY HSQLDB
         try {
-            // Ensure the HSQLDB JDBC driver is loaded.
-            // In modern JDBC versions (4.0+), this is often no longer necessary,
-            // but it doesn't hurt to do it explicitly, especially in environments like AnyLogic.
             Class.forName("org.hsqldb.jdbc.JDBCDriver");
         } catch (ClassNotFoundException e) {
-            System.err.println("HSQLDB JDBC Treiber nicht gefunden. Stellen Sie sicher, dass hsqldb.jar im Classpath ist."); // HSQLDB JDBC Driver not found. Ensure hsqldb.jar is in the Classpath.
-            throw new SQLException("HSQLDB JDBC Treiber nicht gefunden", e); // HSQLDB JDBC Driver not found
+            System.err.println("HSQLDB JDBC Treiber nicht gefunden. Stellen Sie sicher, dass hsqldb.jar im Classpath ist.");
+            throw new SQLException("HSQLDB JDBC Treiber nicht gefunden", e);
         }
         return DriverManager.getConnection(PROJEKT_Y_DB_URL, DB_USER, DB_PASSWORD);
     }
