@@ -1,7 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter; // For PrintWriter
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.util.*;
@@ -46,7 +46,7 @@ public class DatabaseTest {
         System.out.println("\n=== TEST: Connection to ProjektY Database ===");
         Connection conn = null;
         try {
-            // Attempt to establish a connection to the ProjektY database
+            // Attempt to establish a connection to the database
             conn = AnyLogicDBUtil.openProjektYDBConnection();
             System.out.println("Connection to ProjektY database established successfully.");
 
@@ -72,7 +72,7 @@ public class DatabaseTest {
     /**
      * Demonstrates importing files from a directory.
      * Creates sample CSV files if they don't exist.
-     * Imports them into the ProjektY database.
+     * Imports them into the database.
      * Lists tables and displays content of imported tables.
      * @throws Exception if any error occurs during the process.
      */
