@@ -313,6 +313,22 @@ public class AnyLogicDBUtil {
         }
     }
 
+    public static Object[] getDataAtTimeStamp(Connection conn, double modelTime, String tableName, String columnName) throws SQLException {
+        String sql = "SELECT * FROM " + sanitizeTableName(tableName) +
+                " WHERE zeitstempel <= ? ORDER BY zeitstempel DESC LIMIT 1";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setDouble(1, modelTime);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    // Daten aus dem ResultSet extrahieren
+                    return extractRowData(rs);
+                }
+            }
+        }
+        return null;
+    }
+
     // Private helper methods
 
     private static List<String[]> readFile(File file) throws IOException {
