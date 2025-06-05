@@ -329,8 +329,75 @@ public class AnyLogicDBUtil {
         return null;
     }
 
+    /**
+     * Retrieves all rows from the specified table between the given start and
+     * end timestamps.
+     *
+     * @param conn       Active database connection
+     * @param tableName  Name of the table
+     * @param startTime  Start of the interval (inclusive)
+     * @param endTime    End of the interval (inclusive)
+     * @return           List of row objects found in the interval
+     */
+    public static List<Object[]> getDataAtTimeStampRange(Connection conn,
+                                                         String tableName,
+                                                         Timestamp startTime,
+                                                         Timestamp endTime) throws SQLException {
+        String sql = "SELECT * FROM " + sanitizeTableName(tableName) +
+                " WHERE zeitstempel >= ? AND zeitstempel <= ? ORDER BY zeitstempel";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setTimestamp(1, startTime);
+            ps.setTimestamp(2, endTime);
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Object[]> results = new ArrayList<>();
+                while (rs.next()) {
+                    results.add(extractRowData(rs));
+                }
+                return results;
+            }
+        }
+    }
+
+    /**
+     * Returns the most recent row up to the current system timestamp.
+     * This can be used when a regularly updated time variable triggers the
+     * data retrieval.
+     *
+     * @param conn      Active database connection
+     * @param tableName Name of the table
+     * @return          Row data closest to the current time or {@code null}
+     */
+    public static Object[] getActualAtTimeStampData(Connection conn, String tableName) throws SQLException {
+        String sql = "SELECT * FROM " + sanitizeTableName(tableName) +
+                " WHERE zeitstempel <= CURRENT_TIMESTAMP ORDER BY zeitstempel DESC LIMIT 1";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return extractRowData(rs);
+            }
+        }
+        return null;
+    }
+
     //************************************************************************
     // Private helper methods
+
+    /**
+     * Helper that extracts all column values of the current row from the given
+     * {@link ResultSet} into an {@code Object[]} array.
+     */
+    private static Object[] extractRowData(ResultSet rs) throws SQLException {
+        ResultSetMetaData meta = rs.getMetaData();
+        int columnCount = meta.getColumnCount();
+        Object[] data = new Object[columnCount];
+        for (int i = 1; i <= columnCount; i++) {
+            data[i - 1] = rs.getObject(i);
+        }
+        return data;
+    }
+
     private static List<String[]> readFile(File file) throws IOException {
         String name = file.getName().toLowerCase();
         if (name.endsWith(".csv")) {
