@@ -7,6 +7,7 @@ import org.apache.poi.ss.usermodel.CellType;
 import java.io.*;
 import java.sql.*;
 import java.util.*;
+import java.nio.charset.StandardCharsets; // Import für Charset
 
 /**
  * Erweiterte Utility-Klasse für AnyLogic Datenbankoperationen.
@@ -31,9 +32,12 @@ public class AnyLogicDBUtil {
 
     /**
      * Verbindet sich zur HSQLDB Instanz mit Standard-Konfiguration.
+     * HINWEIS: Der Pfad zur Datenbankdatei ist hartcodiert und muss ggf. angepasst werden.
      */
     public static Connection openHSQLDBConnection() throws SQLException {
+        // Der Pfad sollte für Ihre Umgebung korrekt sein oder konfigurierbar gemacht werden.
         String url = "jdbc:hsqldb:hsql://localhost:9001/projectx;file:/Users/merluee/Models/ProjectX//database/db";
+        // Standardmäßig verwendet HSQLDB den Benutzer "SA" mit einem leeren Passwort.
         return DriverManager.getConnection(url, "SA", "");
     }
 
@@ -42,7 +46,7 @@ public class AnyLogicDBUtil {
      *
      * @param conn Datenbankverbindung
      * @param tableName Name der zu erstellenden Tabelle (null = Dateiname verwenden)
-     * @param file CSV oder Excel Datei
+     * @param file CSV oder Excel Datei (nur .xls wird derzeit unterstützt)
      * @param replaceTable true = existierende Tabelle ersetzen, false = Daten anhängen
      */
     public static void importTableFromFile(Connection conn, String tableName, File file, boolean replaceTable)
@@ -85,7 +89,7 @@ public class AnyLogicDBUtil {
      * Importiert alle CSV/Excel Dateien aus einem Verzeichnis.
      *
      * @param conn Datenbankverbindung
-     * @param directory Verzeichnis mit CSV/Excel Dateien
+     * @param directory Verzeichnis mit CSV/Excel Dateien (nur .xls wird derzeit unterstützt)
      * @param replaceExistingTables true = existierende Tabellen ersetzen
      */
     public static void importTablesFromDirectory(Connection conn, File directory, boolean replaceExistingTables)
@@ -97,6 +101,7 @@ public class AnyLogicDBUtil {
 
         File[] files = directory.listFiles((dir, name) -> {
             String lower = name.toLowerCase();
+            // Aktuell nur .csv und .xls, da .xlsx explizit ausgeschlossen wird.
             return lower.endsWith(".csv") || lower.endsWith(".xls");
         });
 
@@ -113,6 +118,7 @@ public class AnyLogicDBUtil {
                 importTableFromFile(conn, tableName, file, replaceExistingTables);
             } catch (Exception e) {
                 System.err.println("Fehler beim Importieren von " + file.getName() + ": " + e.getMessage());
+                // Optional: e.printStackTrace(); für detailliertere Fehlermeldungen
             }
         }
     }
@@ -185,8 +191,8 @@ public class AnyLogicDBUtil {
                 }
                 ps.addBatch();
             }
-            int[] results = ps.executeBatch();
-            System.out.println("Erfolgreich " + results.length + " Zeilen in Tabelle '" + tableName + "' eingefügt");
+            int[] results = ps.executeBatch(); // Use executeBatch for PreparedStatement
+            System.out.println("Erfolgreich " + Arrays.stream(results).sum() + " Zeilen in Tabelle '" + tableName + "' eingefügt (Summe der betroffenen Zeilen pro Batch-Anweisung)");
         }
     }
 
@@ -196,6 +202,7 @@ public class AnyLogicDBUtil {
     public static void displayTable(Connection conn, String tableName, int maxRows) throws SQLException {
         String sql = "SELECT * FROM " + sanitizeTableName(tableName);
         if (maxRows > 0) {
+            // HSQLDB verwendet LIMIT, andere Datenbanken könnten TOP oder ROWNUM verwenden
             sql += " LIMIT " + maxRows;
         }
 
@@ -223,7 +230,7 @@ public class AnyLogicDBUtil {
                 System.out.println();
                 rowCount++;
             }
-            System.out.println("(" + rowCount + " Zeilen)");
+            System.out.println("(" + rowCount + " Zeilen" + (maxRows > 0 && rowCount == maxRows ? " - Limit erreicht" : "") + ")");
         }
     }
 
@@ -232,10 +239,16 @@ public class AnyLogicDBUtil {
      */
     public static void listTables(Connection conn) throws SQLException {
         DatabaseMetaData meta = conn.getMetaData();
+        // Parameter für getTables: catalog, schemaPattern, tableNamePattern, types[]
         try (ResultSet rs = meta.getTables(null, null, "%", new String[]{"TABLE"})) {
             System.out.println("\n=== Vorhandene Tabellen ===");
+            boolean found = false;
             while (rs.next()) {
                 System.out.println("- " + rs.getString("TABLE_NAME"));
+                found = true;
+            }
+            if (!found) {
+                System.out.println("Keine Tabellen gefunden.");
             }
         }
     }
@@ -247,21 +260,24 @@ public class AnyLogicDBUtil {
         if (name.endsWith(".csv")) {
             return readCsv(file);
         }
+        // Derzeit wird .xlsx explizit nicht unterstützt.
         if (name.endsWith(".xls")) {
-            return readExcel(file, false);
+            return readExcelXls(file); // Umbenannt, um Klarheit zu schaffen
         }
+        // Die ursprüngliche Implementierung hat hier einen Fehler für .xlsx ausgelöst.
+        // Wenn .xlsx-Unterstützung gewünscht ist, müsste hier eine entsprechende Logik (mit XSSFWorkbook) implementiert werden.
         if (name.endsWith(".xlsx")) {
-            throw new IOException("XLSX-Dateien werden ohne erweiterte POI-Bibliothek nicht unterstützt. Bitte konvertieren Sie zu XLS oder CSV.");
+            throw new IOException("XLSX-Dateien (.xlsx) werden von dieser Methode derzeit nicht unterstützt. Bitte konvertieren Sie zu XLS oder CSV, oder erweitern Sie die Methode.");
         }
-        throw new IOException("Nicht unterstützter Dateityp: " + file);
+        throw new IOException("Nicht unterstützter Dateityp: " + file.getName() + ". Nur .csv und .xls werden unterstützt.");
     }
 
     private static List<String[]> readCsv(File file) throws IOException {
         List<String[]> rows = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(file, java.nio.charset.StandardCharsets.UTF_8))) {
+        // Explizit UTF-8 verwenden, um Kompatibilitätsprobleme zu vermeiden
+        try (BufferedReader br = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
             String line;
             while ((line = br.readLine()) != null) {
-                // Einfache CSV-Parsing (kann bei komplexeren CSVs erweitert werden)
                 rows.add(parseCsvLine(line));
             }
         }
@@ -269,6 +285,9 @@ public class AnyLogicDBUtil {
     }
 
     private static String[] parseCsvLine(String line) {
+        // Diese einfache Implementierung geht davon aus, dass Kommas die Trennzeichen sind
+        // und Anführungszeichen Felder umschließen können, die Kommas enthalten.
+        // Für komplexere CSV-Dateien (z.B. mit escaped quotes) wäre eine robustere Bibliothek wie OpenCSV sinnvoll.
         List<String> fields = new ArrayList<>();
         StringBuilder field = new StringBuilder();
         boolean inQuotes = false;
@@ -277,51 +296,69 @@ public class AnyLogicDBUtil {
             char c = line.charAt(i);
 
             if (c == '"') {
-                inQuotes = !inQuotes;
+                if (i + 1 < line.length() && line.charAt(i + 1) == '"') {
+                    // Behandle doppelte Anführungszeichen innerhalb von Anführungszeichen als literales Anführungszeichen
+                    field.append('"');
+                    i++; // Überspringe das nächste Anführungszeichen
+                } else {
+                    inQuotes = !inQuotes;
+                }
             } else if (c == ',' && !inQuotes) {
                 fields.add(field.toString().trim());
-                field.setLength(0);
+                field.setLength(0); // Reset für das nächste Feld
             } else {
                 field.append(c);
             }
         }
-        fields.add(field.toString().trim());
+        fields.add(field.toString().trim()); // Letztes Feld hinzufügen
 
         return fields.toArray(new String[0]);
     }
 
-    private static List<String[]> readExcel(File file, boolean isXlsx) throws IOException {
-        if (isXlsx) {
-            throw new IOException("XLSX-Dateien werden ohne erweiterte POI-Bibliothek nicht unterstützt. Bitte konvertieren Sie zu XLS oder CSV.");
-        }
-
+    // Spezifische Methode für .xls Dateien (HSSF)
+    private static List<String[]> readExcelXls(File file) throws IOException {
         List<String[]> rows = new ArrayList<>();
-        try (InputStream in = new FileInputStream(file)) {
-            HSSFWorkbook wb = new HSSFWorkbook(in);
-            HSSFSheet sheet = wb.getSheetAt(0);
-            int firstRow = sheet.getFirstRowNum();
-            int lastRow = sheet.getLastRowNum();
+        try (InputStream in = new FileInputStream(file);
+             HSSFWorkbook wb = new HSSFWorkbook(in)) { // HSSFWorkbook für .xls
 
-            for (int r = firstRow; r <= lastRow; r++) {
+            // Annahme: Daten sind im ersten Sheet
+            if (wb.getNumberOfSheets() == 0) {
+                System.out.println("Warnung: Die Excel-Datei " + file.getName() + " enthält keine Sheets.");
+                return rows; // Leere Liste zurückgeben
+            }
+            HSSFSheet sheet = wb.getSheetAt(0);
+
+            int firstRowIdx = sheet.getFirstRowNum();
+            int lastRowIdx = sheet.getLastRowNum();
+
+            for (int r = firstRowIdx; r <= lastRowIdx; r++) {
                 HSSFRow row = sheet.getRow(r);
-                if (row == null) {
+                if (row == null) { // Leere Zeilen überspringen
                     continue;
                 }
-                // Fixed: Cast to short explicitly
-                short firstCell = row.getFirstCellNum();
-                short lastCell = row.getLastCellNum();
-                List<String> values = new ArrayList<>();
 
-                for (int c = firstCell; c < lastCell; c++) {
-                    HSSFCell cell = row.getCell(c);
+                // getLastCellNum() kann problematisch sein, wenn Zellen fehlen.
+                // Es ist besser, bis zur maximalen Spaltenanzahl der Zeile zu iterieren oder
+                // die Anzahl der Spalten aus dem Header zu verwenden, falls bekannt.
+                // Hier verwenden wir getLastCellNum, was die Nummer der letzten Zelle + 1 ist.
+                short firstCellIdx = row.getFirstCellNum();
+                short lastCellIdx = row.getLastCellNum(); // Index der letzten Zelle + 1; kann -1 sein, wenn die Zeile leer ist.
+
+                if (lastCellIdx < 0) continue; // Zeile ohne Zellen überspringen
+
+                List<String> values = new ArrayList<>();
+                for (int c = firstCellIdx; c < lastCellIdx; c++) {
+                    HSSFCell cell = row.getCell(c); // Kann null sein, wenn Zelle leer ist
                     values.add(getCellValueAsString(cell));
                 }
 
-                // Leere Zeilen am Ende entfernen
+                // Leere Strings am Ende der Zeile entfernen, um Konsistenz zu wahren
                 while (!values.isEmpty() && (values.get(values.size() - 1) == null || values.get(values.size() - 1).trim().isEmpty())) {
                     values.remove(values.size() - 1);
                 }
-                if (!values.isEmpty()) {
+
+                // Nur Zeilen mit Inhalt hinzufügen
+                if (!values.isEmpty() || rows.isEmpty()) { // Header immer hinzufügen, auch wenn leer
                     rows.add(values.toArray(new String[0]));
                 }
             }
@@ -329,26 +366,41 @@ public class AnyLogicDBUtil {
         return rows;
     }
 
-    private static String getCellValueAsString(HSSFCell cell) {
-        if (cell == null) return "";
 
-        // Fixed: Use newer CellType enum instead of deprecated constants
-        CellType cellType = cell.getCellType();
+    private static String getCellValueAsString(HSSFCell cell) {
+        if (cell == null) {
+            return ""; // Leere Zeichenfolge für leere Zellen
+        }
+
+        CellType cellType = cell.getCellType(); // Gibt CellType Enum in POI >= 4.0 zurück
+
+        // Wenn die Zelle eine Formel ist, versuchen, den zwischengespeicherten Ergebnis-Typ zu verwenden
+        if (cellType == CellType.FORMULA) {
+            cellType = cell.getCachedFormulaResultType();
+        }
+
         switch (cellType) {
             case STRING:
-                return cell.getRichStringCellValue().getString(); // Fixed: Use non-deprecated method
+                return cell.getStringCellValue(); // Bevorzugte Methode für String-Zellen
             case NUMERIC:
+                // Hier könnten Datumsformate behandelt werden, falls erforderlich
+                // if (DateUtil.isCellDateFormatted(cell)) {
+                //     return cell.getDateCellValue().toString(); // Oder formatiert als String
+                // }
                 double numValue = cell.getNumericCellValue();
-                if (numValue == Math.floor(numValue)) {
+                // Prüfen, ob es sich um eine Ganzzahl handelt
+                if (numValue == Math.floor(numValue) && !Double.isInfinite(numValue)) {
                     return String.valueOf((long) numValue);
                 } else {
                     return String.valueOf(numValue);
                 }
             case BOOLEAN:
                 return String.valueOf(cell.getBooleanCellValue());
-            case FORMULA:
-                return cell.getCellFormula();
-            default:
+            case BLANK: // Leere Zellen explizit behandeln
+                return "";
+            case ERROR: // Fehlerzellen behandeln
+                return "ERROR_IN_CELL"; // Oder Byte.toString(cell.getErrorCellValue())
+            default: // _NONE und andere unbekannte Typen
                 return "";
         }
     }
@@ -363,11 +415,17 @@ public class AnyLogicDBUtil {
     }
 
     private static void createTableIfNotExists(Connection conn, String tableName, String[] headers) throws SQLException {
+        if (headers == null || headers.length == 0) {
+            System.err.println("Kann Tabelle nicht ohne Header erstellen: " + tableName);
+            // Alternativ eine Exception werfen oder eine Standardspalte erstellen
+            throw new SQLException("Header dürfen nicht leer sein, um eine Tabelle zu erstellen.");
+        }
         StringBuilder sql = new StringBuilder();
         sql.append("CREATE TABLE IF NOT EXISTS ").append(sanitizeTableName(tableName)).append(" (");
 
         for (int i = 0; i < headers.length; i++) {
             if (i > 0) sql.append(", ");
+            // Standardmäßig wird VARCHAR(255) verwendet. Dies könnte anpassbar sein.
             sql.append(sanitizeColumnName(headers[i])).append(" VARCHAR(255)");
         }
         sql.append(")");
@@ -386,16 +444,27 @@ public class AnyLogicDBUtil {
 
     private static void insertData(Connection conn, String tableName, String[] headers, List<String[]> dataRows) throws SQLException {
         if (dataRows.isEmpty()) return;
+        if (headers == null || headers.length == 0) {
+            System.err.println("Kann Daten nicht ohne Header-Informationen einfügen für Tabelle: " + tableName);
+            return;
+        }
 
         StringBuilder sql = new StringBuilder();
-        sql.append("INSERT INTO ").append(sanitizeTableName(tableName)).append(" VALUES (");
+        sql.append("INSERT INTO ").append(sanitizeTableName(tableName)).append(" (");
+        for(int i=0; i < headers.length; i++){
+            if(i > 0) sql.append(", ");
+            sql.append(sanitizeColumnName(headers[i]));
+        }
+        sql.append(") VALUES (");
         sql.append(String.join(",", Collections.nCopies(headers.length, "?")));
         sql.append(")");
 
         try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
             for (String[] row : dataRows) {
+                // Sicherstellen, dass die Anzahl der Werte mit der Anzahl der Header übereinstimmt
                 for (int i = 0; i < headers.length; i++) {
-                    String value = i < row.length ? row[i] : null;
+                    // Wenn eine Zeile weniger Werte hat als Header, wird null für die fehlenden Werte verwendet
+                    String value = (i < row.length) ? row[i] : null;
                     ps.setString(i + 1, value);
                 }
                 ps.addBatch();
@@ -405,17 +474,30 @@ public class AnyLogicDBUtil {
     }
 
     private static String sanitizeTableName(String name) {
-        return name.trim()
-                .replaceAll("\\s+", "_")
-                .replaceAll("[^A-Za-z0-9_]", "")
-                .toLowerCase();
+        if (name == null || name.trim().isEmpty()) {
+            // Fallback, falls der Name leer ist, obwohl dies durch deriveTableNameFromFile vermieden werden sollte
+            return "default_table_name";
+        }
+        String sanitized = name.trim()
+                .replaceAll("\\s+", "_") // Leerzeichen durch Unterstriche ersetzen
+                .replaceAll("[^A-Za-z0-9_]", ""); // Alle nicht-alphanumerischen Zeichen (außer Unterstrich) entfernen
+
+        // Sicherstellen, dass der Name nicht mit einer Zahl beginnt (SQL-Konvention)
+        if (sanitized.isEmpty() || Character.isDigit(sanitized.charAt(0))) {
+            sanitized = "tbl_" + sanitized;
+        }
+        return sanitized.toLowerCase(); // Zu Kleinbuchstaben konvertieren für Konsistenz
     }
 
     private static String sanitizeColumnName(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            return "unnamed_column";
+        }
         String sanitized = name.trim()
                 .replaceAll("\\s+", "_")
                 .replaceAll("[^A-Za-z0-9_]", "");
 
+        // SQL-Keywords und andere problematische Namen könnten hier auch behandelt werden, falls nötig
         if (sanitized.isEmpty() || Character.isDigit(sanitized.charAt(0))) {
             sanitized = "col_" + sanitized;
         }
