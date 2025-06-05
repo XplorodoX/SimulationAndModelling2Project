@@ -1,13 +1,4 @@
-diff --git a/README.md b/README.md
-index ed9de64e16a5056926074b71464dea07a7e2b438..1147c41dabd2d77edfffa789fa14c56057dd134a 100644
---- a/README.md
-+++ b/README.md
-@@ -34,81 +34,83 @@ Decentralized energy systems are becoming increasingly important for reducing co
-    * Battery capacity and C-rate
-    * Trading strategy (timing of feed-in vs. grid draw)
- 
- ---
- 
+
  ## Implementation Details
  
  * **Simulation Framework:** AnyLogic (with JavaScript and Python scripting)
