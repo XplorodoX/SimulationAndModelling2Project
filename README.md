@@ -1,95 +1,42 @@
+# Database Integration Guide
 
- ## Implementation Details
- 
- * **Simulation Framework:** AnyLogic (with JavaScript and Python scripting)
- * **Optimization Method:** Parametric search / heuristic algorithms
- * **Data Inputs:**
- 
-   * Time series of global horizontal irradiance (1-hour resolution)
-   * Load profiles (24-hour curves)
-   * Price and tariff data
- * **Visualization & Analysis:**
- 
-   * AnyLogic built-in charts
-   * External Python scripts for batch runs and result aggregation
- 
- ---
- 
- ## Project Structure
- 
- ```
- .
--├── model/                       # AnyLogic project files
--│   ├── PV_Battery_Optimization.als
--│   └── scripts/                # JavaScript & Python scripts
--│       ├── run_simulation.js
--│       └── analyze_results.py
--├── docs/                        # Background documentation
--│   ├── Simulation_and_Modelling2_Project.pdf  # LaTeX report (Overleaf)
--│   └── UML_Diagram.png          # UML diagram (Lucidchart export)
--├── data/                        # Input data (CSV, JSON)
--├── project-plan/                # GitHub project board link
--├── README.md                    # Project overview (this file)
--└── LICENSE
-+├── Database/                 # Java utilities for importing data
-+│   ├── AnyLogicDBUtil.java
-+│   ├── CsvImporter.java
-+│   └── DatabaseTest.java
-+├── PV/                       # Simple PV model classes
-+│   ├── PV.java
-+│   └── additionalPV.txt
-+├── IntermdianPresentation/   # Slides for the intermediate presentation
-+│   └── Timeline.pptx
-+└── README.md                 # Project overview (this file)
- ```
- 
- ---
- 
- ## Installation & Usage
- 
- 1. Install **AnyLogic Community Edition** or **University License**.
- 
- 2. Clone the repository:
- 
-    ```bash
-    git clone https://github.com/<your-github-username>/SimulationAndModelling2Project.git
-    cd SimulationAndModelling2Project
-    ```
--3. Open the simulation in AnyLogic:
-+3. Open your AnyLogic model (e.g., `PV_Battery_Optimization.als`),
-+   adjust parameters such as budget, module prices and tariff data,
-+   then launch the simulation.
- 
--   * Open `model/PV_Battery_Optimization.als`
--   * Adjust parameters (budget, module prices, tariff data)
--   * Select run configuration and launch simulation
-+4. To build the helper tools in `Database/`, run:
-+
-+   ```bash
-+   javac -cp "Database/jar/*" Database/*.java PV/*.java
-+   ```
- 
- ---
- 
- ## Further Documentation
- 
- * **LaTeX Report (Overleaf):**
-   [https://www.overleaf.com/read/pjqyfxrzmhpv#ac28a1](https://www.overleaf.com/read/pjqyfxrzmhpv#ac28a1)
- * **LaTeX intermediate Presentation (Overleaf):**
-   [https://www.overleaf.com/read/hzhfkzznyqty#d170c5](https://www.overleaf.com/read/hzhfkzznyqty#d170c5)
- 
- * **UML Diagram (Lucidchart):**
-   [https://lucid.app/lucidchart/37222884-5f2d-4537-a731-513d22f26cf5/edit?page=HWEp-vi-RSFO\&invitationId=inv\_09532988-f101-4204-8e33-1ce2f0ec578a#](https://lucid.app/lucidchart/37222884-5f2d-4537-a731-513d22f26cf5/edit?page=HWEp-vi-RSFO&invitationId=inv_09532988-f101-4204-8e33-1ce2f0ec578a#)
- 
- * **Template Presentation:**
-   [https://gitlab.cs.fau.de/schaefer/i7-beamer-latex-template](https://gitlab.cs.fau.de/schaefer/i7-beamer-latex-template)
- 
- ---
- 
- ## Database Example
- 
- The `Database` folder now contains a lightweight Java utility that imports CSV
- or Excel files directly into AnyLogic's internal database. Table structures are
- created automatically from the file headers, so no manual schema definition is
- required. Usage instructions can be found in
- [`Database/README.md`](Database/README.md).
+This directory provides a simple Java utility for importing CSV or Excel files
+into AnyLogic's built-in database. Table schemas are created automatically from
+the file headers, so no manual schema setup is required.
+
+## Prerequisites
+
+* Java (version 8 or later)
+* AnyLogic installation (Community or University edition)
+* The provided `hsqldb-2.7.4.jar` (only needed when running outside AnyLogic)
+
+## Importing CSV/Excel Files
+
+Compile the helper classes and run `CsvImporter` to create a table from a file:
+
+```bash
+javac CsvImporter.java CsvDirImporter.java AnyLogicDBUtil.java
+java -cp .:hsqldb-2.7.4.jar CsvImporter <tableName> <file.csv> [jdbcUrl]
+```
+
+If no `jdbcUrl` is supplied, the importer uses a default in-memory database.
+When running inside an AnyLogic model, pass the model's database connection URL
+to store the table directly in the model database.
+
+You can also call `AnyLogicDBUtil.importTableFromFile` directly from your own
+code. A variant of this method accepts a JDBC URL and handles opening and
+closing the connection for you:
+
+```java
+AnyLogicDBUtil.importTableFromFile("jdbc:hsqldb:mem:test", "my_table",
+        new File("data.csv"));
+```
+
+This automatically creates the table and inserts all rows from the CSV file.
+
+To import all CSV files from a directory at once, use `CsvDirImporter`. Table
+names are derived from the file names without the extension:
+
+```bash
+java -cp .:hsqldb-2.7.4.jar CsvDirImporter path/to/csv/dir [jdbcUrl]
+```
