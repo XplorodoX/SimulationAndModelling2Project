@@ -2,6 +2,7 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.CellType;
 
 import java.io.*;
 import java.sql.*;
@@ -306,8 +307,9 @@ public class AnyLogicDBUtil {
                 if (row == null) {
                     continue;
                 }
-                int firstCell = row.getFirstCellNum();
-                int lastCell = row.getLastCellNum();
+                // Fixed: Cast to short explicitly
+                short firstCell = row.getFirstCellNum();
+                short lastCell = row.getLastCellNum();
                 List<String> values = new ArrayList<>();
 
                 for (int c = firstCell; c < lastCell; c++) {
@@ -330,19 +332,21 @@ public class AnyLogicDBUtil {
     private static String getCellValueAsString(HSSFCell cell) {
         if (cell == null) return "";
 
-        switch (cell.getCellType()) {
-            case HSSFCell.CELL_TYPE_STRING:
-                return cell.getStringCellValue();
-            case HSSFCell.CELL_TYPE_NUMERIC:
+        // Fixed: Use newer CellType enum instead of deprecated constants
+        CellType cellType = cell.getCellType();
+        switch (cellType) {
+            case STRING:
+                return cell.getRichStringCellValue().getString(); // Fixed: Use non-deprecated method
+            case NUMERIC:
                 double numValue = cell.getNumericCellValue();
                 if (numValue == Math.floor(numValue)) {
                     return String.valueOf((long) numValue);
                 } else {
                     return String.valueOf(numValue);
                 }
-            case HSSFCell.CELL_TYPE_BOOLEAN:
+            case BOOLEAN:
                 return String.valueOf(cell.getBooleanCellValue());
-            case HSSFCell.CELL_TYPE_FORMULA:
+            case FORMULA:
                 return cell.getCellFormula();
             default:
                 return "";
