@@ -18,8 +18,8 @@ jobs:
           distribution: 'temurin'
       - name: Compile Java sources
         run: |
-          javac -cp "Database/hsqldb-2.7.4.jar:Database/poi-3.0-FINAL.jar:Database/poi-ooxml-full-5.0.0.jar" Database/*.java PV/*.java
+          javac -cp "Database/hsqldb-2.7.4.jar:Database/poi-5.2.3.jar:Database/poi-ooxml-full-5.2.3.jar" Database/*.java PV/*.java
       - name: Run DatabaseTest
         working-directory: Database
         run: |
-          java -cp ".:hsqldb-2.7.4.jar:poi-3.0-FINAL.jar:poi-ooxml-full-5.0.0.jar" DatabaseTest "jdbc:hsqldb:mem:test"
+          java -cp ".:hsqldb-2.7.4.jar:poi-5.2.3.jar:poi-ooxml-full-5.2.3.jar" DatabaseTest "jdbc:hsqldb:mem:test"
