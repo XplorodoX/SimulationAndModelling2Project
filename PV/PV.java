@@ -1,56 +1,60 @@
 public class PV
 {
-    double module_kWp;
-    double module_count;
-    double base_kWh_per_kWp;
-    double inverter_Conversion_Efficiency; //in - %/°C
-    double temperature_coefficient;
+    private final double module_kWp;
+    private final int module_count;
 
-    public PV(double module_kWp, double roof_length, double roof_width, double pv_module_length, double pv_module_width, double base_kWh_per_kWp, double inverter_Conversion_Efficiency, double temperature_coefficient)
+    public PV(double module_kWp, double roof_length, double roof_width, double pv_module_length, double pv_module_width)
     {
         this.module_kWp = module_kWp;
-        this.base_kWh_per_kWp = base_kWh_per_kWp;
-        this.inverter_Conversion_Efficiency = inverter_Conversion_Efficiency;
-        this.temperature_coefficient = temperature_coefficient;
-
-        //TODO: More advanced module count calculation
         module_count = pvCount(roof_length, roof_width, pv_module_length, pv_module_width);
     }
 
     private int pvCount(double roof_length, double roof_width, double pv_module_length, double pv_module_width)
     {
-        double roof_area = roof_length * roof_width;
-        double pv_area = pv_module_length * pv_module_width;
+        double usable_roof_modifier = 0.75;
 
-        return (int) (roof_area / pv_area);
+        int count_length = (int) (roof_length / pv_module_length);
+        int count_width = (int) (roof_width / pv_module_width);
+        return (int) (count_length * count_width * usable_roof_modifier);
     }
 
-    public double calculateProduction()
+    private double getAge_factor()
     {
-        double kWh_per_kWp = updateConversion();
-        return module_count * module_kWp * kWh_per_kWp * inverter_Conversion_Efficiency;
+        //TODO: Different Cleaning Intervals?
+
+        double age = 0;  //TODO: Convert Sim time into the age of the panels in years
+        double aging_factor = 0.008;
+        return Math.pow(1 - aging_factor, age);
     }
-    private double updateConversion()
+
+
+    public double calculateCurrentProduction()
     {
-        //TODO: Check results especially if the modifiers are correct
-        // or if they influence eachother and thus lower the result too much. e.g. weather / temperature already being factored into Month
+        //TODO: non ideal Slope?
 
-        double kWh_per_kWp = base_kWh_per_kWp;
-        //TODO: Weather Influence
+        //TODO: Bit of Randomness?
 
-        //TODO: Month Influence: https://regional-photovoltaik.de/planung-installation/pv-ertrag-tabelle-aktuelle-daten/
+        //Todo: Change the .csv a bit to get a tiny bit of production in the morning evening?
 
-        //TODO: Hour Influence
+        //Todo: Hourly .csv -> 10 min .csv?
 
-        //Temperature Influence:
+        double base_kWh = 0; //TODO: Get current value from Database
 
-        int temperature = 30; //TODO: Get Temperature from Database
-        double modifier = (temperature - 25) * temperature_coefficient;
-        kWh_per_kWp = kWh_per_kWp * (1 + modifier);
+        double total_kWp = module_count * module_kWp;
 
-        //TODO: Angel Influence? perhaps not needed due to the assumption of a perfect angle during installation
-        //TODO: Age Factor?
+        double data_kWp = 1;
 
-        return kWh_per_kWp;
+        double kWp_Factor = total_kWp / data_kWp;
+
+        //TODO: Write result to Database
+
+        double result = base_kWh * kWp_Factor * getAge_factor();
+
+        return result;
+    }
+    public double forecastFutureProduction(int start, int end )
+    {
+        //TODO: Get value from Database. Database looks up last x of the given time intervals and gives the (weighted) mean of this past simulation data?
+        return 0;
     }
 }
