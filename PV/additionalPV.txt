@@ -8,12 +8,8 @@ Length: 1,762m
 Cost: 57,90€
 Temperature coefficient: -0,24 %/°C
 
-Basic kWh / kWp:
+https://scholarworks.boisestate.edu/cgi/viewcontent.cgi?article=1549&context=electrical_facpubs
+Poland has >−0.9%/year degradation rate
 
-https://regional-photovoltaik.de/planung-installation/pv-ertrag-tabelle-aktuelle-daten/
-ca 900 kWh / kWp
-
-Inverter Conversion Efficiency:
-
-https://batterlution.com/quicklycorrect-and-simple-estimation-of-photovoltaic-power-generation/
-ca 95%
+https://re.jrc.ec.europa.eu/pvg_tools/en/
+used to create .csv
