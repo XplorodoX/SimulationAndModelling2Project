@@ -1,6 +1,6 @@
 public class Battery {
 
-    // --- Batterieparameter ---
+    // --- Batteryparameter ---
     private double capacity;            // Capacity [kWh]
     private double stateOfCharge;       // Current charge [kWh]
     private double maxChargePower;      // Maximum charge in one timestep [kWh]
