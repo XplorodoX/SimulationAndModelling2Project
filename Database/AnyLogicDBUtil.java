@@ -21,7 +21,7 @@ public class AnyLogicDBUtil {
     // URL for the target database
     // Ensure that the HSQLDB server for this database is running
     // if AnyLogic is to access it.
-    private static final String PROJEKT_Y_DB_URL = "jdbc:hsqldb:hsql://localhost:9001/neuewelle;file:/Users/merluee/Models/NeueWelle//database/db";
+    private static final String PROJEKT_Y_DB_URL = "jdbc:hsqldb:hsql://localhost:9001/firstprojectdraft;file:/Users/merluee/IdeaProjects/SimulationAndModelling2Project3/AnylogicProject/database/db";
     private static final String DB_USER = "SA"; // Default HSQLDB user
     private static final String DB_PASSWORD = ""; // Default HSQLDB password
 
@@ -313,7 +313,7 @@ public class AnyLogicDBUtil {
         }
     }
 
-    public static Object[] getDataAtTimeStamp(Connection conn, double modelTime, String tableName, String columnName) throws SQLException {
+    public static Object[] getDataAtTimeStamp(Connection conn, String modelTime, String tableName, String columnName) throws SQLException {
         String sql = "SELECT * FROM " + sanitizeTableName(tableName) +
                 " WHERE zeitstempel <= ? ORDER BY zeitstempel DESC LIMIT 1";
 
@@ -569,8 +569,7 @@ public class AnyLogicDBUtil {
         String sanitizedTableName = sanitizeTableName(tableName);
 
         if (headers == null || headers.length == 0) {
-            System.err.println("Warnung: Header sind leer für Tabelle '" + sanitizedTableName + "'. Erstelle Tabelle ohne Spalten, was zu Fehlern führen kann."); // Warning: Headers are empty for table '...'. Creating table without columns, which can lead to errors.
-            // Or: throw new SQLException("Headers must not be empty to create a meaningful table.");
+            System.err.println("Warnung: Header sind leer für Tabelle '" + sanitizedTableName + "'. Erstelle Tabelle ohne Spalten, was zu Fehlern führen kann.");
         }
 
         StringBuilder sql = new StringBuilder();
