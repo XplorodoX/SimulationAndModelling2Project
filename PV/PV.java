@@ -18,23 +18,27 @@ public class PV
               double temperature_coefficient)
     {
         this.module_kWp = module_kWp;
+
         this.base_kWh_per_kWp = base_kWh_per_kWp;
         this.inverter_efficiency = inverter_efficiency;
         this.temperature_coefficient = temperature_coefficient;
+
         module_count = pvCount(roof_length, roof_width, pv_module_length, pv_module_width);
     }
 
     private int pvCount(double roof_length, double roof_width, double pv_module_length, double pv_module_width)
     {
+        //Not used due to test calculation but will be used later
+        //double usable_roof_modifier = 0.75;
+        double usable_roof_modifier = 1;
+
         int count_length = (int) (roof_length / pv_module_length);
         int count_width = (int) (roof_width / pv_module_width);
-        return count_length * count_width;
+        return (int) (count_length * count_width * usable_roof_modifier);
     }
 
-    private double getAge_factor()
+    private double getAgeFactor()
     {
-        //TODO: Different Cleaning Intervals?
-
         double age = 0;  //TODO: Convert Sim time into the age of the panels in years
         double aging_factor = 0.008;
         return Math.pow(1 - aging_factor, age);
@@ -56,7 +60,7 @@ public class PV
         return total_kWp * kWh_per_kWp * inverter_efficiency;
     }
 
-    // Kept for backwards compatibility but no longer used in tests
+    // Actual method for PV production but not used in test
     public double calculateCurrentProduction()
     {
         double base_kWh = 0; // TODO: Get current value from Database
@@ -67,13 +71,16 @@ public class PV
 
         double kWp_Factor = total_kWp / data_kWp;
 
-        double result = base_kWh * kWp_Factor * getAge_factor();
-
-        return result;
+        return base_kWh * kWp_Factor * getAgeFactor();
     }
     public double forecastFutureProduction(int start, int end )
     {
-        //TODO: Get value from Database. Database looks up last x of the given time intervals and gives the (weighted) mean of this past simulation data?
-        return 0;
+        //TODO: Get production for last 3 timeslots from Database
+
+        double p1 = 0;
+        double p2 = 0;
+        double p3 = 0;
+
+        return (p1 + p2 + p3) /  3;
     }
 }
