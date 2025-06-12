@@ -13,6 +13,8 @@ public class DatabaseTest {
 
     private static final String DATA_DIRECTORY_PATH = "Database/data_test";
     private static final String SAMPLE_CSV_PATH = "Database/sample_products_test.csv";
+    // CSV included in the repository for demonstration
+    private static final String SAMPLE_SIMPLE_CSV_PATH = "Database/sample_csv.csv";
 
 
     public static void main(String[] args) {
@@ -32,6 +34,9 @@ public class DatabaseTest {
             // Single file with custom table name
             // Requires the file SAMPLE_CSV_PATH
             demonstrateSingleFileImport();
+
+            // Import repository sample CSV file
+            demonstrateSampleCsvImport();
 
         } catch (Exception e) {
             System.err.println("An error occurred during the demonstrations:");
@@ -218,6 +223,37 @@ public class DatabaseTest {
         } finally {
             if (conn != null) conn.close();
             System.out.println("Connection closed.");
+        }
+    }
+
+    /**
+     * Imports the sample_csv.csv file located in the Database folder.
+     * Uses the filename as table name and displays the imported rows.
+     */
+    private static void demonstrateSampleCsvImport() throws Exception {
+        System.out.println("\n=== DEMO 4: Import sample_csv.csv ===");
+        Connection conn = null;
+        File csvFile = new File(SAMPLE_SIMPLE_CSV_PATH);
+        try {
+            conn = AnyLogicDBUtil.openProjektYDBConnection();
+            System.out.println("Demo 4: Connected to ProjektY DB.");
+
+            if (csvFile.exists()) {
+                System.out.println("Importing file: " + csvFile.getAbsolutePath());
+                AnyLogicDBUtil.importTableFromFile(conn, null, csvFile, true);
+
+                AnyLogicDBUtil.listTables(conn);
+                AnyLogicDBUtil.displayTable(conn, "sample_csv", 5);
+            } else {
+                System.out.println("File '" + csvFile.getAbsolutePath() + "' not found - Demo 4 skipped.");
+            }
+        } catch (Exception e) {
+            System.err.println("Error in Demo 4 (sample_csv import):");
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if (conn != null) conn.close();
+            System.out.println("Demo 4: Connection closed.");
         }
     }
 
