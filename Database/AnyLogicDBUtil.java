@@ -7,6 +7,9 @@ import java.io.*;
 import java.sql.*;
 import java.util.*;
 import java.nio.charset.StandardCharsets;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 //TODO: GetDataAtTimeStempX(Timestamp timeStamp, String tableName, String columnName)
 //TODO: GetActualAtTimeStempData(String tableName, String columnName)
@@ -102,17 +105,19 @@ public class AnyLogicDBUtil {
 
 
         String[] headers = rows.get(0);
+        List<String[]> dataRows = rows.subList(1, rows.size());
+        String[] columnTypes = guessColumnTypes(headers, dataRows);
 
         // Create or replace table
         if (replaceTable) {
             System.out.println("Ersetze Tabelle (falls vorhanden): " + tableName); // Replacing table (if exists)
             dropTableIfExists(conn, tableName);
         }
-        createTableIfNotExists(conn, tableName, headers);
+        createTableIfNotExists(conn, tableName, headers, columnTypes);
 
         // Insert data
         System.out.println("Füge Daten ein in Tabelle: " + tableName); // Inserting data into table
-        insertData(conn, tableName, headers, rows.subList(1, rows.size()));
+        insertData(conn, tableName, headers, columnTypes, dataRows);
 
         System.out.println("Erfolgreich importiert: " + file.getName() + " → Tabelle '" + tableName + "' (" + (rows.size() - 1) + " Zeilen)"); // Successfully imported ... rows
     }
@@ -313,7 +318,7 @@ public class AnyLogicDBUtil {
         }
     }
 
-    public static Object[] getDataAtTimeStamp(Connection conn, String modelTime, String tableName, String columnName) throws SQLException {
+    public static Object[] getDataAtTimeStamp(Connection conn, double modelTime, String tableName, String columnName) throws SQLException {
         String sql = "SELECT * FROM " + sanitizeTableName(tableName) +
                 " WHERE zeitstempel <= ? ORDER BY zeitstempel DESC LIMIT 1";
 
@@ -554,6 +559,105 @@ public class AnyLogicDBUtil {
         }
     }
 
+    // Attempts to parse a value as java.sql.Time using a set of common patterns
+    private static Time tryParseTime(String value) {
+        if (value == null || value.trim().isEmpty()) return null;
+        String[] patterns = {
+                "HH:mm",
+                "HH:mm:ss",
+                "dd.MM.HH:mm",
+                "dd.MM.HH:mm:ss",
+                "yyyy-MM-dd HH:mm",
+                "yyyy-MM-dd HH:mm:ss"
+        };
+        for (String p : patterns) {
+            try {
+                DateTimeFormatter fmt = DateTimeFormatter.ofPattern(p);
+                if (p.contains("d") || p.contains("M") || p.contains("y")) {
+                    LocalDateTime dt = LocalDateTime.parse(value, fmt);
+                    return Time.valueOf(dt.toLocalTime());
+                } else {
+                    LocalTime t = LocalTime.parse(value, fmt);
+                    return Time.valueOf(t);
+                }
+            } catch (DateTimeParseException ignored) {
+            }
+        }
+        return null;
+    }
+
+    // Attempts to parse a value as java.sql.Timestamp using common patterns
+    private static Timestamp tryParseTimestamp(String value) {
+        if (value == null || value.trim().isEmpty()) return null;
+        String[] patterns = {
+                "yyyy-MM-dd HH:mm:ss",
+                "yyyy-MM-dd HH:mm",
+                "dd.MM.yyyy HH:mm",
+                "dd.MM.yyyy HH:mm:ss",
+                "dd.MM.HH:mm",
+                "dd.MM.HH:mm:ss"
+        };
+        for (String p : patterns) {
+            try {
+                DateTimeFormatter fmt = DateTimeFormatter.ofPattern(p);
+                LocalDateTime dt = LocalDateTime.parse(value, fmt);
+                return Timestamp.valueOf(dt);
+            } catch (DateTimeParseException ignored) {
+            }
+        }
+        return null;
+    }
+
+    // Determines SQL column types based on header names and sample values
+    private static String[] guessColumnTypes(String[] headers, List<String[]> dataRows) {
+        String[] types = new String[headers.length];
+        for (int col = 0; col < headers.length; col++) {
+            String header = headers[col] != null ? headers[col].toLowerCase() : "";
+            boolean timeCandidate = header.contains("zeit") || header.contains("time");
+            boolean timestampCandidate = header.contains("timestamp") || header.contains("zeitstempel");
+
+            boolean allInts = true;
+            boolean allNumbers = true;
+
+            for (String[] row : dataRows) {
+                if (col >= row.length) continue;
+                String value = row[col];
+                if (value == null || value.trim().isEmpty()) continue;
+
+                if (timestampCandidate && tryParseTimestamp(value) != null) {
+                    continue;
+                }
+                if (timeCandidate && tryParseTime(value) != null) {
+                    continue;
+                }
+
+                try {
+                    Integer.parseInt(value.trim());
+                } catch (NumberFormatException e) {
+                    allInts = false;
+                    try {
+                        Double.parseDouble(value.trim());
+                    } catch (NumberFormatException ex) {
+                        allNumbers = false;
+                    }
+                }
+            }
+
+            if (timestampCandidate) {
+                types[col] = "TIMESTAMP";
+            } else if (timeCandidate) {
+                types[col] = "TIME";
+            } else if (allInts) {
+                types[col] = "INTEGER";
+            } else if (allNumbers) {
+                types[col] = "DOUBLE";
+            } else {
+                types[col] = "VARCHAR(255)";
+            }
+        }
+        return types;
+    }
+
     private static String deriveTableNameFromFile(File file) {
         String name = file.getName();
         int dotIndex = name.lastIndexOf('.');
@@ -563,7 +667,7 @@ public class AnyLogicDBUtil {
         return sanitizeTableName(name); // Sanitize directly here
     }
 
-    private static void createTableIfNotExists(Connection conn, String tableName, String[] headers) throws SQLException {
+    private static void createTableIfNotExists(Connection conn, String tableName, String[] headers, String[] columnTypes) throws SQLException {
         // The table name should already be sanitized if it comes from deriveTableNameFromFile,
         // but re-sanitizing doesn't hurt if it comes from elsewhere.
         String sanitizedTableName = sanitizeTableName(tableName);
@@ -578,6 +682,7 @@ public class AnyLogicDBUtil {
         if (headers != null && headers.length > 0) {
             for (int i = 0; i < headers.length; i++) {
                 String header = headers[i];
+                String type = (columnTypes != null && columnTypes.length > i) ? columnTypes[i] : "VARCHAR(255)";
                 if (header == null || header.trim().isEmpty()) {
                     // Skip empty headers or replace them with a placeholder
                     // A placeholder is used here to avoid SQL errors
@@ -585,7 +690,7 @@ public class AnyLogicDBUtil {
                     header = "col_" + i;
                 }
                 if (i > 0) sql.append(", ");
-                sql.append(sanitizeColumnName(header)).append(" VARCHAR(255)"); // Default type VARCHAR(255)
+                sql.append(sanitizeColumnName(header)).append(" ").append(type);
             }
         } else {
             return; // No columns, so don't create a table
@@ -607,7 +712,7 @@ public class AnyLogicDBUtil {
         }
     }
 
-    private static void insertData(Connection conn, String tableName, String[] headers, List<String[]> dataRows) throws SQLException {
+    private static void insertData(Connection conn, String tableName, String[] headers, String[] columnTypes, List<String[]> dataRows) throws SQLException {
         if (dataRows.isEmpty()) {
             System.out.println("Keine Datenzeilen zum Einfügen in Tabelle " + tableName); // No data rows to insert into table
             return;
@@ -646,7 +751,37 @@ public class AnyLogicDBUtil {
                 }
                 for (int i = 0; i < headers.length; i++) {
                     String value = (i < row.length) ? row[i] : null; // Null for missing values at the end of the row
-                    ps.setString(i + 1, value);
+                    String type = (columnTypes != null && columnTypes.length > i) ? columnTypes[i] : "VARCHAR(255)";
+                    if (value == null || value.trim().isEmpty()) {
+                        ps.setNull(i + 1, Types.VARCHAR);
+                        continue;
+                    }
+                    switch (type) {
+                        case "INTEGER":
+                            try {
+                                ps.setInt(i + 1, Integer.parseInt(value.trim()));
+                            } catch (NumberFormatException e) {
+                                ps.setNull(i + 1, Types.INTEGER);
+                            }
+                            break;
+                        case "DOUBLE":
+                            try {
+                                ps.setDouble(i + 1, Double.parseDouble(value.trim()));
+                            } catch (NumberFormatException e) {
+                                ps.setNull(i + 1, Types.DOUBLE);
+                            }
+                            break;
+                        case "TIME":
+                            Time t = tryParseTime(value);
+                            if (t != null) ps.setTime(i + 1, t); else ps.setNull(i + 1, Types.TIME);
+                            break;
+                        case "TIMESTAMP":
+                            Timestamp ts = tryParseTimestamp(value);
+                            if (ts != null) ps.setTimestamp(i + 1, ts); else ps.setNull(i + 1, Types.TIMESTAMP);
+                            break;
+                        default:
+                            ps.setString(i + 1, value);
+                    }
                 }
                 ps.addBatch();
                 validRowsProcessed++;
