@@ -10,6 +10,8 @@ import java.nio.charset.StandardCharsets;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 
 //TODO: GetDataAtTimeStempX(Timestamp timeStamp, String tableName, String columnName)
 //TODO: GetActualAtTimeStempData(String tableName, String columnName)
@@ -572,7 +574,17 @@ public class AnyLogicDBUtil {
         };
         for (String p : patterns) {
             try {
-                DateTimeFormatter fmt = DateTimeFormatter.ofPattern(p);
+                DateTimeFormatter fmt;
+                // patterns without year (e.g., dd.MM.HH:mm) need a default year
+                if (!p.contains("y")) {
+                    fmt = new DateTimeFormatterBuilder()
+                            .appendPattern(p)
+                            .parseDefaulting(ChronoField.YEAR, 2000)
+                            .toFormatter();
+                } else {
+                    fmt = DateTimeFormatter.ofPattern(p);
+                }
+
                 if (p.contains("d") || p.contains("M") || p.contains("y")) {
                     LocalDateTime dt = LocalDateTime.parse(value, fmt);
                     return Time.valueOf(dt.toLocalTime());
@@ -599,7 +611,16 @@ public class AnyLogicDBUtil {
         };
         for (String p : patterns) {
             try {
-                DateTimeFormatter fmt = DateTimeFormatter.ofPattern(p);
+                DateTimeFormatter fmt;
+                // If the pattern lacks a year, provide a default year for parsing
+                if (!p.contains("y")) {
+                    fmt = new DateTimeFormatterBuilder()
+                            .appendPattern(p)
+                            .parseDefaulting(ChronoField.YEAR, 2000)
+                            .toFormatter();
+                } else {
+                    fmt = DateTimeFormatter.ofPattern(p);
+                }
                 LocalDateTime dt = LocalDateTime.parse(value, fmt);
                 return Timestamp.valueOf(dt);
             } catch (DateTimeParseException ignored) {
