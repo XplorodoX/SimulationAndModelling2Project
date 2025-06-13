@@ -361,24 +361,25 @@ public class AnyLogicDBUtil {
      * @param tableName  Name of the table
      * @param startTime  Start of the interval (inclusive)
      * @param endTime    End of the interval (inclusive)
-     * @return           List of row objects found in the interval
+     * @return           Sum of the "kwh" column in the interval
      */
-    public static List<Object[]> getDataAtTimeStampRange(Connection conn,
-                                                         String tableName,
-                                                         Timestamp startTime,
-                                                         Timestamp endTime) throws SQLException {
-        String sql = "SELECT * FROM " + sanitizeTableName(tableName) +
-                " WHERE zeitstempel >= ? AND zeitstempel <= ? ORDER BY zeitstempel";
+    public static double getDataAtTimeStampRange(Connection conn,
+                                                 String tableName,
+                                                 Timestamp startTime,
+                                                 Timestamp endTime) throws SQLException {
+        String sanitizedTable = sanitizeTableName(tableName);
+        String sanitizedColumn = sanitizeColumnName("kwh");
+        String sql = "SELECT SUM(" + sanitizedColumn + ") FROM " + sanitizedTable +
+                " WHERE zeitstempel >= ? AND zeitstempel <= ?";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setTimestamp(1, startTime);
             ps.setTimestamp(2, endTime);
             try (ResultSet rs = ps.executeQuery()) {
-                List<Object[]> results = new ArrayList<>();
-                while (rs.next()) {
-                    results.add(extractRowData(rs));
+                if (rs.next()) {
+                    return rs.getDouble(1);
                 }
-                return results;
+                return 0.0;
             }
         }
     }
