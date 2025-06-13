@@ -68,11 +68,6 @@ public class AnyLogicDBUtil {
      */
     public static Connection openConnection(String url) throws SQLException {
         System.out.println("Verbinde mit URL (ohne explizite User/Pass-Angabe): " + url); // Connecting to URL (without explicit User/Pass)
-        // HSQLDB Server usually requires user/pass, but AnyLogic's internal DB not always explicitly.
-        // For the external HSQLDB server connection, it's better to provide user/pass.
-        // If your server DB requires user/pass, use openConnection(url, user, pass).
-        // This attempts to connect without user/pass, which is OK for some setups, but not for others.
-        // For connecting to the external HSQLDB server DB, explicitly providing user/pass is recommended.
         return DriverManager.getConnection(url);
     }
 
