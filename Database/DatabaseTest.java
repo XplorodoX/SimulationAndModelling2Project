@@ -26,14 +26,14 @@ public class DatabaseTest {
         try {
             // CSV/Excel import from directory
             // Requires a directory DATA_DIRECTORY_PATH with test files
-            demonstrateFileImport();
+            //demonstrateFileImport();
 
             // Manual table creation and data import
-            demonstrateManualDataEntry();
+            //demonstrateManualDataEntry();
 
             // Single file with custom table name
             // Requires the file SAMPLE_CSV_PATH
-            demonstrateSingleFileImport();
+            //demonstrateSingleFileImport();
 
             // Import repository sample CSV file
             demonstrateSampleCsvImport();

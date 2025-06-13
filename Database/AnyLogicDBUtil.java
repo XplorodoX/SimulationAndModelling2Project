@@ -22,10 +22,30 @@ public class AnyLogicDBUtil {
 
     // URL for the target database
     // Ensure that the HSQLDB server for this database is running
-    // if AnyLogic is to access it.
-    private static final String PROJEKT_Y_DB_URL = "jdbc:hsqldb:hsql://localhost:9001/firstprojectdraft;file:/Users/merluee/IdeaProjects/SimulationAndModelling2Project3/AnylogicProject/database/db";
-    private static final String DB_USER = "SA"; // Default HSQLDB user
-    private static final String DB_PASSWORD = ""; // Default HSQLDB password
+    // if AnyLogic is to access it.(Default Values)
+    private static String PROJEKT_Y_DB_URL = "jdbc:hsqldb:hsql://localhost:9001/firstprojectdraft;file:/Users/merluee/IdeaProjects/SimulationAndModelling2Project3/AnylogicProject/database/db";
+    private static String DB_USER = "SA"; // Standard-HSQLDB-Benutzer
+    private static String DB_PASSWORD = ""; // Standard-HSQLDB-Passwort
+
+    /**
+     * Gets the URL for the ProjektY database.
+     * This is used to connect to the external HSQLDB instance.
+     *
+     * @return The JDBC URL for the ProjektY database
+     */
+    public static String getProjektYDbUrl() {
+        return PROJEKT_Y_DB_URL;
+    }
+
+    /**
+     * Sets the URL for the ProjektY database.
+     * This should be called before any connection attempts.
+     *
+     * @param url The JDBC URL for the ProjektY database
+     */
+    public static void setProjektYDbUrl(String url) {
+        PROJEKT_Y_DB_URL = url;
+    }
 
     /**
      * Opens a connection to AnyLogic's INTERNAL in-memory database (or a standalone in-memory DB).
