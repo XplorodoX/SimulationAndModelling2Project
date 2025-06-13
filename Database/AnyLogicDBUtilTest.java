@@ -12,6 +12,10 @@ import java.util.List;
 import java.util.Map;
 
 public class AnyLogicDBUtilTest {
+
+    public static void main(String[] args) {
+        org.junit.runner.JUnitCore.main("AnyLogicDBUtilTest");
+    }
     @Test
     public void testImportTableFromFile() throws Exception {
         // use sample_csv.csv located in the Database folder
