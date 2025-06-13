@@ -32,7 +32,7 @@ public class AnyLogicDBUtilTest {
 
             rs = stmt.executeQuery("SELECT zeit, kwh FROM sample_csv ORDER BY zeit LIMIT 1");
             assertTrue(rs.next());
-            assertEquals(Time.valueOf("00:30:00"), rs.getTime("zeit"));
+            assertEquals(Timestamp.valueOf("2000-01-01 00:30:00"), rs.getTimestamp("zeit"));
             assertEquals(21.0, rs.getDouble("kwh"), 0.0001);
         }
     }
