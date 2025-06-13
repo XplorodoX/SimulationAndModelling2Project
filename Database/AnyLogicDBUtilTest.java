@@ -27,13 +27,13 @@ public class AnyLogicDBUtilTest {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM sample_csv");
             assertTrue(rs.next());
-            // sample_csv.csv contains six data rows
-            assertEquals(6, rs.getInt(1));
+            // sample_csv.csv contains 51 data rows
+            assertEquals(51, rs.getInt(1));
 
             rs = stmt.executeQuery("SELECT zeit, kwh FROM sample_csv ORDER BY zeit LIMIT 1");
             assertTrue(rs.next());
-            assertEquals(Timestamp.valueOf("2000-01-01 00:30:00"), rs.getTimestamp("zeit"));
-            assertEquals(21.0, rs.getDouble("kwh"), 0.0001);
+            assertEquals(Timestamp.valueOf("2005-01-01 08:30:00"), rs.getTimestamp("zeit"));
+            assertEquals(0.0, rs.getDouble("kwh"), 0.0001);
         }
     }
 
@@ -42,27 +42,24 @@ public class AnyLogicDBUtilTest {
         try (Connection conn = AnyLogicDBUtil.openMemoryConnection()) {
             Map<String, String> columns = new LinkedHashMap<>();
             columns.put("zeitstempel", "TIMESTAMP");
-            columns.put("value", "INTEGER");
+            columns.put("kwh", "DOUBLE");
             AnyLogicDBUtil.createTable(conn, "timeseries_test", columns, true);
 
             List<Object[]> rows = new ArrayList<>();
-            rows.add(new Object[]{Timestamp.valueOf("2024-01-01 00:00:00"), 10});
-            rows.add(new Object[]{Timestamp.valueOf("2024-01-02 00:00:00"), 20});
-            rows.add(new Object[]{Timestamp.valueOf("2024-01-03 00:00:00"), 30});
-            rows.add(new Object[]{Timestamp.valueOf("2024-01-04 00:00:00"), 40});
-            rows.add(new Object[]{Timestamp.valueOf("2024-01-05 00:00:00"), 50});
+            rows.add(new Object[]{Timestamp.valueOf("2024-01-01 00:00:00"), 10.0});
+            rows.add(new Object[]{Timestamp.valueOf("2024-01-02 00:00:00"), 20.0});
+            rows.add(new Object[]{Timestamp.valueOf("2024-01-03 00:00:00"), 30.0});
+            rows.add(new Object[]{Timestamp.valueOf("2024-01-04 00:00:00"), 40.0});
+            rows.add(new Object[]{Timestamp.valueOf("2024-01-05 00:00:00"), 50.0});
             AnyLogicDBUtil.insertManualData(conn, "timeseries_test",
-                    new String[]{"zeitstempel", "value"}, rows);
+                    new String[]{"zeitstempel", "kwh"}, rows);
 
             Timestamp start = Timestamp.valueOf("2024-01-02 00:00:00");
             Timestamp end = Timestamp.valueOf("2024-01-04 00:00:00");
-            List<Object[]> result = AnyLogicDBUtil.getDataAtTimeStampRange(
+            double sum = AnyLogicDBUtil.getDataAtTimeStampRange(
                     conn, "timeseries_test", start, end);
 
-            assertEquals(3, result.size());
-            assertEquals(Timestamp.valueOf("2024-01-02 00:00:00"), result.get(0)[0]);
-            assertEquals(20, ((Number) result.get(0)[1]).intValue());
-            assertEquals(40, ((Number) result.get(2)[1]).intValue());
+            assertEquals(90.0, sum, 0.0001);
         }
     }
 }
