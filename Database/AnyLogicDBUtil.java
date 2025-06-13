@@ -405,22 +405,25 @@ public class AnyLogicDBUtil {
     }
 
     /**
-     * Returns the most recent row up to the current system timestamp.
-     * This can be used when a regularly updated time variable triggers the
-     * data retrieval.
+     * Returns the {@code KWH} value from the row whose timestamp is less than
+     * or equal to the provided {@code time}. This can be used when a regularly
+     * updated time variable triggers the data retrieval.
      *
      * @param conn      Active database connection
      * @param tableName Name of the table
-     * @return          Row data closest to the current time or {@code null}
+     * @param time      Timestamp used for the lookup
+     * @return          kWh value at the given time or {@code null} if no row exists
      */
-    public static Object[] getActualAtTimeStampData(Connection conn, String tableName) throws SQLException {
-        String sql = "SELECT * FROM " + sanitizeTableName(tableName) +
-                " WHERE zeitstempel <= CURRENT_TIMESTAMP ORDER BY zeitstempel DESC LIMIT 1";
+    public static Double getActualAtTimeStampData(Connection conn, String tableName, Timestamp time) throws SQLException {
+        String sql = "SELECT KWH FROM " + sanitizeTableName(tableName) +
+                " WHERE zeitstempel <= ? ORDER BY zeitstempel DESC LIMIT 1";
 
-        try (PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) {
-                return extractRowData(rs);
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setTimestamp(1, time);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble(1);
+                }
             }
         }
         return null;
