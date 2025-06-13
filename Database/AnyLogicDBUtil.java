@@ -13,9 +13,6 @@ import java.time.format.DateTimeParseException;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 
-//TODO: GetDataAtTimeStempX(Timestamp timeStamp, String tableName, String columnName)
-//TODO: GetActualAtTimeStempData(String tableName, String columnName)
-
 /**
  * Extended utility class for AnyLogic database operations.
  * Supports CSV/Excel import with dynamic table creation
