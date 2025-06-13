@@ -414,9 +414,15 @@ public class AnyLogicDBUtil {
      * @param time      Timestamp used for the lookup
      * @return          kWh value at the given time or {@code null} if no row exists
      */
-    public static Double getActualAtTimeStampData(Connection conn, String tableName, Timestamp time) throws SQLException {
-        String sql = "SELECT KWH FROM " + sanitizeTableName(tableName) +
-                " WHERE zeitstempel <= ? ORDER BY zeitstempel DESC LIMIT 1";
+    public static Double getActualAtTimeStampData(Connection conn,
+                                                  String tableName,
+                                                  String timestampColumn,
+                                                  Timestamp time) throws SQLException {
+        String sanitizedTable = sanitizeTableName(tableName);
+        String sanitizedColumn = sanitizeColumnName("KWH");
+        String sanitizedTimeColumn = sanitizeColumnName(timestampColumn);
+        String sql = "SELECT " + sanitizedColumn + " FROM " + sanitizedTable +
+                " WHERE " + sanitizedTimeColumn + " <= ? ORDER BY " + sanitizedTimeColumn + " DESC LIMIT 1";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setTimestamp(1, time);
