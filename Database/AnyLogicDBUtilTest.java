@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -28,6 +29,11 @@ public class AnyLogicDBUtilTest {
             ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM sample_csv");
             assertTrue(rs.next());
             assertEquals(5, rs.getInt(1));
+
+            rs = stmt.executeQuery("SELECT zeit, kwh FROM sample_csv ORDER BY zeit LIMIT 1");
+            assertTrue(rs.next());
+            assertEquals(Time.valueOf("00:30:00"), rs.getTime("zeit"));
+            assertEquals(21.0, rs.getDouble("kwh"), 0.0001);
         }
     }
 
