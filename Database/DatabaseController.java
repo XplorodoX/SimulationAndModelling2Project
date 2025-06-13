@@ -45,6 +45,10 @@ public class DatabaseController {
                 System.out.println("No data found at or before " + queryTime);
             }
 
+            Timestamp acutalTime = Timestamp.valueOf("2005-01-01 16:20:00.000000");
+
+            AnyLogicDBUtil.getActualAtTimeStampData(conn, "sample_csv", "KWH",acutalTime);
+
         }catch(Exception e){
             e.printStackTrace();
         }
