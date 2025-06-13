@@ -27,7 +27,8 @@ public class AnyLogicDBUtilTest {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM sample_csv");
             assertTrue(rs.next());
-            assertEquals(5, rs.getInt(1));
+            // sample_csv.csv contains six data rows
+            assertEquals(6, rs.getInt(1));
 
             rs = stmt.executeQuery("SELECT zeit, kwh FROM sample_csv ORDER BY zeit LIMIT 1");
             assertTrue(rs.next());
