@@ -1,21 +1,20 @@
 import java.io.File;
 import java.sql.Connection;
 import java.sql.Timestamp;
-import java.util.List;
 
 public class DatabaseController {
     private static final String SAMPLE_SIMPLE_CSV_PATH = "Database/sample_csv.csv";
 
     public static void main(String[] args) {
         Connection conn = null;
-        Boolean importet = false;
+        Boolean init = false;
         File csvFile = new File(SAMPLE_SIMPLE_CSV_PATH);
 
         try {
             conn = AnyLogicDBUtil.openProjektYDBConnection();
             // Example usage of AnyLogicDBUtil methods
 
-            if (csvFile.exists() && importet == true) {
+            if (csvFile.exists() && init == true) {
                 System.out.println("Importing file: " + csvFile.getAbsolutePath());
                 AnyLogicDBUtil.importTableFromFile(conn, null, csvFile, true);
 
