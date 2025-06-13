@@ -30,7 +30,7 @@ public class DatabaseController {
             Double lol = AnyLogicDBUtil.getDataAtTimeStampRange(conn, "sample_csv", "zeit", startTime, endTime);
 
             // Example retrieval of the last kWh value before a timestamp
-            Timestamp queryTime = Timestamp.valueOf("2005-01-01 16:40:00");
+            Timestamp queryTime = Timestamp.valueOf("2005-01-01 08:30:00");
             Double singleValue = AnyLogicDBUtil.getActualAtTimeStampData(conn, "sample_csv", "zeit", queryTime);
 
             if (lol != null && lol != 0) {
@@ -40,14 +40,10 @@ public class DatabaseController {
             }
 
             if (singleValue != null) {
-                System.out.println("kWh at or before " + queryTime + ": " + singleValue);
+                System.out.println("kWh at " + queryTime + ": " + singleValue);
             } else {
-                System.out.println("No data found at or before " + queryTime);
+                System.out.println("No data found at " + queryTime);
             }
-
-            Timestamp acutalTime = Timestamp.valueOf("2005-01-01 16:20:00.000000");
-
-            AnyLogicDBUtil.getActualAtTimeStampData(conn, "sample_csv", "KWH",acutalTime);
 
         }catch(Exception e){
             e.printStackTrace();
