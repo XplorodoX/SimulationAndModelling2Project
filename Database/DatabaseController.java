@@ -25,13 +25,13 @@ public class DatabaseController {
                 System.out.println("File not found or import not set to true");
             }
 
-            Timestamp startTime = Timestamp.valueOf("2005-01-01 08:30:00");
+            Timestamp startTime = Timestamp.valueOf("2005-01-01 16:30:00");
             Timestamp endTime = Timestamp.valueOf("2005-01-01 16:50:00");
 
             Double lol = AnyLogicDBUtil.getDataAtTimeStampRange(conn, "sample_csv", "zeit", startTime, endTime);
 
             if (lol != null && lol != 0) {
-                System.out.println("Sum of kWh between " + startTime + " and " + endTime + ": " + lol);
+                System.out.println("Sum of kWh between " + startTime + " and " + endTime + ": " + lol + " kWh");
             } else {
                 System.out.println("No data found for the specified time range.");
             }
