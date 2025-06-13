@@ -8,27 +8,35 @@ public class DatabaseController {
 
     public static void main(String[] args) {
         Connection conn = null;
+        Boolean importet = false;
         File csvFile = new File(SAMPLE_SIMPLE_CSV_PATH);
 
         try {
             conn = AnyLogicDBUtil.openProjektYDBConnection();
             // Example usage of AnyLogicDBUtil methods
 
-            if (csvFile.exists()) {
+            if (csvFile.exists() && importet == true) {
                 System.out.println("Importing file: " + csvFile.getAbsolutePath());
                 AnyLogicDBUtil.importTableFromFile(conn, null, csvFile, true);
 
-                AnyLogicDBUtil.listTables(conn);
-                AnyLogicDBUtil.displayTable(conn, "sample_csv", 5);
+                //AnyLogicDBUtil.listTables(conn);
+                //AnyLogicDBUtil.displayTable(conn, "sample_csv", 5);
             } else {
-                System.out.println("File '" + csvFile.getAbsolutePath() + "' not found - Demo 4 skipped.");
+                System.out.println("File not found or import not set to true");
             }
 
-            Timestamp startTime = Timestamp.valueOf("2005-01-01 09:30:00");
-            Timestamp endTime = Timestamp.valueOf("2005-01-01 15:40:00");
+            Timestamp startTime = Timestamp.valueOf("2005-01-01 08:30:00");
+            Timestamp endTime = Timestamp.valueOf("2005-01-01 16:50:00");
 
             // sample_csv.csv uses the column name "zeit" for timestamps
-            AnyLogicDBUtil.getDataAtTimeStampRange(conn, "sample_csv", "zeit", startTime, endTime);
+            Double lol = AnyLogicDBUtil.getDataAtTimeStampRange(conn, "sample_csv", "zeit", startTime, endTime);
+
+            if (lol != null && lol != 0) {
+                System.out.println("Sum of kWh between " + startTime + " and " + endTime + ": " + lol);
+            } else {
+                System.out.println("No data found for the specified time range.");
+            }
+
         }catch(Exception e){
             e.printStackTrace();
         }

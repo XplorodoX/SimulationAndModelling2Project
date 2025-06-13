@@ -387,7 +387,7 @@ public class AnyLogicDBUtil {
                                                  Timestamp startTime,
                                                  Timestamp endTime) throws SQLException {
         String sanitizedTable = sanitizeTableName(tableName);
-        String sanitizedColumn = sanitizeColumnName("kwh");
+        String sanitizedColumn = sanitizeColumnName("KWH");
         String sanitizedTimeColumn = sanitizeColumnName(timestampColumn);
         String sql = "SELECT SUM(" + sanitizedColumn + ") FROM " + sanitizedTable +
                 " WHERE " + sanitizedTimeColumn + " >= ? AND " + sanitizedTimeColumn + " <= ?";
