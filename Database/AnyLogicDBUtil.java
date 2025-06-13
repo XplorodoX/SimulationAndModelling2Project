@@ -367,10 +367,30 @@ public class AnyLogicDBUtil {
                                                  String tableName,
                                                  Timestamp startTime,
                                                  Timestamp endTime) throws SQLException {
+        return getDataAtTimeStampRange(conn, tableName, "zeitstempel", startTime, endTime);
+    }
+
+    /**
+     * Retrieves the sum of the "kwh" column between the given timestamps using
+     * a custom timestamp column.
+     *
+     * @param conn            Active database connection
+     * @param tableName       Name of the table
+     * @param timestampColumn Name of the timestamp column
+     * @param startTime       Start of the interval (inclusive)
+     * @param endTime         End of the interval (inclusive)
+     * @return Sum of the "kwh" column in the interval
+     */
+    public static double getDataAtTimeStampRange(Connection conn,
+                                                 String tableName,
+                                                 String timestampColumn,
+                                                 Timestamp startTime,
+                                                 Timestamp endTime) throws SQLException {
         String sanitizedTable = sanitizeTableName(tableName);
         String sanitizedColumn = sanitizeColumnName("kwh");
+        String sanitizedTimeColumn = sanitizeColumnName(timestampColumn);
         String sql = "SELECT SUM(" + sanitizedColumn + ") FROM " + sanitizedTable +
-                " WHERE zeitstempel >= ? AND zeitstempel <= ?";
+                " WHERE " + sanitizedTimeColumn + " >= ? AND " + sanitizedTimeColumn + " <= ?";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setTimestamp(1, startTime);

@@ -27,7 +27,8 @@ public class DatabaseController {
             Timestamp startTime = Timestamp.valueOf("2005-01-01 09:30:00");
             Timestamp endTime = Timestamp.valueOf("2005-01-01 15:40:00");
 
-            AnyLogicDBUtil.getDataAtTimeStampRange(conn, "sample_csv", startTime, endTime);
+            // sample_csv.csv uses the column name "zeit" for timestamps
+            AnyLogicDBUtil.getDataAtTimeStampRange(conn, "sample_csv", "zeit", startTime, endTime);
         }catch(Exception e){
             e.printStackTrace();
         }
