@@ -634,6 +634,8 @@ public class AnyLogicDBUtil {
             boolean timeCandidate = header.contains("zeit") || header.contains("time");
             boolean timestampCandidate = header.contains("timestamp") || header.contains("zeitstempel");
 
+            boolean hasDatePart = false;
+
             boolean allInts = true;
             boolean allNumbers = true;
 
@@ -643,9 +645,13 @@ public class AnyLogicDBUtil {
                 if (value == null || value.trim().isEmpty()) continue;
 
                 if (timestampCandidate && tryParseTimestamp(value) != null) {
+                    hasDatePart = true;
                     continue;
                 }
                 if (timeCandidate && tryParseTime(value) != null) {
+                    if ((value.contains(".") || value.contains("-")) && tryParseTimestamp(value) != null) {
+                        hasDatePart = true;
+                    }
                     continue;
                 }
 
@@ -661,7 +667,7 @@ public class AnyLogicDBUtil {
                 }
             }
 
-            if (timestampCandidate) {
+            if (timestampCandidate || (timeCandidate && hasDatePart)) {
                 types[col] = "TIMESTAMP";
             } else if (timeCandidate) {
                 types[col] = "TIME";
