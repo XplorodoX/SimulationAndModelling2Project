@@ -792,6 +792,9 @@ public class AnyLogicDBUtil {
             // It's not safe to map data without header information.
             throw new SQLException("Header sind erforderlich, um Daten einzufügen."); // Headers are required to insert data.
         }
+
+        // Additional safety to prevent ArrayIndexOutOfBoundsExceptions
+        dataRows = sanitizeDataRows(headers.length, dataRows);
         String sanitizedTableName = sanitizeTableName(tableName);
 
         StringBuilder sql = new StringBuilder();
@@ -908,6 +911,30 @@ public class AnyLogicDBUtil {
             String[] row = rows.get(i);
             if (row.length != columns) {
                 System.err.println("Warnung: Zeile " + (i + 1) + " hat " + row.length +
+                        " Spalten, erwartet werden " + columns + ". Passe Zeile an.");
+                row = Arrays.copyOf(row, columns);
+            }
+            sanitized.add(row);
+        }
+        return sanitized;
+    }
+
+    /**
+     * Ensures a list of data rows matches the expected number of columns.
+     * Extra cells are truncated and missing cells are padded with null.
+     */
+    private static List<String[]> sanitizeDataRows(int columns, List<String[]> rows) {
+        if (rows == null || rows.isEmpty()) return Collections.emptyList();
+        List<String[]> sanitized = new ArrayList<>(rows.size());
+        for (int i = 0; i < rows.size(); i++) {
+            String[] row = rows.get(i);
+            if (row == null) {
+                System.err.println("Warnung: Leere Zeile " + (i + 1) + " übersprungen.");
+                continue;
+            }
+            if (row.length != columns) {
+                System.err.println(
+                        "Warnung: Zeile " + (i + 1) + " hat " + row.length +
                         " Spalten, erwartet werden " + columns + ". Passe Zeile an.");
                 row = Arrays.copyOf(row, columns);
             }
