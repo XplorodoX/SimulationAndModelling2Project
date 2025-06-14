@@ -3,7 +3,7 @@ import java.sql.Connection;
 import java.sql.Timestamp;
 
 public class DatabaseController {
-    private static final String SAMPLE_SIMPLE_CSV_PATH = "Database/sample_csv.csv";
+    private static final String SAMPLE_SIMPLE_CSV_PATH = "Database/sample_csvold.csv";
 
     public static void main(String[] args) {
         Connection conn = null;
