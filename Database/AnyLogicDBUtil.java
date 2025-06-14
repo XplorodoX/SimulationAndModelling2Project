@@ -106,6 +106,7 @@ public class AnyLogicDBUtil {
         System.out.println("Lese Datei: " + file.getAbsolutePath()); // Reading file
 
         List<String[]> rows = readFile(file);
+        rows = sanitizeRows(rows);
         if (rows.isEmpty()) {
             System.out.println("Warnung: Datei " + file.getName() + " ist leer oder konnte nicht gelesen werden."); // Warning: File is empty or could not be read.
             return;
@@ -862,6 +863,29 @@ public class AnyLogicDBUtil {
                 System.out.println("Keine gültigen Datenzeilen zum Einfügen in " + sanitizedTableName + " gefunden nach Filterung."); // No valid data rows found for insertion into ... after filtering.
             }
         }
+    }
+
+    /**
+     * Ensures all rows have the same length as the header by padding or trimming.
+     * This prevents ArrayIndexOutOfBoundsExceptions during insertion.
+     */
+    private static List<String[]> sanitizeRows(List<String[]> rows) {
+        if (rows == null || rows.isEmpty()) return Collections.emptyList();
+
+        int columns = rows.get(0).length;
+        List<String[]> sanitized = new ArrayList<>(rows.size());
+        sanitized.add(rows.get(0)); // header
+
+        for (int i = 1; i < rows.size(); i++) {
+            String[] row = rows.get(i);
+            if (row.length != columns) {
+                System.err.println("Warnung: Zeile " + (i + 1) + " hat " + row.length +
+                        " Spalten, erwartet werden " + columns + ". Passe Zeile an.");
+                row = Arrays.copyOf(row, columns);
+            }
+            sanitized.add(row);
+        }
+        return sanitized;
     }
 
     private static String sanitizeIdentifier(String name, String prefix) {
