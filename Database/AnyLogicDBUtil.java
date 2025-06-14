@@ -811,8 +811,12 @@ public class AnyLogicDBUtil {
         sql.append(")");
         System.out.println("SQL zum Einfügen von Daten-Batches: " + sql.toString()); // SQL for inserting data batches
 
+        // Execute batches in smaller chunks to avoid potential driver limits on
+        // the number of batched statements and to keep memory usage low.
+        final int BATCH_SIZE = 1000;
         try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
             int validRowsProcessed = 0;
+            int batchCount = 0;
             for (String[] row : dataRows) {
                 if (row.length != headers.length) {
                     System.out.println("Warnung: Zeile hat " + row.length + " Werte, aber es gibt " + headers.length + " Header. Überspringe Zeile: " + Arrays.toString(row)); // Warning: Row has ... values, but there are ... headers. Skipping row:
@@ -854,14 +858,38 @@ public class AnyLogicDBUtil {
                     }
                 }
                 ps.addBatch();
+                batchCount++;
                 validRowsProcessed++;
+
+                if (batchCount >= BATCH_SIZE) {
+                    ps.executeBatch();
+                    ps.clearBatch();
+                    batchCount = 0;
+                }
+            }
+            if (batchCount > 0) {
+                ps.executeBatch();
+                ps.clearBatch();
             }
             if (validRowsProcessed > 0) {
-                ps.executeBatch();
-                System.out.println(validRowsProcessed + " Datenzeilen-Batches verarbeitet für Tabelle " + sanitizedTableName); // ... data row batches processed for table
+                System.out.println(validRowsProcessed +
+                        " Datenzeilen für Tabelle " + sanitizedTableName + " importiert.");
             } else {
                 System.out.println("Keine gültigen Datenzeilen zum Einfügen in " + sanitizedTableName + " gefunden nach Filterung."); // No valid data rows found for insertion into ... after filtering.
             }
+        } catch (BatchUpdateException bue) {
+            System.err.println("Fehler beim Ausführen der Batch-Inserts: " + bue.getMessage());
+            int[] counts = bue.getUpdateCounts();
+            long successful = 0;
+            if (counts != null) {
+                for (int c : counts) {
+                    if (c > 0 || c == Statement.SUCCESS_NO_INFO) {
+                        successful++;
+                    }
+                }
+            }
+            System.err.println("Bereits erfolgreich eingefügte Zeilen: " + successful);
+            throw bue;
         }
     }
 
