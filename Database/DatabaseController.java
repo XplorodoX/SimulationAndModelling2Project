@@ -7,7 +7,7 @@ public class DatabaseController {
 
     public static void main(String[] args) {
         Connection conn = null;
-        Boolean init = false;
+        Boolean init = true;
         File csvFile = new File(SAMPLE_SIMPLE_CSV_PATH);
 
         try {
@@ -24,14 +24,14 @@ public class DatabaseController {
                 System.out.println("File not found or import not set to true");
             }
 
-            Timestamp startTime = Timestamp.valueOf("2005-01-01 16:30:00");
-            Timestamp endTime = Timestamp.valueOf("2005-01-01 16:50:00");
+            Timestamp startTime = Timestamp.valueOf("2005-01-04 12:30:00.000000");
+            Timestamp endTime = Timestamp.valueOf("2005-03-04 11:45:00.000000");
 
-            Double lol = AnyLogicDBUtil.getDataAtTimeStampRange(conn, "sample_csv", "zeit", startTime, endTime);
+            Double lol = AnyLogicDBUtil.getDataAtTimeStampRange(conn, "sample_csv", "Time", startTime, endTime);
 
             // Example retrieval of the last kWh value before a timestamp
             Timestamp queryTime = Timestamp.valueOf("2005-01-01 08:30:00");
-            Double singleValue = AnyLogicDBUtil.getActualAtTimeStampData(conn, "sample_csv", "zeit", queryTime);
+            Double singleValue = AnyLogicDBUtil.getActualAtTimeStampData(conn, "sample_csv", "Time", queryTime);
 
             if (lol != null && lol != 0) {
                 System.out.println("Sum of kWh between " + startTime + " and " + endTime + ": " + lol + " kWh");
