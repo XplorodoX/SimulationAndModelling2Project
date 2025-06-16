@@ -829,6 +829,21 @@ public class AnyLogicDBUtil {
             int validRowsProcessed = 0;
             int batchCount = 0;
             for (String[] row : dataRows) {
+                // Skip rows that match the header values
+                boolean headerDuplicate = true;
+                for (int h = 0; h < headers.length; h++) {
+                    String cell = (h < row.length) ? row[h] : null;
+                    String head = headers[h];
+                    if (cell == null || head == null || !cell.trim().equalsIgnoreCase(head.trim())) {
+                        headerDuplicate = false;
+                        break;
+                    }
+                }
+                if (headerDuplicate) {
+                    System.out.println("Überspringe Kopfzeile im Datenbereich: " + Arrays.toString(row));
+                    continue;
+                }
+
                 if (row.length != headers.length) {
                     System.out.println("Warnung: Zeile hat " + row.length + " Werte, aber es gibt " + headers.length + " Header. Überspringe Zeile: " + Arrays.toString(row)); // Warning: Row has ... values, but there are ... headers. Skipping row:
                     // Optional: pad row or throw error
