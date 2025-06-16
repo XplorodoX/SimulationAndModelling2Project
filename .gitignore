@@ -1,1 +1,3 @@
 *.class
+PersonEnergy/household_data_15min_singleindex.csv
+PersonEnergy/*.class

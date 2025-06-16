@@ -916,7 +916,9 @@ public class AnyLogicDBUtil {
             if (row.length != columns) {
                 System.err.println("Warnung: Zeile " + (i + 1) + " hat " + row.length +
                         " Spalten, erwartet werden " + columns + ". Passe Zeile an.");
+                System.err.println("[DEBUG] Row " + (i + 1) + " before sanitize: " + Arrays.toString(row));
                 row = Arrays.copyOf(row, columns);
+                System.err.println("[DEBUG] Row " + (i + 1) + " after sanitize:  " + Arrays.toString(row));
             }
             sanitized.add(row);
         }
@@ -940,7 +942,9 @@ public class AnyLogicDBUtil {
                 System.err.println(
                         "Warnung: Zeile " + (i + 1) + " hat " + row.length +
                         " Spalten, erwartet werden " + columns + ". Passe Zeile an.");
+                System.err.println("[DEBUG] Row " + (i + 1) + " before sanitize: " + Arrays.toString(row));
                 row = Arrays.copyOf(row, columns);
+                System.err.println("[DEBUG] Row " + (i + 1) + " after sanitize:  " + Arrays.toString(row));
             }
             sanitized.add(row);
         }
