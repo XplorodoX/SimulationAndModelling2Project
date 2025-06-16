@@ -19,12 +19,12 @@ RETRY_DELAY = 5
 # um eine weitere CSV-Datei zu importieren.
 IMPORTS_CONFIG: List[Dict[str, Any]] = [
     {
-        "path": "sample_csv.csv",
-        "table_name": "sample_table"
+        "path": "PV.csv",
+        "table_name": "pv"
     },
     {
         "path": "household_data_15min_singleindex.csv",
-        "table_name": "household_data_15min"
+        "table_name": "household_data"
     }
 ]
 

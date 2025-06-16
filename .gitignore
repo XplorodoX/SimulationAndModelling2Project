@@ -1,3 +1,5 @@
 *.class
 /Users/merluee/IdeaProjects/SimulationAndModelling2Project3/Database/Python/household_data_15min_singleindex.csv
 /Users/merluee/IdeaProjects/SimulationAndModelling2Project3/Database/Python/sample.csv
+/Database/Python/household_data_15min_singleindex.csv
+/Database/Python/PV.csv
