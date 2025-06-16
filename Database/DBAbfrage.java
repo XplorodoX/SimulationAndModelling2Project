@@ -13,7 +13,7 @@ public class DBAbfrage {
         String url = "jdbc:postgresql://localhost:5432/simdata";
         String user = "user";
         String password = "password";
-        String tableName = "sample_table";
+        String tableName = "pv";
 
         Connection connection = null;
 
@@ -24,8 +24,9 @@ public class DBAbfrage {
             System.out.println("✅ Successfully connected to the PostgreSQL database!");
 
             // --- 2. Use the Integrated Functions ---
-            LocalDateTime endDateTime = LocalDateTime.of(2023, 12, 31, 23, 30, 0);
-            LocalDateTime startDateTime = LocalDateTime.of(2023, 12, 31, 22, 45, 0);
+            LocalDateTime startDateTime = LocalDateTime.of(2005, 1, 1, 0, 0, 0);
+            LocalDateTime endDateTime = LocalDateTime.of(2023, 1, 1, 1, 30, 0);
+
             Timestamp endTime = Timestamp.valueOf(endDateTime);
             Timestamp startTime = Timestamp.valueOf(startDateTime);
 
