@@ -50,7 +50,7 @@ class CsvImporter {
 
     private static void handleFileImport(String[] args) throws Exception {
         if (args.length < 2) {
-            System.err.println("Usage: import-file <file> [tableName] [jdbcUrl] [replaceTrueFalse]");
+            System.err.println("Usage: import-file <file> [tableName] [jdbcUrl] [replaceTrueFalse] [debugTrueFalse]");
             return;
         }
 
@@ -58,6 +58,7 @@ class CsvImporter {
         String tableName = args.length > 2 ? args[2] : null;
         String jdbcUrl = args.length > 3 ? args[3] : null; // explicit URL
         boolean replace = args.length > 4 && "true".equalsIgnoreCase(args[4]);
+        boolean debug = args.length > 5 && "true".equalsIgnoreCase(args[5]);
 
         // Logic for establishing connection:
         // 1. If jdbcUrl is specified, use it.
@@ -66,7 +67,7 @@ class CsvImporter {
                 AnyLogicDBUtil.openConnection(jdbcUrl) : // May require user/pass if your DB needs it
                 AnyLogicDBUtil.openProjektYDBConnection()) { // Default to ProjektY
 
-            AnyLogicDBUtil.importTableFromFile(conn, tableName, file, replace);
+            AnyLogicDBUtil.importTableFromFile(conn, tableName, file, replace, debug);
             System.out.println("File import completed successfully.");
         }
     }
@@ -203,7 +204,7 @@ class CsvImporter {
         System.out.println("Usage: java CsvImporter <command> [options]");
         System.out.println();
         System.out.println("Commands:");
-        System.out.println("  import-file <file> [tableName] [jdbcUrl] [replaceTrueFalse]");
+        System.out.println("  import-file <file> [tableName] [jdbcUrl] [replaceTrueFalse] [debugTrueFalse]");
         System.out.println("    Imports a single CSV/Excel (.xls) file.");
         System.out.println("    Example: java CsvImporter import-file data.csv my_table");
         System.out.println();
@@ -229,6 +230,7 @@ class CsvImporter {
         System.out.println("  jdbcUrl: JDBC URL of the target database.");
         System.out.println("           (Default: Connects to ProjektY DB: " + ")"); // Assuming AnyLogicDBUtil.getProjektYDB_JDBC_URL() or similar exists
         System.out.println("  replaceTrueFalse: 'true' or 'false' - Replaces existing table (Default: false).");
+        System.out.println("  debugTrueFalse: 'true' enables per-row debug output during import.");
         System.out.println("  maxRows: Maximum number of rows to display for 'show-table'.");
     }
 }
