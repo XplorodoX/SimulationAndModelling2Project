@@ -105,6 +105,12 @@ public class AnyLogicDBUtil {
         }
         System.out.println("Lese Datei: " + file.getAbsolutePath()); // Reading file
 
+        String lowerName = file.getName().toLowerCase();
+        if (lowerName.endsWith(".csv")) {
+            importCsvSequential(conn, tableName, file, replaceTable);
+            return;
+        }
+
         List<String[]> rows = readFile(file);
         rows = sanitizeRows(rows);
         if (rows.isEmpty()) {
@@ -939,6 +945,114 @@ public class AnyLogicDBUtil {
             sanitized.add(row);
         }
         return sanitized;
+    }
+
+    // Sanitizes a single row to match the expected number of columns
+    private static String[] sanitizeRow(int columns, String[] row) {
+        if (row == null) {
+            return new String[columns];
+        }
+        if (row.length != columns) {
+            System.err.println("Warnung: Zeile hat " + row.length + " Spalten, erwartet werden " + columns + ". Passe Zeile an.");
+            row = Arrays.copyOf(row, columns);
+        }
+        return row;
+    }
+
+    private static void importCsvSequential(Connection conn, String tableName, File file, boolean replaceTable)
+            throws SQLException, IOException {
+        List<String[]> sampleRows = new ArrayList<>();
+        String[] headers;
+
+        // First pass to read header and a few sample rows for type guessing
+        try (BufferedReader br = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
+            String line = br.readLine();
+            if (line == null) {
+                System.out.println("Warnung: Datei " + file.getName() + " ist leer.");
+                return;
+            }
+            headers = parseCsvLine(line);
+
+            while ((line = br.readLine()) != null && sampleRows.size() < 100) {
+                if (!line.trim().isEmpty()) {
+                    sampleRows.add(parseCsvLine(line));
+                }
+            }
+        }
+
+        if (tableName == null || tableName.trim().isEmpty()) {
+            tableName = deriveTableNameFromFile(file);
+        }
+
+        String[] columnTypes = guessColumnTypes(headers, sampleRows);
+
+        if (replaceTable) {
+            dropTableIfExists(conn, tableName);
+        }
+        createTableIfNotExists(conn, tableName, headers, columnTypes);
+
+        String sanitizedTableName = sanitizeTableName(tableName);
+        StringBuilder sql = new StringBuilder();
+        sql.append("INSERT INTO ").append(sanitizedTableName).append(" (");
+        for (int i = 0; i < headers.length; i++) {
+            String header = headers[i];
+            if (header == null || header.trim().isEmpty()) {
+                header = "col_" + i;
+            }
+            if (i > 0) sql.append(", ");
+            sql.append(sanitizeColumnName(header));
+        }
+        sql.append(") VALUES (");
+        sql.append(String.join(",", Collections.nCopies(headers.length, "?")));
+        sql.append(")");
+
+        int inserted = 0;
+        try (PreparedStatement ps = conn.prepareStatement(sql.toString());
+             BufferedReader br = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
+            br.readLine(); // skip header
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+                String[] row = sanitizeRow(headers.length, parseCsvLine(line));
+                for (int i = 0; i < headers.length; i++) {
+                    String value = (i < row.length) ? row[i] : null;
+                    String type = (columnTypes != null && columnTypes.length > i) ? columnTypes[i] : "VARCHAR(255)";
+                    if (value == null || value.trim().isEmpty()) {
+                        ps.setNull(i + 1, Types.VARCHAR);
+                        continue;
+                    }
+                    switch (type) {
+                        case "INTEGER":
+                            try {
+                                ps.setInt(i + 1, Integer.parseInt(value.trim()));
+                            } catch (NumberFormatException e) {
+                                ps.setNull(i + 1, Types.INTEGER);
+                            }
+                            break;
+                        case "DOUBLE":
+                            try {
+                                ps.setDouble(i + 1, Double.parseDouble(value.trim()));
+                            } catch (NumberFormatException e) {
+                                ps.setNull(i + 1, Types.DOUBLE);
+                            }
+                            break;
+                        case "TIME":
+                            Time t = tryParseTime(value);
+                            if (t != null) ps.setTime(i + 1, t); else ps.setNull(i + 1, Types.TIME);
+                            break;
+                        case "TIMESTAMP":
+                            Timestamp ts = tryParseTimestamp(value);
+                            if (ts != null) ps.setTimestamp(i + 1, ts); else ps.setNull(i + 1, Types.TIMESTAMP);
+                            break;
+                        default:
+                            ps.setString(i + 1, value);
+                    }
+                }
+                ps.executeUpdate();
+                inserted++;
+            }
+        }
+        System.out.println("Erfolgreich importiert: " + file.getName() + " → Tabelle '" + tableName + "' (" + inserted + " Zeilen)");
     }
 
     private static String sanitizeIdentifier(String name, String prefix) {
