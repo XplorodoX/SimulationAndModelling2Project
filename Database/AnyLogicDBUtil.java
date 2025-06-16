@@ -477,28 +477,21 @@ public class AnyLogicDBUtil {
     }
 
     private static String[] parseCsvLine(String line) {
-        List<String> fields = new ArrayList<>();
-        StringBuilder field = new StringBuilder();
-        boolean inQuotes = false;
+        if (line == null) return new String[0];
 
-        for (int i = 0; i < line.length(); i++) {
-            char c = line.charAt(i);
-            if (c == '"') {
-                if (i + 1 < line.length() && line.charAt(i + 1) == '"') {
-                    field.append('"');
-                    i++;
-                } else {
-                    inQuotes = !inQuotes;
-                }
-            } else if (c == ',' && !inQuotes) {
-                fields.add(field.toString().trim());
-                field.setLength(0);
-            } else {
-                field.append(c);
+        // Split on commas that are not within quotes
+        String[] tokens = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+
+        for (int i = 0; i < tokens.length; i++) {
+            String t = tokens[i].trim();
+            if (t.startsWith("\"") && t.endsWith("\"") && t.length() >= 2) {
+                // Remove surrounding quotes and unescape doubled quotes
+                t = t.substring(1, t.length() - 1).replace("\"\"", "\"");
             }
+            tokens[i] = t;
         }
-        fields.add(field.toString().trim());
-        return fields.toArray(new String[0]);
+
+        return tokens;
     }
 
     private static List<String[]> readExcelXls(File file) throws IOException {
@@ -903,12 +896,17 @@ public class AnyLogicDBUtil {
     private static List<String[]> sanitizeRows(List<String[]> rows) {
         if (rows == null || rows.isEmpty()) return Collections.emptyList();
 
-        int columns = rows.get(0).length;
+        int columns = rows.get(0) != null ? rows.get(0).length : 0;
         List<String[]> sanitized = new ArrayList<>(rows.size());
-        sanitized.add(rows.get(0)); // header
+
+        sanitized.add(rows.get(0) == null ? new String[columns] : Arrays.copyOf(rows.get(0), columns));
 
         for (int i = 1; i < rows.size(); i++) {
             String[] row = rows.get(i);
+            if (row == null) {
+                System.err.println("Warnung: Leere Zeile " + (i + 1) + " uebersprungen.");
+                continue;
+            }
             if (row.length != columns) {
                 System.err.println("Warnung: Zeile " + (i + 1) + " hat " + row.length +
                         " Spalten, erwartet werden " + columns + ". Passe Zeile an.");
