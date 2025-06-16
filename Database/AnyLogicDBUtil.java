@@ -7,9 +7,11 @@ import java.io.*;
 import java.sql.*;
 import java.util.*;
 import java.nio.charset.StandardCharsets;
-
-//TODO: GetDataAtTimeStempX(Timestamp timeStamp, String tableName, String columnName)
-//TODO: GetActualAtTimeStempData(String tableName, String columnName)
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 
 /**
  * Extended utility class for AnyLogic database operations.
@@ -20,10 +22,30 @@ public class AnyLogicDBUtil {
 
     // URL for the target database
     // Ensure that the HSQLDB server for this database is running
-    // if AnyLogic is to access it.
-    private static final String PROJEKT_Y_DB_URL = "jdbc:hsqldb:hsql://localhost:9001/neuewelle;file:/Users/merluee/Models/NeueWelle//database/db";
-    private static final String DB_USER = "SA"; // Default HSQLDB user
-    private static final String DB_PASSWORD = ""; // Default HSQLDB password
+    // if AnyLogic is to access it.(Default Values)
+    private static String PROJEKT_Y_DB_URL = "jdbc:hsqldb:hsql://localhost:9001/firstprojectdraft;file:/Users/merluee/IdeaProjects/SimulationAndModelling2Project3/AnylogicProject/database/db";
+    private static String DB_USER = "SA"; // Standard-HSQLDB-Benutzer
+    private static String DB_PASSWORD = ""; // Standard-HSQLDB-Passwort
+
+    /**
+     * Gets the URL for the ProjektY database.
+     * This is used to connect to the external HSQLDB instance.
+     *
+     * @return The JDBC URL for the ProjektY database
+     */
+    public static String getProjektYDbUrl() {
+        return PROJEKT_Y_DB_URL;
+    }
+
+    /**
+     * Sets the URL for the ProjektY database.
+     * This should be called before any connection attempts.
+     *
+     * @param url The JDBC URL for the ProjektY database
+     */
+    public static void setProjektYDbUrl(String url) {
+        PROJEKT_Y_DB_URL = url;
+    }
 
     /**
      * Opens a connection to AnyLogic's INTERNAL in-memory database (or a standalone in-memory DB).
@@ -46,11 +68,6 @@ public class AnyLogicDBUtil {
      */
     public static Connection openConnection(String url) throws SQLException {
         System.out.println("Verbinde mit URL (ohne explizite User/Pass-Angabe): " + url); // Connecting to URL (without explicit User/Pass)
-        // HSQLDB Server usually requires user/pass, but AnyLogic's internal DB not always explicitly.
-        // For the external HSQLDB server connection, it's better to provide user/pass.
-        // If your server DB requires user/pass, use openConnection(url, user, pass).
-        // This attempts to connect without user/pass, which is OK for some setups, but not for others.
-        // For connecting to the external HSQLDB server DB, explicitly providing user/pass is recommended.
         return DriverManager.getConnection(url);
     }
 
@@ -89,6 +106,7 @@ public class AnyLogicDBUtil {
         System.out.println("Lese Datei: " + file.getAbsolutePath()); // Reading file
 
         List<String[]> rows = readFile(file);
+        rows = sanitizeRows(rows);
         if (rows.isEmpty()) {
             System.out.println("Warnung: Datei " + file.getName() + " ist leer oder konnte nicht gelesen werden."); // Warning: File is empty or could not be read.
             return;
@@ -102,17 +120,19 @@ public class AnyLogicDBUtil {
 
 
         String[] headers = rows.get(0);
+        List<String[]> dataRows = rows.subList(1, rows.size());
+        String[] columnTypes = guessColumnTypes(headers, dataRows);
 
         // Create or replace table
         if (replaceTable) {
             System.out.println("Ersetze Tabelle (falls vorhanden): " + tableName); // Replacing table (if exists)
             dropTableIfExists(conn, tableName);
         }
-        createTableIfNotExists(conn, tableName, headers);
+        createTableIfNotExists(conn, tableName, headers, columnTypes);
 
         // Insert data
         System.out.println("Füge Daten ein in Tabelle: " + tableName); // Inserting data into table
-        insertData(conn, tableName, headers, rows.subList(1, rows.size()));
+        insertData(conn, tableName, headers, columnTypes, dataRows);
 
         System.out.println("Erfolgreich importiert: " + file.getName() + " → Tabelle '" + tableName + "' (" + (rows.size() - 1) + " Zeilen)"); // Successfully imported ... rows
     }
@@ -337,45 +357,75 @@ public class AnyLogicDBUtil {
      * @param tableName  Name of the table
      * @param startTime  Start of the interval (inclusive)
      * @param endTime    End of the interval (inclusive)
-     * @return           List of row objects found in the interval
+     * @return           Sum of the "kwh" column in the interval
      */
-    public static List<Object[]> getDataAtTimeStampRange(Connection conn,
-                                                         String tableName,
-                                                         Timestamp startTime,
-                                                         Timestamp endTime) throws SQLException {
-        String sql = "SELECT * FROM " + sanitizeTableName(tableName) +
-                " WHERE zeitstempel >= ? AND zeitstempel <= ? ORDER BY zeitstempel";
+    public static double getDataAtTimeStampRange(Connection conn,
+                                                 String tableName,
+                                                 Timestamp startTime,
+                                                 Timestamp endTime) throws SQLException {
+        return getDataAtTimeStampRange(conn, tableName, "zeitstempel", startTime, endTime);
+    }
+
+    /**
+     * Retrieves the sum of the "kwh" column between the given timestamps using
+     * a custom timestamp column.
+     *
+     * @param conn            Active database connection
+     * @param tableName       Name of the table
+     * @param timestampColumn Name of the timestamp column
+     * @param startTime       Start of the interval (inclusive)
+     * @param endTime         End of the interval (inclusive)
+     * @return Sum of the "kwh" column in the interval
+     */
+    public static double getDataAtTimeStampRange(Connection conn,
+                                                 String tableName,
+                                                 String timestampColumn,
+                                                 Timestamp startTime,
+                                                 Timestamp endTime) throws SQLException {
+        String sanitizedTable = sanitizeTableName(tableName);
+        String sanitizedColumn = sanitizeColumnName("KWH");
+        String sanitizedTimeColumn = sanitizeColumnName(timestampColumn);
+        String sql = "SELECT SUM(" + sanitizedColumn + ") FROM " + sanitizedTable +
+                " WHERE " + sanitizedTimeColumn + " >= ? AND " + sanitizedTimeColumn + " <= ?";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setTimestamp(1, startTime);
             ps.setTimestamp(2, endTime);
             try (ResultSet rs = ps.executeQuery()) {
-                List<Object[]> results = new ArrayList<>();
-                while (rs.next()) {
-                    results.add(extractRowData(rs));
+                if (rs.next()) {
+                    return rs.getDouble(1);
                 }
-                return results;
+                return 0.0;
             }
         }
     }
 
     /**
-     * Returns the most recent row up to the current system timestamp.
-     * This can be used when a regularly updated time variable triggers the
-     * data retrieval.
+     * Returns the {@code KWH} value from the row whose timestamp is less than
+     * or equal to the provided {@code time}. This can be used when a regularly
+     * updated time variable triggers the data retrieval.
      *
      * @param conn      Active database connection
      * @param tableName Name of the table
-     * @return          Row data closest to the current time or {@code null}
+     * @param time      Timestamp used for the lookup
+     * @return          kWh value at the given time or {@code null} if no row exists
      */
-    public static Object[] getActualAtTimeStampData(Connection conn, String tableName) throws SQLException {
-        String sql = "SELECT * FROM " + sanitizeTableName(tableName) +
-                " WHERE zeitstempel <= CURRENT_TIMESTAMP ORDER BY zeitstempel DESC LIMIT 1";
+    public static Double getActualAtTimeStampData(Connection conn,
+                                                  String tableName,
+                                                  String timestampColumn,
+                                                  Timestamp time) throws SQLException {
+        String sanitizedTable = sanitizeTableName(tableName);
+        String sanitizedColumn = sanitizeColumnName("KWH");
+        String sanitizedTimeColumn = sanitizeColumnName(timestampColumn);
+        String sql = "SELECT " + sanitizedColumn + " FROM " + sanitizedTable +
+                " WHERE " + sanitizedTimeColumn + " <= ? ORDER BY " + sanitizedTimeColumn + " DESC LIMIT 1";
 
-        try (PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) {
-                return extractRowData(rs);
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setTimestamp(1, time);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble(1);
+                }
             }
         }
         return null;
@@ -427,28 +477,21 @@ public class AnyLogicDBUtil {
     }
 
     private static String[] parseCsvLine(String line) {
-        List<String> fields = new ArrayList<>();
-        StringBuilder field = new StringBuilder();
-        boolean inQuotes = false;
+        if (line == null) return new String[0];
 
-        for (int i = 0; i < line.length(); i++) {
-            char c = line.charAt(i);
-            if (c == '"') {
-                if (i + 1 < line.length() && line.charAt(i + 1) == '"') {
-                    field.append('"');
-                    i++;
-                } else {
-                    inQuotes = !inQuotes;
-                }
-            } else if (c == ',' && !inQuotes) {
-                fields.add(field.toString().trim());
-                field.setLength(0);
-            } else {
-                field.append(c);
+        // Split on commas that are not within quotes
+        String[] tokens = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+
+        for (int i = 0; i < tokens.length; i++) {
+            String t = tokens[i].trim();
+            if (t.startsWith("\"") && t.endsWith("\"") && t.length() >= 2) {
+                // Remove surrounding quotes and unescape doubled quotes
+                t = t.substring(1, t.length() - 1).replace("\"\"", "\"");
             }
+            tokens[i] = t;
         }
-        fields.add(field.toString().trim());
-        return fields.toArray(new String[0]);
+
+        return tokens;
     }
 
     private static List<String[]> readExcelXls(File file) throws IOException {
@@ -554,6 +597,130 @@ public class AnyLogicDBUtil {
         }
     }
 
+    // Attempts to parse a value as java.sql.Time using a set of common patterns
+    private static Time tryParseTime(String value) {
+        if (value == null || value.trim().isEmpty()) return null;
+        String[] patterns = {
+                "HH:mm",
+                "HH:mm:ss",
+                "dd.MM.HH:mm",
+                "dd.MM.HH:mm:ss",
+                "yyyy-MM-dd HH:mm",
+                "yyyy-MM-dd HH:mm:ss"
+        };
+        for (String p : patterns) {
+            try {
+                DateTimeFormatter fmt;
+                // patterns without year (e.g., dd.MM.HH:mm) need a default year
+                if (!p.contains("y")) {
+                    fmt = new DateTimeFormatterBuilder()
+                            .appendPattern(p)
+                            .parseDefaulting(ChronoField.YEAR, 2000)
+                            .toFormatter();
+                } else {
+                    fmt = DateTimeFormatter.ofPattern(p);
+                }
+
+                if (p.contains("d") || p.contains("M") || p.contains("y")) {
+                    LocalDateTime dt = LocalDateTime.parse(value, fmt);
+                    return Time.valueOf(dt.toLocalTime());
+                } else {
+                    LocalTime t = LocalTime.parse(value, fmt);
+                    return Time.valueOf(t);
+                }
+            } catch (DateTimeParseException ignored) {
+            }
+        }
+        return null;
+    }
+
+    // Attempts to parse a value as java.sql.Timestamp using common patterns
+    private static Timestamp tryParseTimestamp(String value) {
+        if (value == null || value.trim().isEmpty()) return null;
+        String[] patterns = {
+                "yyyy-MM-dd HH:mm:ss",
+                "yyyy-MM-dd HH:mm",
+                "dd.MM.yyyy HH:mm",
+                "dd.MM.yyyy HH:mm:ss",
+                "dd.MM.HH:mm",
+                "dd.MM.HH:mm:ss"
+        };
+        for (String p : patterns) {
+            try {
+                DateTimeFormatter fmt;
+                // If the pattern lacks a year, provide a default year for parsing
+                if (!p.contains("y")) {
+                    fmt = new DateTimeFormatterBuilder()
+                            .appendPattern(p)
+                            .parseDefaulting(ChronoField.YEAR, 2000)
+                            .toFormatter();
+                } else {
+                    fmt = DateTimeFormatter.ofPattern(p);
+                }
+                LocalDateTime dt = LocalDateTime.parse(value, fmt);
+                return Timestamp.valueOf(dt);
+            } catch (DateTimeParseException ignored) {
+            }
+        }
+        return null;
+    }
+
+    // Determines SQL column types based on header names and sample values
+    private static String[] guessColumnTypes(String[] headers, List<String[]> dataRows) {
+        String[] types = new String[headers.length];
+        for (int col = 0; col < headers.length; col++) {
+            String header = headers[col] != null ? headers[col].toLowerCase() : "";
+            boolean timeCandidate = header.contains("zeit") || header.contains("time");
+            boolean timestampCandidate = header.contains("timestamp") || header.contains("zeitstempel");
+
+            boolean hasDatePart = false;
+
+            boolean allInts = true;
+            boolean allNumbers = true;
+
+            for (String[] row : dataRows) {
+                if (col >= row.length) continue;
+                String value = row[col];
+                if (value == null || value.trim().isEmpty()) continue;
+
+                if (timestampCandidate && tryParseTimestamp(value) != null) {
+                    hasDatePart = true;
+                    continue;
+                }
+                if (timeCandidate && tryParseTime(value) != null) {
+                    if ((value.contains(".") || value.contains("-")) && tryParseTimestamp(value) != null) {
+                        hasDatePart = true;
+                    }
+                    continue;
+                }
+
+                try {
+                    Integer.parseInt(value.trim());
+                } catch (NumberFormatException e) {
+                    allInts = false;
+                    try {
+                        Double.parseDouble(value.trim());
+                    } catch (NumberFormatException ex) {
+                        allNumbers = false;
+                    }
+                }
+            }
+
+            if (timestampCandidate || (timeCandidate && hasDatePart)) {
+                types[col] = "TIMESTAMP";
+            } else if (timeCandidate) {
+                types[col] = "TIME";
+            } else if (allInts) {
+                types[col] = "INTEGER";
+            } else if (allNumbers) {
+                types[col] = "DOUBLE";
+            } else {
+                types[col] = "VARCHAR(255)";
+            }
+        }
+        return types;
+    }
+
     private static String deriveTableNameFromFile(File file) {
         String name = file.getName();
         int dotIndex = name.lastIndexOf('.');
@@ -563,14 +730,13 @@ public class AnyLogicDBUtil {
         return sanitizeTableName(name); // Sanitize directly here
     }
 
-    private static void createTableIfNotExists(Connection conn, String tableName, String[] headers) throws SQLException {
+    private static void createTableIfNotExists(Connection conn, String tableName, String[] headers, String[] columnTypes) throws SQLException {
         // The table name should already be sanitized if it comes from deriveTableNameFromFile,
         // but re-sanitizing doesn't hurt if it comes from elsewhere.
         String sanitizedTableName = sanitizeTableName(tableName);
 
         if (headers == null || headers.length == 0) {
-            System.err.println("Warnung: Header sind leer für Tabelle '" + sanitizedTableName + "'. Erstelle Tabelle ohne Spalten, was zu Fehlern führen kann."); // Warning: Headers are empty for table '...'. Creating table without columns, which can lead to errors.
-            // Or: throw new SQLException("Headers must not be empty to create a meaningful table.");
+            System.err.println("Warnung: Header sind leer für Tabelle '" + sanitizedTableName + "'. Erstelle Tabelle ohne Spalten, was zu Fehlern führen kann.");
         }
 
         StringBuilder sql = new StringBuilder();
@@ -579,6 +745,7 @@ public class AnyLogicDBUtil {
         if (headers != null && headers.length > 0) {
             for (int i = 0; i < headers.length; i++) {
                 String header = headers[i];
+                String type = (columnTypes != null && columnTypes.length > i) ? columnTypes[i] : "VARCHAR(255)";
                 if (header == null || header.trim().isEmpty()) {
                     // Skip empty headers or replace them with a placeholder
                     // A placeholder is used here to avoid SQL errors
@@ -586,7 +753,7 @@ public class AnyLogicDBUtil {
                     header = "col_" + i;
                 }
                 if (i > 0) sql.append(", ");
-                sql.append(sanitizeColumnName(header)).append(" VARCHAR(255)"); // Default type VARCHAR(255)
+                sql.append(sanitizeColumnName(header)).append(" ").append(type);
             }
         } else {
             return; // No columns, so don't create a table
@@ -608,7 +775,7 @@ public class AnyLogicDBUtil {
         }
     }
 
-    private static void insertData(Connection conn, String tableName, String[] headers, List<String[]> dataRows) throws SQLException {
+    private static void insertData(Connection conn, String tableName, String[] headers, String[] columnTypes, List<String[]> dataRows) throws SQLException {
         if (dataRows.isEmpty()) {
             System.out.println("Keine Datenzeilen zum Einfügen in Tabelle " + tableName); // No data rows to insert into table
             return;
@@ -618,6 +785,9 @@ public class AnyLogicDBUtil {
             // It's not safe to map data without header information.
             throw new SQLException("Header sind erforderlich, um Daten einzufügen."); // Headers are required to insert data.
         }
+
+        // Additional safety to prevent ArrayIndexOutOfBoundsExceptions
+        dataRows = sanitizeDataRows(headers.length, dataRows);
         String sanitizedTableName = sanitizeTableName(tableName);
 
         StringBuilder sql = new StringBuilder();
@@ -637,8 +807,12 @@ public class AnyLogicDBUtil {
         sql.append(")");
         System.out.println("SQL zum Einfügen von Daten-Batches: " + sql.toString()); // SQL for inserting data batches
 
+        // Execute batches in smaller chunks to avoid potential driver limits on
+        // the number of batched statements and to keep memory usage low.
+        final int BATCH_SIZE = 1000;
         try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
             int validRowsProcessed = 0;
+            int batchCount = 0;
             for (String[] row : dataRows) {
                 if (row.length != headers.length) {
                     System.out.println("Warnung: Zeile hat " + row.length + " Werte, aber es gibt " + headers.length + " Header. Überspringe Zeile: " + Arrays.toString(row)); // Warning: Row has ... values, but there are ... headers. Skipping row:
@@ -647,18 +821,124 @@ public class AnyLogicDBUtil {
                 }
                 for (int i = 0; i < headers.length; i++) {
                     String value = (i < row.length) ? row[i] : null; // Null for missing values at the end of the row
-                    ps.setString(i + 1, value);
+                    String type = (columnTypes != null && columnTypes.length > i) ? columnTypes[i] : "VARCHAR(255)";
+                    if (value == null || value.trim().isEmpty()) {
+                        ps.setNull(i + 1, Types.VARCHAR);
+                        continue;
+                    }
+                    switch (type) {
+                        case "INTEGER":
+                            try {
+                                ps.setInt(i + 1, Integer.parseInt(value.trim()));
+                            } catch (NumberFormatException e) {
+                                ps.setNull(i + 1, Types.INTEGER);
+                            }
+                            break;
+                        case "DOUBLE":
+                            try {
+                                ps.setDouble(i + 1, Double.parseDouble(value.trim()));
+                            } catch (NumberFormatException e) {
+                                ps.setNull(i + 1, Types.DOUBLE);
+                            }
+                            break;
+                        case "TIME":
+                            Time t = tryParseTime(value);
+                            if (t != null) ps.setTime(i + 1, t); else ps.setNull(i + 1, Types.TIME);
+                            break;
+                        case "TIMESTAMP":
+                            Timestamp ts = tryParseTimestamp(value);
+                            if (ts != null) ps.setTimestamp(i + 1, ts); else ps.setNull(i + 1, Types.TIMESTAMP);
+                            break;
+                        default:
+                            ps.setString(i + 1, value);
+                    }
                 }
                 ps.addBatch();
+                batchCount++;
                 validRowsProcessed++;
+
+                if (batchCount >= BATCH_SIZE) {
+                    ps.executeBatch();
+                    ps.clearBatch();
+                    batchCount = 0;
+                }
+            }
+            if (batchCount > 0) {
+                ps.executeBatch();
+                ps.clearBatch();
             }
             if (validRowsProcessed > 0) {
-                ps.executeBatch();
-                System.out.println(validRowsProcessed + " Datenzeilen-Batches verarbeitet für Tabelle " + sanitizedTableName); // ... data row batches processed for table
+                System.out.println(validRowsProcessed +
+                        " Datenzeilen für Tabelle " + sanitizedTableName + " importiert.");
             } else {
                 System.out.println("Keine gültigen Datenzeilen zum Einfügen in " + sanitizedTableName + " gefunden nach Filterung."); // No valid data rows found for insertion into ... after filtering.
             }
+        } catch (BatchUpdateException bue) {
+            System.err.println("Fehler beim Ausführen der Batch-Inserts: " + bue.getMessage());
+            int[] counts = bue.getUpdateCounts();
+            long successful = 0;
+            if (counts != null) {
+                for (int c : counts) {
+                    if (c > 0 || c == Statement.SUCCESS_NO_INFO) {
+                        successful++;
+                    }
+                }
+            }
+            System.err.println("Bereits erfolgreich eingefügte Zeilen: " + successful);
+            throw bue;
         }
+    }
+
+    /**
+     * Ensures all rows have the same length as the header by padding or trimming.
+     * This prevents ArrayIndexOutOfBoundsExceptions during insertion.
+     */
+    private static List<String[]> sanitizeRows(List<String[]> rows) {
+        if (rows == null || rows.isEmpty()) return Collections.emptyList();
+
+        int columns = rows.get(0) != null ? rows.get(0).length : 0;
+        List<String[]> sanitized = new ArrayList<>(rows.size());
+
+        sanitized.add(rows.get(0) == null ? new String[columns] : Arrays.copyOf(rows.get(0), columns));
+
+        for (int i = 1; i < rows.size(); i++) {
+            String[] row = rows.get(i);
+            if (row == null) {
+                System.err.println("Warnung: Leere Zeile " + (i + 1) + " uebersprungen.");
+                continue;
+            }
+            if (row.length != columns) {
+                System.err.println("Warnung: Zeile " + (i + 1) + " hat " + row.length +
+                        " Spalten, erwartet werden " + columns + ". Passe Zeile an.");
+                row = Arrays.copyOf(row, columns);
+            }
+            sanitized.add(row);
+        }
+        return sanitized;
+    }
+
+    /**
+     * Ensures a list of data rows matches the expected number of columns.
+     * Extra cells are truncated and missing cells are padded with null.
+     */
+    private static List<String[]> sanitizeDataRows(int columns, List<String[]> rows) {
+        if (rows == null || rows.isEmpty()) return Collections.emptyList();
+        List<String[]> sanitized = new ArrayList<>(rows.size());
+        for (int i = 0; i < rows.size(); i++) {
+            String[] row = rows.get(i);
+            if (row == null) {
+                System.err.println("Warnung: Leere Zeile " + (i + 1) + " übersprungen.");
+                continue;
+            }
+            if (row.length != columns) {
+                System.err.println(
+                        "Warnung: Zeile " + (i + 1) + " hat " + row.length +
+                        " Spalten, erwartet werden " + columns + ". Passe Zeile an.");
+                row = Arrays.copyOf(row, columns);
+            }
+            sanitized.add(row);
+        }
+        return sanitized;
     }
 
     private static String sanitizeIdentifier(String name, String prefix) {

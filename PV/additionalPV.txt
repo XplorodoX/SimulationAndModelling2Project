@@ -12,4 +12,7 @@ https://scholarworks.boisestate.edu/cgi/viewcontent.cgi?article=1549&context=ele
 Poland has >−0.9%/year degradation rate
 
 https://re.jrc.ec.europa.eu/pvg_tools/en/
-used to create .csv
+used to create pv.csv
+
+https://www.smard.de/home/downloadcenter/download-marktdaten/?downloadAttributes=%7B%22selectedCategory%22:3,%22selectedSubCategory%22:8,%22selectedRegion%22:%22DE%22,%22selectedFileType%22:%22CSV%22,%22from%22:1451602800000,%22to%22:1735685999999%7D
+used to creare price.csv
