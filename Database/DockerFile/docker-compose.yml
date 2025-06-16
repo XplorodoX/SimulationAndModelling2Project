@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    container_name: simmodelling_db
+    ports:
+      - "127.0.0.1:5432:5432" # Expose port to localhost for security
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=simdata
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+
+volumes:
+  postgres_data:
