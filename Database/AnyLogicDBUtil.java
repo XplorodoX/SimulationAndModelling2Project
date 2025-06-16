@@ -98,6 +98,15 @@ public class AnyLogicDBUtil {
      */
     public static void importTableFromFile(Connection conn, String tableName, File file, boolean replaceTable)
             throws SQLException, IOException {
+        importTableFromFile(conn, tableName, file, replaceTable, false);
+    }
+
+    /**
+     * Imports a single CSV/Excel file into a table with optional debug logging.
+     */
+    public static void importTableFromFile(Connection conn, String tableName, File file,
+                                           boolean replaceTable, boolean debug)
+            throws SQLException, IOException {
 
         if (!file.exists()) {
             System.err.println("FEHLER: Datei nicht gefunden für Import: " + file.getAbsolutePath()); // ERROR: File not found for import
@@ -107,7 +116,7 @@ public class AnyLogicDBUtil {
 
         String lowerName = file.getName().toLowerCase();
         if (lowerName.endsWith(".csv")) {
-            importCsvSequential(conn, tableName, file, replaceTable);
+            importCsvSequential(conn, tableName, file, replaceTable, debug);
             return;
         }
 
@@ -148,7 +157,7 @@ public class AnyLogicDBUtil {
      */
     public static void importTableFromFile(Connection conn, String tableName, File file)
             throws SQLException, IOException {
-        importTableFromFile(conn, tableName, file, false);
+        importTableFromFile(conn, tableName, file, false, false);
     }
 
     /**
@@ -959,7 +968,8 @@ public class AnyLogicDBUtil {
         return row;
     }
 
-    private static void importCsvSequential(Connection conn, String tableName, File file, boolean replaceTable)
+    private static void importCsvSequential(Connection conn, String tableName, File file,
+                                            boolean replaceTable, boolean debug)
             throws SQLException, IOException {
         List<String[]> sampleRows = new ArrayList<>();
         String[] headers;
@@ -1006,50 +1016,71 @@ public class AnyLogicDBUtil {
         sql.append(String.join(",", Collections.nCopies(headers.length, "?")));
         sql.append(")");
 
+        final int MAX_DEBUG_ERRORS = 20;
         int inserted = 0;
+        int lineNumber = 1; // header counted as line 1
+        int debugErrors = 0;
+
         try (PreparedStatement ps = conn.prepareStatement(sql.toString());
              BufferedReader br = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
             br.readLine(); // skip header
             String line;
             while ((line = br.readLine()) != null) {
+                lineNumber++;
                 if (line.trim().isEmpty()) continue;
-                String[] row = sanitizeRow(headers.length, parseCsvLine(line));
-                for (int i = 0; i < headers.length; i++) {
-                    String value = (i < row.length) ? row[i] : null;
-                    String type = (columnTypes != null && columnTypes.length > i) ? columnTypes[i] : "VARCHAR(255)";
-                    if (value == null || value.trim().isEmpty()) {
-                        ps.setNull(i + 1, Types.VARCHAR);
-                        continue;
+                try {
+                    String[] row = sanitizeRow(headers.length, parseCsvLine(line));
+                    for (int i = 0; i < headers.length; i++) {
+                        String value = (i < row.length) ? row[i] : null;
+                        String type = (columnTypes != null && columnTypes.length > i) ? columnTypes[i] : "VARCHAR(255)";
+                        if (value == null || value.trim().isEmpty()) {
+                            ps.setNull(i + 1, Types.VARCHAR);
+                            continue;
+                        }
+                        switch (type) {
+                            case "INTEGER":
+                                try {
+                                    ps.setInt(i + 1, Integer.parseInt(value.trim()));
+                                } catch (NumberFormatException e) {
+                                    ps.setNull(i + 1, Types.INTEGER);
+                                }
+                                break;
+                            case "DOUBLE":
+                                try {
+                                    ps.setDouble(i + 1, Double.parseDouble(value.trim()));
+                                } catch (NumberFormatException e) {
+                                    ps.setNull(i + 1, Types.DOUBLE);
+                                }
+                                break;
+                            case "TIME":
+                                Time t = tryParseTime(value);
+                                if (t != null) ps.setTime(i + 1, t); else ps.setNull(i + 1, Types.TIME);
+                                break;
+                            case "TIMESTAMP":
+                                Timestamp ts = tryParseTimestamp(value);
+                                if (ts != null) ps.setTimestamp(i + 1, ts); else ps.setNull(i + 1, Types.TIMESTAMP);
+                                break;
+                            default:
+                                ps.setString(i + 1, value);
+                        }
                     }
-                    switch (type) {
-                        case "INTEGER":
-                            try {
-                                ps.setInt(i + 1, Integer.parseInt(value.trim()));
-                            } catch (NumberFormatException e) {
-                                ps.setNull(i + 1, Types.INTEGER);
-                            }
-                            break;
-                        case "DOUBLE":
-                            try {
-                                ps.setDouble(i + 1, Double.parseDouble(value.trim()));
-                            } catch (NumberFormatException e) {
-                                ps.setNull(i + 1, Types.DOUBLE);
-                            }
-                            break;
-                        case "TIME":
-                            Time t = tryParseTime(value);
-                            if (t != null) ps.setTime(i + 1, t); else ps.setNull(i + 1, Types.TIME);
-                            break;
-                        case "TIMESTAMP":
-                            Timestamp ts = tryParseTimestamp(value);
-                            if (ts != null) ps.setTimestamp(i + 1, ts); else ps.setNull(i + 1, Types.TIMESTAMP);
-                            break;
-                        default:
-                            ps.setString(i + 1, value);
+                    ps.executeUpdate();
+                    inserted++;
+                } catch (Exception ex) {
+                    if (debug && debugErrors < MAX_DEBUG_ERRORS) {
+                        System.err.println("Fehler in Zeile " + lineNumber + ": " + ex.getMessage());
+                        String snippet = line.length() > 200 ? line.substring(0, 200) + "..." : line;
+                        System.err.println("Zeileninhalt: " + snippet);
+                        debugErrors++;
+                        if (debugErrors == MAX_DEBUG_ERRORS) {
+                            System.err.println("Maximale Anzahl an Debug-Fehlern erreicht – weitere Fehler werden nicht ausgegeben.");
+                        }
                     }
                 }
-                ps.executeUpdate();
-                inserted++;
+
+                if (debug && lineNumber % 100000 == 0) {
+                    System.out.println("Debug: " + lineNumber + " Zeilen verarbeitet ...");
+                }
             }
         }
         System.out.println("Erfolgreich importiert: " + file.getName() + " → Tabelle '" + tableName + "' (" + inserted + " Zeilen)");

@@ -19,6 +19,8 @@ javac CsvImporter.java CsvDirImporter.java AnyLogicDBUtil.java
 java -cp .:hsqldb-2.7.4.jar CsvImporter <tableName> <file.csv> [jdbcUrl]
 ```
 
+Pass `true` as an additional final argument to enable debug output while importing large files.
+
 If no `jdbcUrl` is supplied, the importer uses a default in-memory database.
 When running inside an AnyLogic model, pass the model's database connection URL
 to store the table directly in the model database.
