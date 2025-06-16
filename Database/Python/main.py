@@ -15,16 +15,17 @@ MAX_RETRIES = 5
 RETRY_DELAY = 5
 
 # --- Konfiguration für CSV-Importe ---
-# Dieser Ansatz ist flexibler. Füge einfach ein neues Wörterbuch hinzu,
-# um eine weitere CSV-Datei zu importieren.
+# NEU: Füge einen Schlüssel "timestamp_columns" hinzu, der die Zeitstempelspalten auflistet.
 IMPORTS_CONFIG: List[Dict[str, Any]] = [
     {
         "path": "PV.csv",
-        "table_name": "pv"
+        "table_name": "pv",
+        "timestamp_columns": ["time"]  # Annahme: Die Spalte heißt 'time'
     },
     {
         "path": "household_data_15min_singleindex.csv",
-        "table_name": "household_data"
+        "table_name": "household_data",
+        "timestamp_columns": ["date"]  # Annahme: Die Spalte heißt 'date'
     }
 ]
 
@@ -46,14 +47,24 @@ def wait_for_db(engine):
     return False
 
 
-def import_csv_to_db(engine, file_path: str, table_name: str):
-    """Liest eine CSV-Datei und importiert sie in die Datenbank."""
+# MODIFIZIERT: Die Funktion akzeptiert eine optionale Liste von Zeitstempelspalten.
+def import_csv_to_db(engine, file_path: str, table_name: str, timestamp_columns: Optional[List[str]] = None):
+    """
+    Liest eine CSV-Datei, konvertiert Zeitstempelspalten und importiert sie in die Datenbank.
+    """
     print(f"\n--- Importiere '{file_path}' in Tabelle '{table_name}' ---")
     try:
-        df = pd.read_csv(file_path)
+        # Die Spalten aus 'timestamp_columns' werden direkt als Datum/Zeit geparst.
+        df = pd.read_csv(file_path, parse_dates=timestamp_columns)
         print(f"'{file_path}' erfolgreich gelesen.")
+
+        # Optional: Überprüfen der Datentypen im DataFrame vor dem Import
+        print("DataFrame Info (Datentypen):")
+        df.info()
+
         df.to_sql(table_name, engine, if_exists='replace', index=False)
         print(f"Daten erfolgreich in Tabelle '{table_name}' importiert.")
+
     except FileNotFoundError:
         print(f"Fehler: Die Datei '{file_path}' wurde nicht gefunden.")
     except Exception as e:
