@@ -662,6 +662,21 @@
 						<Type><![CDATA[double]]></Type>        
 					</Properties>
 				</Variable>
+				<Variable Class="PlainVariable">
+					<Id>1750190950826</Id>
+					<Name><![CDATA[energy]]></Name>
+					<X>350</X><Y>350</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
+						<Type><![CDATA[double]]></Type>        
+						<InitialValue Class="CodeValue">
+							<Code><![CDATA[0]]></Code>
+						</InitialValue>
+					</Properties>
+				</Variable>
 				<Variable Class="Parameter">
 					<Id>1749066364626</Id>
 					<Name><![CDATA[tickSize_in_min]]></Name>
@@ -721,10 +736,10 @@
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
 					<IncomingMessageType><![CDATA[MessageType]]></IncomingMessageType>
-					<OutgoingMessageType><![CDATA[Object]]></OutgoingMessageType>
+					<OutgoingMessageType><![CDATA[MessageType]]></OutgoingMessageType>
 					<CustomPort><![CDATA[false]]></CustomPort>
 					<OnReceiveAction><![CDATA[// at end of tick: 
-handler.simpleStrat();
+//handler.simpleStrat();
 
 
 // classify messages with enum
@@ -777,15 +792,12 @@ handler.messageIn(msg);]]></OnReceiveAction>
 					<Points>
 						<Point><X>0</X><Y>0</Y></Point>
 						<Point><X>0</X><Y>20</Y></Point>
-						<Point><X>-50</X><Y>20</Y></Point>
-						<Point><X>-50</X><Y>0</Y></Point>
+						<Point><X>-55</X><Y>20</Y></Point>
+						<Point><X>-55</X><Y>0</Y></Point>
 					</Points>
-					<IconOffset>45.0</IconOffset>
+					<IconOffset>50.0</IconOffset>
 					<Properties Source="1749066240613" Target="1749066240613" Trigger="timeout">
-						<Action><![CDATA[handler.sendMessagesToAll();
-//wait for all answers
-//handler.tstFct1();
-handler.simpleStrat();]]></Action>
+						<Action><![CDATA[handler.sendMessagesToAll();]]></Action>
 						<Timeout Class="CodeUnitValue">
 							<Code><![CDATA[tickSize_in_min]]></Code>
 							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
@@ -1023,7 +1035,7 @@ handler.simpleStrat();]]></Action>
 						<UnitOfValue Class="AccelerationUnits"><![CDATA[MPS_SQ]]></UnitOfValue>
 						<SdArray>false</SdArray>
 						<DefaultValue Class="CodeValue">
-							<Code><![CDATA[new BatteryJava(this,1,1,1,1,1)]]></Code>
+							<Code><![CDATA[new BatteryJava(this,75, 15, 15, 0.975, 0.01)]]></Code>
 						</DefaultValue>
 						<ParameterEditor>
 							<Id>1749489945179</Id>
@@ -1044,7 +1056,7 @@ handler.simpleStrat();]]></Action>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
-					<IncomingMessageType><![CDATA[Object]]></IncomingMessageType>
+					<IncomingMessageType><![CDATA[MessageType]]></IncomingMessageType>
 					<OutgoingMessageType><![CDATA[MessageType]]></OutgoingMessageType>
 					<CustomPort><![CDATA[false]]></CustomPort>
 					<OnReceiveAction><![CDATA[// different messages: 
@@ -1052,7 +1064,10 @@ handler.simpleStrat();]]></Action>
 //  calculate and return stored elec
 //  send message back
 // 2) save elec (from strategy)
-//  add elec ]]></OnReceiveAction>
+//  add elec 
+
+handler.messageIn(msg);
+]]></OnReceiveAction>
 				</Port>
 			</Ports>
 			<AgentLinks>
@@ -1243,7 +1258,7 @@ handler.simpleStrat();]]></Action>
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
 						<DefaultValue Class="CodeValue">
-							<Code><![CDATA[new PVJava(this,1,1,1,1,1)]]></Code>
+							<Code><![CDATA[new PVJava(this, 0.44, 10.0, 10.0, 1.134, 1.762)]]></Code>
 						</DefaultValue>
 						<ParameterEditor>
 							<Id>1749855097557</Id>
@@ -1264,12 +1279,14 @@ handler.simpleStrat();]]></Action>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
-					<IncomingMessageType><![CDATA[Object]]></IncomingMessageType>
+					<IncomingMessageType><![CDATA[MessageType]]></IncomingMessageType>
 					<OutgoingMessageType><![CDATA[MessageType]]></OutgoingMessageType>
 					<CustomPort><![CDATA[false]]></CustomPort>
 					<OnReceiveAction><![CDATA[// this should be in special classes, just for test here
+handler.messageIn(msg);
 
-if (msg instanceof DataResponseTriggerMessage){
+
+if (false && msg instanceof DataResponseTriggerMessage){
 	// calc current production: 
 	double curTimeInS = time();
 	double production = 1.1 * (Math.sin(curTimeInS) + 1);
@@ -1490,12 +1507,15 @@ if (msg instanceof DataResponseTriggerMessage){
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
-					<IncomingMessageType><![CDATA[Object]]></IncomingMessageType>
+					<IncomingMessageType><![CDATA[MessageType]]></IncomingMessageType>
 					<OutgoingMessageType><![CDATA[MessageType]]></OutgoingMessageType>
 					<CustomPort><![CDATA[false]]></CustomPort>
 					<OnReceiveAction><![CDATA[// calc current consumption: 
 
-if (msg instanceof DataResponseTriggerMessage){
+handler.messageIn(msg);
+
+
+if (false && msg instanceof DataResponseTriggerMessage){
 	double curTimeInS = time();
 	double consumption = -(Math.sin(curTimeInS) + 1);
 
@@ -1752,7 +1772,10 @@ public class HouseControllerJava implements Serializable {
 	private double consumptionInThisTickPC;
 	//private double powerBalanceInThisTick;
 	private double differenceInThisTick;
-
+	private int messageCounter = 0;
+	private int numMessagesPerTick = 2;
+	private double powerBalanceInThisTick;
+	
     /**
      * Constructor
      */
@@ -1774,6 +1797,7 @@ public class HouseControllerJava implements Serializable {
 	
 	public void messageIn(MessageType msg) {
 		//System.out.println("msg in HouseController: " + msg);
+		messageCounter++;
 
 		if (msg instanceof DataMessageFromPV){
 
@@ -1799,11 +1823,28 @@ public class HouseControllerJava implements Serializable {
 		}
 		else if (msg instanceof DataMessageFromBattery){
 			
-			differenceInThisTick = ((DataMessageFromBattery) msg).difference;							
+			differenceInThisTick = ((DataMessageFromBattery) msg).difference;
 		}
 		else{
 		 	System.out.println("ERROR IN \"messageIn\". ");
 		}
+		
+		
+		if (messageCounter < numMessagesPerTick) {
+			// still have to get messages from first ones (now PC, PV)
+		}
+		else if (messageCounter == numMessagesPerTick)
+		{
+			powerBalanceInThisTick = productionInThisTickPV - consumptionInThisTickPC;		
+			
+			owner.port.send(new DataMessageToBattery(owner, owner.time(), powerBalanceInThisTick));
+		}
+		else {
+			simpleStrat();
+			messageCounter = 0;
+		}
+		
+		
 	}	
 	
 	public void simpleStrat() {
@@ -1812,21 +1853,16 @@ public class HouseControllerJava implements Serializable {
 		// 2) buy / sell energy
 		// 3) send orders to battery
 		
-		// all values needed for strat must be here from the messsages
-		double producedTotal = productionInThisTickPV;
-		double consumedTotal = consumptionInThisTickPC;
-		double powerBalance = productionInThisTickPV - consumptionInThisTickPC;
+		
+		//System.out.println(differenceInThisTick);
+		//System.out.println(powerBalanceInThisTick);
 		
 		
-		owner.port.send(new DataMessageToBattery(owner, owner.time(), powerBalance));
-		//wait for answer
-		if(powerBalance > 0) {
-			//sell difference
+		if(powerBalanceInThisTick > 0) {
+			owner.energy += differenceInThisTick;
 		}else {
-			//buy difference
-		}
-		
-		
+			owner.energy -= differenceInThisTick;
+		}		
 		
 		
 		// System.out.println("maxCap in battery Agent: " + owner.get_Main().battery.maxCapInAgent);
@@ -2007,6 +2043,21 @@ import java.io.IOException;
  */	
 public class PCJava implements Serializable {
 
+	public void sendMessageToController(DataResponseTriggerMessage msg) {
+		if (owner.getHourOfDay() < 8 || owner.getHourOfDay() > 18) {
+			owner.port.send(new DataMessageFromPC(owner, owner.time(), 0.5));		
+		}
+		else {
+			owner.port.send(new DataMessageFromPC(owner, owner.time(), 1));		
+		}
+	}
+	
+	public void messageIn(MessageType msg) {
+		if (msg instanceof DataResponseTriggerMessage){
+			sendMessageToController((DataResponseTriggerMessage)(msg));
+		}
+	}
+	
 	public PC owner;
 	private String csvFile;
     private double totalConsumption;
@@ -2095,6 +2146,23 @@ public class PCJava implements Serializable {
  */	
 public class PVJava implements Serializable {
 
+	public void sendMessageToController(DataResponseTriggerMessage msg) {	
+		
+		if (owner.getHourOfDay() < 8 || owner.getHourOfDay() > 18) {
+			owner.port.send(new DataMessageFromPV(owner, owner.time(), 0));		
+		}
+		else {
+			owner.port.send(new DataMessageFromPV(owner, owner.time(), 100));		
+		}
+	}
+	
+	public void messageIn(MessageType msg) {
+		if (msg instanceof DataResponseTriggerMessage){
+			sendMessageToController((DataResponseTriggerMessage)(msg));
+		}
+	}
+	
+	
 	private final double module_kWp;
     private final int module_count;
 	public PV owner;
@@ -2106,6 +2174,7 @@ public class PVJava implements Serializable {
               double pv_module_length,
               double pv_module_width)
     {
+    	this.owner = owner;
         this.module_kWp = module_kWp;
 
         module_count = pvCount(roof_length, roof_width, pv_module_length, pv_module_width);
@@ -2122,14 +2191,14 @@ public class PVJava implements Serializable {
 
     private double getAgeFactor()
     {
-        double age = 0;  //TODO: Convert Sim time into the age of the panels in years
-        double aging_factor = 0.008;
-        return Math.pow(1 - aging_factor, age);
+    	double age = owner.time() / 31536000;
+    	double aging_factor = 0.008;
+    	return Math.pow(1 - aging_factor, age); 
     }
 
     public double calculateCurrentProduction()
     {
-        double base_kWh = 0; // TODO: Get current value from Database
+        double base_kWh = 1; // TODO: Get current value from Database
 
         double total_kWp = module_count * module_kWp;
 
@@ -2185,6 +2254,7 @@ public class BatteryJava implements Serializable {
     private double cycles;              // Charging cycles
 
     public BatteryJava(Battery owner, double capacity, double maxChargePower, double maxDischargePower, double roundTripEfficiency, double degradationPerCycle) {
+    	this.owner = owner;
         this.capacity = capacity;
         this.stateOfCharge = 0.0;
         this.maxChargePower = maxChargePower;
@@ -2204,6 +2274,7 @@ public class BatteryJava implements Serializable {
         stateOfCharge += actualCharge;
 
         cycles += actualCharge / capacity;
+        System.out.println("stateOfCharge: " +stateOfCharge);
 
         return overflow;
     }
@@ -2211,7 +2282,7 @@ public class BatteryJava implements Serializable {
     // Discharges battery and returns missing
     // trueDischarge tries to consider roundTripEfficiency beforehand
     public double discharge(double requestedEnergy, boolean trueDischarge) {
-        double newRequestedEnergy = requestedEnergy;
+        double newRequestedEnergy = Math.abs(requestedEnergy);
         if(trueDischarge) {
             newRequestedEnergy /= roundTripEfficiency;
         }
@@ -2223,6 +2294,13 @@ public class BatteryJava implements Serializable {
         stateOfCharge -= actualDischarge;
 
         cycles += actualDischarge / capacity;
+        
+        //System.out.println("maxPossibleDischarge: " +maxPossibleDischarge);
+        //System.out.println("actualDischarge: " +actualDischarge);
+        System.out.println("stateOfCharge: " +stateOfCharge);
+        //System.out.println("maxDischargePower: " +maxDischargePower);
+        //System.out.println("requestedEnergy: " +requestedEnergy);
+        //System.out.println("missing: " +missing);
 
         return missing;
     }
@@ -2257,15 +2335,22 @@ public class BatteryJava implements Serializable {
 		return super.toString();
 	}
 	
-	public void messageIn(DataMessageToBattery msg) {
-		double difference;
-		double powerBalance = msg.powerBalance;
-		if(powerBalance > 0) {
-			difference = charge(powerBalance);
-		}else {
-			difference = discharge(powerBalance, true);
+	public void messageIn(MessageType generalMsg) {
+		
+		
+		if (generalMsg instanceof DataMessageToBattery)
+		{		
+			DataMessageToBattery msg = (DataMessageToBattery)(generalMsg);
+			
+			double difference;
+			double powerBalance = msg.powerBalance;
+			if(powerBalance > 0) {
+				difference = charge(powerBalance);
+			}else {
+				difference = discharge(powerBalance, true);
+			}
+			owner.port.send(new DataMessageFromBattery(owner, owner.time(), difference));
 		}
-		owner.port.send(new DataMessageFromBattery(owner, owner.time(), difference));
 	}
 
 	/**
