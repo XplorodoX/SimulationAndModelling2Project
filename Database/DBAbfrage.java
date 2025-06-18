@@ -156,8 +156,8 @@ public class DBAbfrage {
             System.out.println("✅ Erfolgreich mit der PostgreSQL-Datenbank verbunden!");
 
             // PV-Daten abfragen
-            LocalDateTime startPV = LocalDateTime.of(2005, 1, 1, 0, 0);
-            LocalDateTime endPV = LocalDateTime.of(2005, 1, 1, 1, 0);
+            LocalDateTime startPV = LocalDateTime.of(2016, 1, 1, 0, 0);
+            LocalDateTime endPV = LocalDateTime.of(2016, 12, 1, 1, 0);
 
             List<Object[]> pvData = getTimeSeriesData(conn, "pv", "Time", "kWh", startPV, endPV);
             Object latestKwh = getLatestValueBefore(conn, "pv", "Time", "kWh", endPV);
