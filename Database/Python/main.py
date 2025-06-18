@@ -1,7 +1,7 @@
 """
-Hilfsskript zum Importieren von CSV-Dateien in eine PostgreSQL-Datenbank.
-Wird in der Docker-Umgebung automatisch gestartet und kann auch
-standalone ausgefuehrt werden.
+Helper script for importing CSV files into a PostgreSQL database.
+It is started automatically in the Docker environment but can also be run
+standalone.
 """
 
 import os
@@ -11,7 +11,7 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.exc import OperationalError
 from typing import Optional, List, Dict, Any
 
-# --- Konfiguration aus Umgebungsvariablen ---
+# --- Configuration from environment variables ---
 DB_USER = os.getenv("DB_USER", "user")
 DB_PASSWORD = os.getenv("DB_PASSWORD", "password")
 DB_HOST = os.getenv("DB_HOST", "localhost")
@@ -20,8 +20,8 @@ DB_NAME = os.getenv("DB_NAME", "simdata")
 MAX_RETRIES = 5
 RETRY_DELAY = 5
 
-# --- Konfiguration für CSV-Importe ---
-# NEU: Füge einen Schlüssel "timestamp_columns" hinzu, der die Zeitstempelspalten auflistet.
+# --- Configuration for CSV imports ---
+# Added a key "timestamp_columns" listing the timestamp columns.
 IMPORTS_CONFIG: List[Dict[str, Any]] = [
     {
         "path": "PV.csv",
@@ -37,94 +37,95 @@ IMPORTS_CONFIG: List[Dict[str, Any]] = [
 
 
 def wait_for_db(engine):
-    """Wartet, bis die Datenbankverbindung verfügbar ist."""
-    print("Warte auf Datenbankverbindung...")
+    """Wait until the database connection is available."""
+    print("Waiting for database connection...")
     for i in range(MAX_RETRIES):
         try:
             with engine.connect() as connection:
                 connection.execute(text('SELECT 1'))
-            print("Datenbankverbindung erfolgreich hergestellt.")
+            print("Database connection established.")
             return True
         except OperationalError:
             print(
-                f"Verbindungsversuch {i + 1}/{MAX_RETRIES} fehlgeschlagen. Nächster Versuch in {RETRY_DELAY} Sekunden.")
+                f"Connection attempt {i + 1}/{MAX_RETRIES} failed. Next try in {RETRY_DELAY} seconds.")
             time.sleep(RETRY_DELAY)
-    print("Fehler: Konnte keine Verbindung zur Datenbank herstellen.")
+    print("Error: Could not establish a connection to the database.")
     return False
 
 
-# MODIFIZIERT: Die Funktion akzeptiert eine optionale Liste von Zeitstempelspalten.
+# MODIFIED: The function accepts an optional list of timestamp columns.
 def import_csv_to_db(engine, file_path: str, table_name: str, timestamp_columns: Optional[List[str]] = None):
     """
-    Liest eine CSV-Datei, konvertiert Zeitstempelspalten und importiert sie in die Datenbank.
+    Read a CSV file, convert timestamp columns and import it into the database.
     """
-    print(f"\n--- Importiere '{file_path}' in Tabelle '{table_name}' ---")
+    print(f"\n--- Importing '{file_path}' into table '{table_name}' ---")
     try:
-        # Die Spalten aus 'timestamp_columns' werden direkt als Datum/Zeit geparst.
+        # Columns listed in 'timestamp_columns' are parsed directly as datetime.
         df = pd.read_csv(file_path, parse_dates=timestamp_columns)
-        print(f"'{file_path}' erfolgreich gelesen.")
+        print(f"'{file_path}' read successfully.")
 
-        # Optional: Überprüfen der Datentypen im DataFrame vor dem Import
-        print("DataFrame Info (Datentypen):")
+        # Optional: check the data types before import
+        print("DataFrame info (dtypes):")
         df.info()
 
         df.to_sql(table_name, engine, if_exists='replace', index=False)
-        print(f"Daten erfolgreich in Tabelle '{table_name}' importiert.")
+        print(f"Data successfully imported into table '{table_name}'.")
 
     except FileNotFoundError:
-        print(f"Fehler: Die Datei '{file_path}' wurde nicht gefunden.")
+        print(f"Error: File '{file_path}' not found.")
     except Exception as e:
-        print(f"Ein Fehler beim Importieren der Daten ist aufgetreten: {e}")
+        print(f"An error occurred while importing the data: {e}")
 
 
 def get_current_content(engine, table_name: str) -> Optional[pd.DataFrame]:
     """
-    Liest die aktuellen Inhalte aus einer Datenbanktabelle und gibt sie als DataFrame zurück.
-    Gibt None zurück, wenn ein Fehler auftritt.
+    Read the current contents of a table and return them as a DataFrame.
+    Returns None if an error occurs.
     """
-    print(f"\nLese aktuelle Inhalte aus Tabelle '{table_name}'...")
+    print(f"\nReading current contents from table '{table_name}'...")
     try:
         df = pd.read_sql(f'SELECT * FROM {table_name}', engine)
-        print("Inhalte erfolgreich abgerufen.")
+        print("Contents retrieved successfully.")
         return df
     except Exception as e:
-        print(f"Fehler: Konnte die Inhalte nicht aus der Datenbank lesen. Grund: {e}")
+        print(f"Error: Could not read contents from the database. Reason: {e}")
         return None
 
 
 def read_from_db(engine, table_name: str):
-    """Liest Daten aus einer Tabelle und gibt sie direkt auf der Konsole aus."""
+    """Read data from a table and print it directly to the console."""
     try:
         read_df = pd.read_sql(f'SELECT * FROM {table_name}', engine)
-        print(f"\nDaten aus der Datenbank (Tabelle: '{table_name}'):")
-        print(read_df.head()) # .head() verwenden, um die Ausgabe bei großen Tabellen zu begrenzen
+        print(f"\nData from the database (table: '{table_name}'):")
+        # .head() keeps the output short for large tables
+        print(read_df.head())
     except Exception as e:
-        print(f"Ein Fehler beim Lesen der Daten ist aufgetreten: {e}")
+        print(f"An error occurred while reading the data: {e}")
 
 
 def main():
-    """Hauptfunktion des Skripts."""
+    """Main entry point of the script."""
     db_url = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
     engine = create_engine(db_url)
 
     if wait_for_db(engine):
-        # 1. Alle konfigurierten CSV-Dateien importieren
+        # 1. Import all configured CSV files
         for config in IMPORTS_CONFIG:
             import_csv_to_db(engine, config["path"], config["table_name"])
 
-        # 2. Daten aus allen importierten Tabellen zur Überprüfung lesen
+        # 2. Read data from all imported tables for verification
         for config in IMPORTS_CONFIG:
             read_from_db(engine, config["table_name"])
 
-        # 3. Beispiel für die Weiterverarbeitung von Daten aus einer Tabelle
-        print("\n--- Beispiel für die Weiterverarbeitung ---")
+        # 3. Example for further processing of data from a table
+        print("\n--- Example for further processing ---")
         first_table_name = IMPORTS_CONFIG[0]["table_name"]
         current_content_df = get_current_content(engine, first_table_name)
 
         if current_content_df is not None:
-            print(f"Die abgerufenen Daten aus '{first_table_name}' können nun weiterverarbeitet werden.")
-            print(f"Anzahl der Zeilen: {len(current_content_df)}")
-            print("Erste Zeile der Daten:")
+            print(f"The retrieved data from '{first_table_name}' can now be processed further.")
+            print(f"Number of rows: {len(current_content_df)}")
+            print("First row of data:")
             print(current_content_df.head(1))
 
 

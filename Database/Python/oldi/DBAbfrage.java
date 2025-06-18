@@ -1,7 +1,7 @@
 /**
- * Legacy-Version des Datenbank-Demo-Programms.
- * Zeigt grundsaetzlich die gleichen Funktionen wie die aktuelle DBAbfrage,
- * wurde jedoch fuer erste Tests entwickelt und bleibt hier als Referenz.
+ * Legacy version of the database demo program.
+ * Shows basically the same functions as the current DBAbfrage but was
+ * developed for early tests and remains here as a reference.
  */
 
 package Python.oldi;
@@ -42,7 +42,7 @@ public class DBAbfrage {
             Timestamp startTime = Timestamp.valueOf(startDateTime);
 
             // Query all timestamp/kWh pairs in the given range
-            // Datum und Uhrzeit in: 2005-04-01 16:45:00
+            // Date and time example: 2005-04-01 16:45:00
             List<Object[]> data = getDataAtTimeStampRange(connection,
                     tableName,
                     "Time",
@@ -79,7 +79,7 @@ public class DBAbfrage {
             Timestamp startTime2 = Timestamp.valueOf(startDateTime2);
 
             // Query all timestamp/kWh pairs in the given range
-            //Datum und Uhrzeit in UTC: 2016-01-01T00:45:00Z
+            // Date and time in UTC: 2016-01-01T00:45:00Z
             List<Object[]> data2 = getDataAtTimeStampRange(connection,
                     tableName2,
                     "utc_timestamp",
@@ -125,10 +125,10 @@ public class DBAbfrage {
     }
 
     /**
-     * Gibt alle Zeitstempel-Spalten-Paare für einen bestimmten Zeitraum zurück.
-     * Die zurückgegebene Liste enthält für jede Zeile ein Object[], wobei das erste
-     * Element der Zeitstempel und die weiteren Elemente den angeforderten Spalten
-     * entsprechen. Gibt eine leere Liste zurück, wenn keine Daten gefunden werden.
+     * Returns all timestamp/column pairs for a given time range.
+     * Each row in the returned list is an Object[] where the first element is the
+     * timestamp and the remaining elements correspond to the requested columns.
+     * Returns an empty list if no data is found.
      */
     public static List<Object[]> getDataAtTimeStampRange(Connection conn,
                                                          String tableName,
@@ -175,7 +175,7 @@ public class DBAbfrage {
     }
 
     /**
-     * Beibehaltende Rückwärtskompatibilität: ruft nur die "kWh"-Spalte ab.
+     * Kept for backwards compatibility: retrieves only the "kWh" column.
      */
     public static List<Object[]> getDataAtTimeStampRange(Connection conn,
                                                          String tableName,
