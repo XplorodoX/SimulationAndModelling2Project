@@ -10,7 +10,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY Database/Python/main.py ./main.py
 
 # Copy CSV data used by the script
-COPY CSV ./CSV
+COPY Database/Python/ ./
 
 # Default environment variables (can be overridden by docker-compose)
 ENV DB_HOST=db \
