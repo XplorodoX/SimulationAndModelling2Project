@@ -27,7 +27,7 @@ public class DBAbfrage {
 
             // --- 2. Use the Integrated Functions ---
             LocalDateTime startDateTime = LocalDateTime.of(2005, 1, 1, 0, 0, 0);
-            LocalDateTime endDateTime = LocalDateTime.of(2023, 1, 1, 1, 30, 0);
+            LocalDateTime endDateTime = LocalDateTime.of(2005, 1, 1, 1, 0, 0);
 
             Timestamp endTime = Timestamp.valueOf(endDateTime);
             Timestamp startTime = Timestamp.valueOf(startDateTime);
