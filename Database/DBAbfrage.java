@@ -32,22 +32,33 @@ public class DBAbfrage {
             Timestamp endTime = Timestamp.valueOf(endDateTime);
             Timestamp startTime = Timestamp.valueOf(startDateTime);
 
-            // We now expect a 'Double' object, which can be null.
-            Double totalKwh = getDataAtTimeStampRange(connection, tableName, startTime, endTime);
+            // Query all timestamp/kWh pairs in the given range
+            List<Object[]> data = getDataAtTimeStampRange(connection,
+                    tableName,
+                    "Time",
+                    startTime,
+                    endTime);
 
             Double nowKwh = getActualAtTimeStampData(connection, tableName, "Time", endTime);
 
             System.out.println("Table: " + tableName);
             System.out.println("Time range: " + startTime + " to " + endTime);
-
             System.out.println("Now KWH: " + nowKwh);
 
-            // --- 3. Check the result and give feedback ---
-            if (totalKwh != null) {
-                System.out.println("Total kWh consumed: " + String.format("%.2f", totalKwh));
-            } else {
-                // This message is shown if the function returned null.
+            // --- 3. Print the results ---
+            if (data.isEmpty()) {
                 System.out.println("📢 No data found for the specified time range.");
+            } else {
+                double totalKwh = 0.0;
+                for (Object[] row : data) {
+                    Timestamp ts = (Timestamp) row[0];
+                    Double kWh = (Double) row[1];
+                    System.out.println(ts + " -> " + kWh);
+                    if (kWh != null) {
+                        totalKwh += kWh;
+                    }
+                }
+                System.out.println("Total kWh in range: " + String.format("%.2f", totalKwh));
             }
 
 
