@@ -1,3 +1,9 @@
+/**
+ * Legacy-Version des Datenbank-Demo-Programms.
+ * Zeigt grundsaetzlich die gleichen Funktionen wie die aktuelle DBAbfrage,
+ * wurde jedoch fuer erste Tests entwickelt und bleibt hier als Referenz.
+ */
+
 package Python.oldi;
 
 import java.sql.Connection;

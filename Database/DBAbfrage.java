@@ -1,9 +1,22 @@
+/**
+ * Beispielprogramm zum Zugriff auf eine PostgreSQL-Datenbank.
+ * Demonstriert einfache Abfragen für Zeitreihendaten, wie sie durch
+ * das Python-Importskript bereitgestellt werden.
+ *
+ * Diese Klasse kann eigenständig ausgeführt werden.
+ */
+
 import java.sql.*;
 import java.time.*;
 import java.util.*;
 
 public class DBAbfrage {
 
+    /**
+     * Kleine Hilfsklasse zum Aufbau und automatischen Schliessen einer JDBC-Verbindung.
+     * Standardwerte fuer URL, Benutzername und Passwort koennen ueber Parameter
+     * angepasst werden.
+     */
     // Vereinfachte Datenbank-Verbindung mit Builder-Pattern
     public static class DBConnection implements AutoCloseable {
         private Connection connection;

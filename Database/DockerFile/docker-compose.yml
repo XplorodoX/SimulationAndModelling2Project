@@ -1,3 +1,6 @@
+# Beispielhafte Docker-Compose-Konfiguration zum Start einer lokalen PostgreSQL-Datenbank
+# und des Python-Importdienstes.
+
 version: '3.8'
 
 services:

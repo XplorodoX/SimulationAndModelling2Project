@@ -1,3 +1,6 @@
+# Dockerfile fuer das Python-Importskript
+# Erstellt ein schlankes Image und installiert alle benoetigten Abhaengigkeiten
+
 FROM python:3.11-slim
 
 # Install Python dependencies
