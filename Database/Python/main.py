@@ -20,12 +20,12 @@ IMPORTS_CONFIG: List[Dict[str, Any]] = [
     {
         "path": "PV.csv",
         "table_name": "pv",
-        "timestamp_columns": ["time"]  # Annahme: Die Spalte heißt 'time'
+        "timestamp_columns": ["time"]
     },
     {
         "path": "household_data_15min_singleindex.csv",
         "table_name": "household_data",
-        "timestamp_columns": ["date"]  # Annahme: Die Spalte heißt 'date'
+        "timestamp_columns": ["date"]
     }
 ]
 
