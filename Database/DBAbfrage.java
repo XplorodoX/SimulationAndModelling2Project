@@ -15,7 +15,8 @@ public class DBAbfrage {
         String url = "jdbc:postgresql://localhost:5432/simdata";
         String user = "user";
         String password = "password";
-        String tableName = "pv";
+        String tableName = "pv"; // table for PV data
+        String tableName2 = "household_data"; // table for household consumption
 
         Connection connection = null;
 
@@ -66,17 +67,34 @@ public class DBAbfrage {
             LocalDateTime startDateTime2 = LocalDateTime.of(2016, 1, 1, 0, 0, 0);
             LocalDateTime endDateTime2 = LocalDateTime.of(2016, 1, 1, 1, 0, 0);
 
-            Timestamp endTime2 = Timestamp.valueOf(endDateTime);
-            Timestamp startTime2 = Timestamp.valueOf(startDateTime);
+            Timestamp endTime2 = Timestamp.valueOf(endDateTime2);
+            Timestamp startTime2 = Timestamp.valueOf(startDateTime2);
 
             // Query all timestamp/kWh pairs in the given range
             //Datum und Uhrzeit in UTC: 2016-01-01T00:45:00Z
             List<Object[]> data2 = getDataAtTimeStampRange(connection,
-                    tableName,
+                    tableName2,
                     "utc_timestamp",
                     List.of("average_per_person_consumption"),
-                    startTime,
-                    endTime);
+                    startTime2,
+                    endTime2);
+
+            System.out.println("\nTable: " + tableName2);
+            System.out.println("Time range: " + startTime2 + " to " + endTime2);
+            if (data2.isEmpty()) {
+                System.out.println("📢 No data found for the specified time range.");
+            } else {
+                double totalAvg = 0.0;
+                for (Object[] row : data2) {
+                    Timestamp ts = (Timestamp) row[0];
+                    Double val = (Double) row[1];
+                    System.out.println(ts + " -> " + val);
+                    if (val != null) {
+                        totalAvg += val;
+                    }
+                }
+                System.out.println("Total average consumption in range: " + String.format("%.2f", totalAvg));
+            }
 
 
         } catch (ClassNotFoundException e) {
