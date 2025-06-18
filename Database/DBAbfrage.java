@@ -1,9 +1,9 @@
 /**
- * Beispielprogramm zum Zugriff auf eine PostgreSQL-Datenbank.
- * Demonstriert einfache Abfragen für Zeitreihendaten, wie sie durch
- * das Python-Importskript bereitgestellt werden.
+ * Example program that accesses a PostgreSQL database.
+ * Demonstrates simple queries for time series data as provided by the
+ * Python import script.
  *
- * Diese Klasse kann eigenständig ausgeführt werden.
+ * This class can be executed standalone.
  */
 
 import java.sql.*;
@@ -13,11 +13,10 @@ import java.util.*;
 public class DBAbfrage {
 
     /**
-     * Kleine Hilfsklasse zum Aufbau und automatischen Schliessen einer JDBC-Verbindung.
-     * Standardwerte fuer URL, Benutzername und Passwort koennen ueber Parameter
-     * angepasst werden.
+     * Small helper class for creating and automatically closing a JDBC connection.
+     * Default values for URL, user name and password can be adjusted via parameters.
      */
-    // Vereinfachte Datenbank-Verbindung mit Builder-Pattern
+    // Simplified database connection using a builder pattern
     public static class DBConnection implements AutoCloseable {
         private Connection connection;
         private static final String DEFAULT_URL = "jdbc:postgresql://localhost:5432/simdata";
@@ -45,18 +44,18 @@ public class DBAbfrage {
         }
     }
 
-    // Vereinfachte Abfrage-Methode für Zeitreihen-Daten
+    // Simplified query method for time series data
     public static List<Object[]> getTimeSeriesData(Connection conn, String tableName,
                                                    String timeColumn, List<String> dataColumns,
                                                    LocalDateTime start, LocalDateTime end) throws SQLException {
-        // Mit UTC-Zeitzone konvertieren
+        // Convert using the UTC time zone
         Timestamp startTs = timestampFromLocalDateTime(start);
         Timestamp endTs = timestampFromLocalDateTime(end);
 
         return getTimeSeriesData(conn, tableName, timeColumn, dataColumns, startTs, endTs);
     }
 
-    // Überladene Methode mit Timestamps
+    // Overloaded method using timestamps
     public static List<Object[]> getTimeSeriesData(Connection conn, String tableName,
                                                    String timeColumn, List<String> dataColumns,
                                                    Timestamp start, Timestamp end) throws SQLException {
@@ -97,14 +96,14 @@ public class DBAbfrage {
         return results;
     }
 
-    // Hilfsmethode für eine einzelne Spalte
+    // Helper method for a single column
     public static List<Object[]> getTimeSeriesData(Connection conn, String tableName,
                                                    String timeColumn, String dataColumn,
                                                    LocalDateTime start, LocalDateTime end) throws SQLException {
         return getTimeSeriesData(conn, tableName, timeColumn, List.of(dataColumn), start, end);
     }
 
-    // Hilfsmethode für den letzten Wert vor einem Zeitpunkt
+    // Helper for retrieving the last value before a given timestamp
     public static Object getLatestValueBefore(Connection conn, String tableName,
                                               String timeColumn, String dataColumn,
                                               LocalDateTime time) throws SQLException {
@@ -127,25 +126,25 @@ public class DBAbfrage {
         return null;
     }
 
-    // Hilfsmethode für Zeitstempel-Konvertierung (berücksichtigt UTC)
+    // Helper for timestamp conversion (uses UTC)
     private static Timestamp timestampFromLocalDateTime(LocalDateTime ldt) {
-        // Konvertiere zu UTC für die Datenbank
+        // Convert to UTC for the database
         ZonedDateTime zdt = ldt.atZone(ZoneId.systemDefault())
                 .withZoneSameInstant(ZoneId.of("UTC"));
         return Timestamp.from(zdt.toInstant());
     }
 
-    // Hilfsmethode für SQL-Injection-Schutz
+    // Helper for SQL injection protection
     private static String sanitizeIdentifier(String identifier) {
         return identifier.replaceAll("[^a-zA-Z0-9_]", "");
     }
 
-    // Hilfsmethode für die Formatierung der Ausgabe
+    // Helper for formatting the output
     public static void printTimeSeriesData(List<Object[]> data, String title, String valueLabel) {
         System.out.println("\n" + title);
 
         if (data.isEmpty()) {
-            System.out.println("📢 Keine Daten gefunden.");
+            System.out.println("📢 No data found.");
             return;
         }
 
@@ -160,39 +159,39 @@ public class DBAbfrage {
             }
         }
 
-        System.out.println("Gesamt " + valueLabel + ": " + String.format("%.2f", total));
+        System.out.println("Total " + valueLabel + ": " + String.format("%.2f", total));
     }
 
     public static void main(String[] args) {
         try (DBConnection dbConn = new DBConnection()) {
             Connection conn = dbConn.getConnection();
-            System.out.println("✅ Erfolgreich mit der PostgreSQL-Datenbank verbunden!");
+            System.out.println("✅ Successfully connected to the PostgreSQL database!");
 
-            // PV-Daten abfragen
+            // Query PV data
             LocalDateTime startPV = LocalDateTime.of(2016, 1, 1, 0, 0);
             LocalDateTime endPV = LocalDateTime.of(2016, 12, 1, 1, 0);
 
             List<Object[]> pvData = getTimeSeriesData(conn, "pv", "Time", "kWh", startPV, endPV);
             Object latestKwh = getLatestValueBefore(conn, "pv", "Time", "kWh", endPV);
 
-            System.out.println("Tabelle: pv");
-            System.out.println("Zeitraum: " + startPV + " bis " + endPV);
-            System.out.println("Aktueller kWh-Wert: " + latestKwh);
-            printTimeSeriesData(pvData, "PV-Daten:", "kWh");
+            System.out.println("Table: pv");
+            System.out.println("Period: " + startPV + " to " + endPV);
+            System.out.println("Current kWh value: " + latestKwh);
+            printTimeSeriesData(pvData, "PV data:", "kWh");
 
-            // Haushaltsdaten abfragen
+            // Query household data
             LocalDateTime startHH = LocalDateTime.of(2016, 1, 1, 1, 0);
             LocalDateTime endHH = LocalDateTime.of(2016, 1, 1, 2, 0);
 
             List<Object[]> hhData = getTimeSeriesData(conn, "household_data", "utc_timestamp",
                     "average_per_person_consumption", startHH, endHH);
-            printTimeSeriesData(hhData, "Haushaltsdaten:", "Durchschnittsverbrauch pro Person");
+            printTimeSeriesData(hhData, "Household data:", "Average consumption per person");
 
         } catch (ClassNotFoundException e) {
-            System.err.println("🚨 PostgreSQL JDBC-Treiber nicht gefunden.");
+            System.err.println("🚨 PostgreSQL JDBC driver not found.");
             e.printStackTrace();
         } catch (SQLException e) {
-            System.err.println("🚨 Datenbankverbindung fehlgeschlagen!");
+            System.err.println("🚨 Database connection failed!");
             e.printStackTrace();
         }
     }

@@ -1,33 +1,33 @@
 """
-Werkzeug zur Vorverarbeitung von CSV-Dateien bevor sie importiert werden.
-Beispielhaft wird eine Zeitstempelspalte angepasst und unnoetige Spalten werden entfernt.
+Utility for preprocessing CSV files before they are imported.
+As an example a timestamp column is adjusted and unnecessary columns are removed.
 """
 
 import pandas as pd
 
-def transformiere_zeitstempel(df: pd.DataFrame, spaltenname: str = 'utc_timestamp') -> pd.DataFrame:
+def convert_timestamp(df: pd.DataFrame, column_name: str = 'utc_timestamp') -> pd.DataFrame:
     """
-    Wandelt das Zeitformat der angegebenen Spalte um und addiert 15 Minuten.
+    Convert the format of the given column and add 15 minutes.
     """
-    df[spaltenname] = pd.to_datetime(df[spaltenname], utc=True)
-    df[spaltenname] = df[spaltenname] + pd.Timedelta(minutes=15)
-    df[spaltenname] = df[spaltenname].dt.strftime('%Y-%m-%d %H:%M:%S')
+    df[column_name] = pd.to_datetime(df[column_name], utc=True)
+    df[column_name] = df[column_name] + pd.Timedelta(minutes=15)
+    df[column_name] = df[column_name].dt.strftime('%Y-%m-%d %H:%M:%S')
     return df
 
-def entferne_spalte(df: pd.DataFrame, spaltenname: str) -> pd.DataFrame:
+def remove_column(df: pd.DataFrame, column_name: str) -> pd.DataFrame:
     """
-    Entfernt die angegebene Spalte aus dem DataFrame.
+    Remove the specified column from the DataFrame.
     """
-    return df.drop(columns=[spaltenname])
+    return df.drop(columns=[column_name])
 
 if __name__ == '__main__':
-    input_pfad = 'oldi/household_data_15min_singleindex.csv'
-    output_pfad = 'household_data_15min_singleindex.csv'
-    zeitspalte = 'utc_timestamp'
-    zu_entfernende_spalte = 'cet_cest_timestamp'
+    input_path = 'oldi/household_data_15min_singleindex.csv'
+    output_path = 'household_data_15min_singleindex.csv'
+    timestamp_column = 'utc_timestamp'
+    column_to_remove = 'cet_cest_timestamp'
 
-    df = pd.read_csv(input_pfad)
-    df = transformiere_zeitstempel(df, zeitspalte)
-    if zu_entfernende_spalte in df.columns:
-        df = entferne_spalte(df, zu_entfernende_spalte)
-    df.to_csv(output_pfad, index=False)
+    df = pd.read_csv(input_path)
+    df = convert_timestamp(df, timestamp_column)
+    if column_to_remove in df.columns:
+        df = remove_column(df, column_to_remove)
+    df.to_csv(output_path, index=False)

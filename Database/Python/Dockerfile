@@ -1,5 +1,5 @@
-# Dockerfile fuer das Python-Importskript
-# Erstellt ein schlankes Image und installiert alle benoetigten Abhaengigkeiten
+# Dockerfile for the Python import script
+# Creates a slim image and installs all required dependencies
 
 FROM python:3.11-slim
 

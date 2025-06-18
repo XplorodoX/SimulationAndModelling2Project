@@ -1,23 +1,23 @@
 # Database Utilities
 
-Dieses Verzeichnis enthaelt Hilfsprogramme zur Speicherung und Verarbeitung von CSV-Daten in einer PostgreSQL-Datenbank. Die Tools koennen unabhaengig von AnyLogic genutzt werden, um Messreihen in eine Datenbank zu importieren und spaeter wieder auszulesen.
+This directory contains helper utilities for storing and processing CSV data in a PostgreSQL database. The tools can be used independently of AnyLogic to import measurement series into a database and retrieve them later on.
 
-## Struktur
+## Structure
 
-- **DBAbfrage.java** – Java-Programm zum Einlesen von Zeitreihen und einfachen Abfragen.
-- **DockerFile/** – `docker-compose.yml` zum Starten einer lokalen PostgreSQL-Datenbank und des Import-Skripts.
-- **Python/** – Python-Skripte und Dockerfile fuer den CSV-Import.
-- **jar/** – Enthält das PostgreSQL-JDBC-Driver-JAR, das fuer die Java-Programme benoetigt wird.
+- **DBAbfrage.java** – Java program for reading time series data and performing simple queries.
+- **DockerFile/** – `docker-compose.yml` to start a local PostgreSQL database and run the import script.
+- **Python/** – Python scripts and Dockerfile used for CSV import.
+- **jar/** – Contains the PostgreSQL JDBC driver JAR required for the Java programs.
 
-## Verwendung
+## Usage
 
-1. `docker-compose` im Unterordner `DockerFile` startet eine PostgreSQL-Datenbank und fuehrt das Python-Importskript aus:
+1. `docker-compose` in the `DockerFile` subfolder starts a PostgreSQL database and runs the Python import script:
    ```bash
    cd Database/DockerFile
    docker-compose up
    ```
-2. Das Python-Skript `main.py` importiert die in `IMPORTS_CONFIG` aufgelisteten CSV-Dateien in die Datenbank.
-3. `DBAbfrage.java` demonstriert, wie Daten aus der Datenbank abgefragt und verarbeitet werden koennen.
+2. The Python script `main.py` imports the CSV files listed in `IMPORTS_CONFIG` into the database.
+3. `DBAbfrage.java` demonstrates how data can be queried from the database and further processed.
 
-Weitere Details zu den einzelnen Dateien finden sich in den Kommentarblöcken der jeweiligen Quellcodes.
+Further details about the individual files can be found in the comment blocks of the respective source codes.
 
