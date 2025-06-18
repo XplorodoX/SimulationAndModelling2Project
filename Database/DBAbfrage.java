@@ -82,21 +82,32 @@ public class DBAbfrage {
     }
 
     /**
-     * Gibt alle Zeitstempel-kWh-Paare für einen bestimmten Zeitraum zurück.
-     * Jedes Element der zurückgegebenen Liste ist ein Array mit [Timestamp, kWh].
-     * Gibt eine leere Liste zurück, wenn keine Daten gefunden werden.
+     * Gibt alle Zeitstempel-Spalten-Paare für einen bestimmten Zeitraum zurück.
+     * Die zurückgegebene Liste enthält für jede Zeile ein Object[], wobei das erste
+     * Element der Zeitstempel und die weiteren Elemente den angeforderten Spalten
+     * entsprechen. Gibt eine leere Liste zurück, wenn keine Daten gefunden werden.
      */
     public static List<Object[]> getDataAtTimeStampRange(Connection conn,
                                                          String tableName,
                                                          String timestampColumn,
+                                                         List<String> columns,
                                                          Timestamp startTime,
                                                          Timestamp endTime) throws SQLException {
         String sanitizedTable = sanitizeTableName(tableName);
-        String sanitizedColumn = sanitizeColumnName("kWh");
         String sanitizedTimeColumn = sanitizeColumnName(timestampColumn);
 
-        // SQL-Abfrage für einzelne Datenpunkte statt Summe
-        String sql = "SELECT \"" + sanitizedTimeColumn + "\", \"" + sanitizedColumn + "\" FROM \"" + sanitizedTable + "\"" +
+        List<String> sanitizedColumns = new ArrayList<>();
+        for (String col : columns) {
+            sanitizedColumns.add(sanitizeColumnName(col));
+        }
+
+        StringBuilder columnBuilder = new StringBuilder();
+        columnBuilder.append('"').append(sanitizedTimeColumn).append('"');
+        for (String col : sanitizedColumns) {
+            columnBuilder.append(", \"").append(col).append("\"");
+        }
+
+        String sql = "SELECT " + columnBuilder + " FROM \"" + sanitizedTable + "\"" +
                 " WHERE \"" + sanitizedTimeColumn + "\" >= ? AND \"" + sanitizedTimeColumn + "\" <= ?" +
                 " ORDER BY \"" + sanitizedTimeColumn + "\" ASC";
 
@@ -107,21 +118,30 @@ public class DBAbfrage {
             ps.setTimestamp(2, endTime);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    Timestamp timestamp = rs.getTimestamp(1);
-                    Double kWh = rs.getDouble(2);
-
-                    // Prüfe ob kWh NULL ist
-                    if (rs.wasNull()) {
-                        kWh = null;
+                    Object[] row = new Object[sanitizedColumns.size() + 1];
+                    row[0] = rs.getTimestamp(1);
+                    for (int i = 0; i < sanitizedColumns.size(); i++) {
+                        row[i + 1] = rs.getObject(i + 2);
                     }
-
-                    // Füge die Daten als Array zur Ergebnisliste hinzu
-                    resultList.add(new Object[]{timestamp, kWh});
+                    resultList.add(row);
                 }
             }
         }
 
         return resultList;
+    }
+
+    /**
+     * Beibehaltende Rückwärtskompatibilität: ruft nur die "kWh"-Spalte ab.
+     */
+    public static List<Object[]> getDataAtTimeStampRange(Connection conn,
+                                                         String tableName,
+                                                         String timestampColumn,
+                                                         Timestamp startTime,
+                                                         Timestamp endTime) throws SQLException {
+        List<String> cols = new ArrayList<>();
+        cols.add("kWh");
+        return getDataAtTimeStampRange(conn, tableName, timestampColumn, cols, startTime, endTime);
     }
 
     // --- getActualAtTimeStampData and sanitize methods remain the same ---
