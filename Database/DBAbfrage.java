@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DBAbfrage {
 
@@ -25,28 +27,56 @@ public class DBAbfrage {
 
             // --- 2. Use the Integrated Functions ---
             LocalDateTime startDateTime = LocalDateTime.of(2005, 1, 1, 0, 0, 0);
-            LocalDateTime endDateTime = LocalDateTime.of(2023, 1, 1, 1, 30, 0);
+            LocalDateTime endDateTime = LocalDateTime.of(2005, 1, 1, 1, 0, 0);
 
             Timestamp endTime = Timestamp.valueOf(endDateTime);
             Timestamp startTime = Timestamp.valueOf(startDateTime);
 
-            // We now expect a 'Double' object, which can be null.
-            Double totalKwh = getDataAtTimeStampRange(connection, tableName, startTime, endTime);
+            // Query all timestamp/kWh pairs in the given range
+            // Datum und Uhrzeit in: 2005-04-01 16:45:00
+            List<Object[]> data = getDataAtTimeStampRange(connection,
+                    tableName,
+                    "Time",
+                    startTime,
+                    endTime);
 
             Double nowKwh = getActualAtTimeStampData(connection, tableName, "Time", endTime);
 
             System.out.println("Table: " + tableName);
             System.out.println("Time range: " + startTime + " to " + endTime);
-
             System.out.println("Now KWH: " + nowKwh);
 
-            // --- 3. Check the result and give feedback ---
-            if (totalKwh != null) {
-                System.out.println("Total kWh consumed: " + String.format("%.2f", totalKwh));
-            } else {
-                // This message is shown if the function returned null.
+            // --- 3. Print the results ---
+            if (data.isEmpty()) {
                 System.out.println("📢 No data found for the specified time range.");
+            } else {
+                double totalKwh = 0.0;
+                for (Object[] row : data) {
+                    Timestamp ts = (Timestamp) row[0];
+                    Double kWh = (Double) row[1];
+                    System.out.println(ts + " -> " + kWh);
+                    if (kWh != null) {
+                        totalKwh += kWh;
+                    }
+                }
+                System.out.println("Total kWh in range: " + String.format("%.2f", totalKwh));
             }
+
+            // --- 2. Use the Integrated Functions ---
+            LocalDateTime startDateTime2 = LocalDateTime.of(2016, 1, 1, 0, 0, 0);
+            LocalDateTime endDateTime2 = LocalDateTime.of(2016, 1, 1, 1, 0, 0);
+
+            Timestamp endTime2 = Timestamp.valueOf(endDateTime);
+            Timestamp startTime2 = Timestamp.valueOf(startDateTime);
+
+            // Query all timestamp/kWh pairs in the given range
+            //Datum und Uhrzeit in UTC: 2016-01-01T00:45:00Z
+            List<Object[]> data2 = getDataAtTimeStampRange(connection,
+                    tableName,
+                    "utc_timestamp",
+                    List.of("average_per_person_consumption"),
+                    startTime,
+                    endTime);
 
 
         } catch (ClassNotFoundException e) {
@@ -69,45 +99,66 @@ public class DBAbfrage {
     }
 
     /**
-     * Changed to return Double to allow for a null return value.
+     * Gibt alle Zeitstempel-Spalten-Paare für einen bestimmten Zeitraum zurück.
+     * Die zurückgegebene Liste enthält für jede Zeile ein Object[], wobei das erste
+     * Element der Zeitstempel und die weiteren Elemente den angeforderten Spalten
+     * entsprechen. Gibt eine leere Liste zurück, wenn keine Daten gefunden werden.
      */
-    public static Double getDataAtTimeStampRange(Connection conn,
-                                                 String tableName,
-                                                 Timestamp startTime,
-                                                 Timestamp endTime) throws SQLException {
-        return getDataAtTimeStampRange(conn, tableName, "Time", startTime, endTime);
-    }
-
-    /**
-     * Changed to return Double. Returns null if no data is found.
-     */
-    public static Double getDataAtTimeStampRange(Connection conn,
-                                                 String tableName,
-                                                 String timestampColumn,
-                                                 Timestamp startTime,
-                                                 Timestamp endTime) throws SQLException {
+    public static List<Object[]> getDataAtTimeStampRange(Connection conn,
+                                                         String tableName,
+                                                         String timestampColumn,
+                                                         List<String> columns,
+                                                         Timestamp startTime,
+                                                         Timestamp endTime) throws SQLException {
         String sanitizedTable = sanitizeTableName(tableName);
-        String sanitizedColumn = sanitizeColumnName("kWh");
         String sanitizedTimeColumn = sanitizeColumnName(timestampColumn);
-        String sql = "SELECT SUM(\"" + sanitizedColumn + "\") FROM \"" + sanitizedTable + "\"" +
-                " WHERE \"" + sanitizedTimeColumn + "\" >= ? AND \"" + sanitizedTimeColumn + "\" <= ?";
+
+        List<String> sanitizedColumns = new ArrayList<>();
+        for (String col : columns) {
+            sanitizedColumns.add(sanitizeColumnName(col));
+        }
+
+        StringBuilder columnBuilder = new StringBuilder();
+        columnBuilder.append('"').append(sanitizedTimeColumn).append('"');
+        for (String col : sanitizedColumns) {
+            columnBuilder.append(", \"").append(col).append("\"");
+        }
+
+        String sql = "SELECT " + columnBuilder + " FROM \"" + sanitizedTable + "\"" +
+                " WHERE \"" + sanitizedTimeColumn + "\" >= ? AND \"" + sanitizedTimeColumn + "\" <= ?" +
+                " ORDER BY \"" + sanitizedTimeColumn + "\" ASC";
+
+        List<Object[]> resultList = new ArrayList<>();
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setTimestamp(1, startTime);
             ps.setTimestamp(2, endTime);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    double total = rs.getDouble(1);
-                    // The SUM aggregate returns NULL if there are no rows.
-                    // rs.getDouble() returns 0.0 for NULL, so we must also check rs.wasNull().
-                    if (rs.wasNull()) {
-                        return null; // No rows were found to sum, so return null.
+                while (rs.next()) {
+                    Object[] row = new Object[sanitizedColumns.size() + 1];
+                    row[0] = rs.getTimestamp(1);
+                    for (int i = 0; i < sanitizedColumns.size(); i++) {
+                        row[i + 1] = rs.getObject(i + 2);
                     }
-                    return total; // Return the calculated sum.
+                    resultList.add(row);
                 }
             }
         }
-        return null; // Should not be reached, but good practice.
+
+        return resultList;
+    }
+
+    /**
+     * Beibehaltende Rückwärtskompatibilität: ruft nur die "kWh"-Spalte ab.
+     */
+    public static List<Object[]> getDataAtTimeStampRange(Connection conn,
+                                                         String tableName,
+                                                         String timestampColumn,
+                                                         Timestamp startTime,
+                                                         Timestamp endTime) throws SQLException {
+        List<String> cols = new ArrayList<>();
+        cols.add("kWh");
+        return getDataAtTimeStampRange(conn, tableName, timestampColumn, cols, startTime, endTime);
     }
 
     // --- getActualAtTimeStampData and sanitize methods remain the same ---
