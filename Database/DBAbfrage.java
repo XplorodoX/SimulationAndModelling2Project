@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DBAbfrage {
 
@@ -69,45 +71,46 @@ public class DBAbfrage {
     }
 
     /**
-     * Changed to return Double to allow for a null return value.
+     * Gibt alle Zeitstempel-kWh-Paare für einen bestimmten Zeitraum zurück.
+     * Jedes Element der zurückgegebenen Liste ist ein Array mit [Timestamp, kWh].
+     * Gibt eine leere Liste zurück, wenn keine Daten gefunden werden.
      */
-    public static Double getDataAtTimeStampRange(Connection conn,
-                                                 String tableName,
-                                                 Timestamp startTime,
-                                                 Timestamp endTime) throws SQLException {
-        return getDataAtTimeStampRange(conn, tableName, "Time", startTime, endTime);
-    }
-
-    /**
-     * Changed to return Double. Returns null if no data is found.
-     */
-    public static Double getDataAtTimeStampRange(Connection conn,
-                                                 String tableName,
-                                                 String timestampColumn,
-                                                 Timestamp startTime,
-                                                 Timestamp endTime) throws SQLException {
+    public static List<Object[]> getDataAtTimeStampRange(Connection conn,
+                                                         String tableName,
+                                                         String timestampColumn,
+                                                         Timestamp startTime,
+                                                         Timestamp endTime) throws SQLException {
         String sanitizedTable = sanitizeTableName(tableName);
         String sanitizedColumn = sanitizeColumnName("kWh");
         String sanitizedTimeColumn = sanitizeColumnName(timestampColumn);
-        String sql = "SELECT SUM(\"" + sanitizedColumn + "\") FROM \"" + sanitizedTable + "\"" +
-                " WHERE \"" + sanitizedTimeColumn + "\" >= ? AND \"" + sanitizedTimeColumn + "\" <= ?";
+
+        // SQL-Abfrage für einzelne Datenpunkte statt Summe
+        String sql = "SELECT \"" + sanitizedTimeColumn + "\", \"" + sanitizedColumn + "\" FROM \"" + sanitizedTable + "\"" +
+                " WHERE \"" + sanitizedTimeColumn + "\" >= ? AND \"" + sanitizedTimeColumn + "\" <= ?" +
+                " ORDER BY \"" + sanitizedTimeColumn + "\" ASC";
+
+        List<Object[]> resultList = new ArrayList<>();
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setTimestamp(1, startTime);
             ps.setTimestamp(2, endTime);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    double total = rs.getDouble(1);
-                    // The SUM aggregate returns NULL if there are no rows.
-                    // rs.getDouble() returns 0.0 for NULL, so we must also check rs.wasNull().
+                while (rs.next()) {
+                    Timestamp timestamp = rs.getTimestamp(1);
+                    Double kWh = rs.getDouble(2);
+
+                    // Prüfe ob kWh NULL ist
                     if (rs.wasNull()) {
-                        return null; // No rows were found to sum, so return null.
+                        kWh = null;
                     }
-                    return total; // Return the calculated sum.
+
+                    // Füge die Daten als Array zur Ergebnisliste hinzu
+                    resultList.add(new Object[]{timestamp, kWh});
                 }
             }
         }
-        return null; // Should not be reached, but good practice.
+
+        return resultList;
     }
 
     // --- getActualAtTimeStampData and sanitize methods remain the same ---
