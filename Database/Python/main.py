@@ -1,3 +1,9 @@
+"""
+Hilfsskript zum Importieren von CSV-Dateien in eine PostgreSQL-Datenbank.
+Wird in der Docker-Umgebung automatisch gestartet und kann auch
+standalone ausgefuehrt werden.
+"""
+
 import os
 import time
 import pandas as pd

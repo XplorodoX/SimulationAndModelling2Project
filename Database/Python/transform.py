@@ -1,3 +1,8 @@
+"""
+Werkzeug zur Vorverarbeitung von CSV-Dateien bevor sie importiert werden.
+Beispielhaft wird eine Zeitstempelspalte angepasst und unnoetige Spalten werden entfernt.
+"""
+
 import pandas as pd
 
 def transformiere_zeitstempel(df: pd.DataFrame, spaltenname: str = 'utc_timestamp') -> pd.DataFrame:
