@@ -1,11 +1,8 @@
 import csv
 from datetime import datetime
-from io import StringIO
-
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 
 COL1 = "Deutschland/Luxemburg [€/MWh] Berechnete Auflösungen"
 COL2 = "DE/AT/LU [€/MWh] Berechnete Auflösungen"
@@ -71,63 +68,63 @@ def process_price(input_path: str,
     return df_out
 
 
+import pandas as pd
+from io import StringIO
+
+
 def process_pv(input_path: str,
                output_path: str,
                interval_min: int,
                write_csv: bool):
+    # Load relevant lines starting with a date
     with open(input_path, encoding='utf-8') as f:
         lines = [L for L in f if L.strip().startswith("20")]
 
+    # Read only relevant columns
     df = pd.read_csv(
         StringIO("".join(lines)),
         header=None,
         names=["time", "P", "Gb(i)", "Gd(i)", "Gr(i)", "H_sun", "T2m", "WS10m", "Int"],
         sep=",")[["time", "P"]]
 
+    # Convert and format
     df["P"] = df["P"].astype(float)
     df["kWh"] = df["P"] / 1000.0
     df["time"] = pd.to_datetime(df["time"], format="%Y%m%d:%H%M")
     df.set_index("time", inplace=True)
 
+    # Save original sum for normalization
     orig_sum = df["kWh"].sum()
 
-    base_idx = pd.date_range(
-        start=df.index.min().floor('D'),
-        end=df.index.max().ceil('D') - pd.Timedelta(minutes=interval_min),
-        freq=f"{interval_min}min"
-    )
-
-    df2 = df.reindex(base_idx)
-    df2["kWh"] = df2["kWh"].interpolate(method='linear')
-    df2["kWh"] = df2["kWh"].fillna(0)
-
-    df2.index = df2.index + pd.Timedelta(hours=1)
-
+    # Define new uniform index at given resolution
     cutoff_date = pd.Timestamp('2023-12-31 23:50:00')
-    start_day = df2.index.min().floor('D')
-    end_day = min(df2.index.max().ceil('D') - pd.Timedelta(minutes=interval_min), cutoff_date)
+    start_day = df.index.min().floor('D')
+    end_day = min(df.index.max().ceil('D') - pd.Timedelta(minutes=interval_min), cutoff_date)
     new_index = pd.date_range(start=start_day, end=end_day, freq=f"{interval_min}min")
 
-    df2 = df2.reindex(new_index)
+    # Reindex and interpolate
+    df2 = df.reindex(new_index)
     df2["kWh"] = df2["kWh"].interpolate(method='linear')
     df2["kWh"] = df2["kWh"].fillna(0)
 
+    # Rescale to preserve original energy sum
     scale = orig_sum / df2["kWh"].sum()
-    df2["kWh"] = scale * df2["kWh"]
+    df2["kWh"] *= scale
 
+    # Prepare output
     out = df2.reset_index()[["index", "kWh"]]
     out.columns = ["Time", "kWh"]
 
     if write_csv:
         out.to_csv(output_path, index=False)
         print(f"PV csv done: {output_path}")
+
     return out
 
 
 def plot_random(pv_df: pd.DataFrame,
                 price_df: pd.DataFrame,
                 days_to_plot: int = 3):
-
     for df in (pv_df, price_df):
         if 'Time' in df.columns:
             df['Time'] = pd.to_datetime(df['Time'], format="%Y-%m-%d %H:%M:%S")
@@ -166,3 +163,4 @@ def plot_random(pv_df: pd.DataFrame,
 
     plt.tight_layout()
     plt.show()
+
