@@ -32,6 +32,11 @@ IMPORTS_CONFIG: List[Dict[str, Any]] = [
         "path": "household_data_15min_singleindex.csv",
         "table_name": "household_data",
         "timestamp_columns": ["date"]
+    },
+    {
+        "path": "price.csv",
+        "table_name": "price",
+        "timestamp_columns": ["time"]
     }
 ]
 

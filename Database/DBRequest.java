@@ -16,7 +16,7 @@ import java.sql.*;
 import java.time.*;
 import java.util.*;
 
-public class DBAbfrage {
+public class DBRequest {
 
     /**
      * Helper class that creates and automatically closes a JDBC connection.
@@ -295,6 +295,15 @@ public class DBAbfrage {
             List<Object[]> hhData = getTimeSeriesData(conn, "household_data", "utc_timestamp",
                     "average_per_person_consumption", startHH, endHH);
             printTimeSeriesData(hhData, "Household data:", "Average consumption per person");
+
+            // Example 2: Query household consumption data for an hour
+            LocalDateTime startHHS = LocalDateTime.of(2015, 1, 1, 1, 0);
+            LocalDateTime endHHS = LocalDateTime.of(2016, 1, 1, 2, 0);
+
+            List<Object[]> shData = getTimeSeriesData(conn, "price", "Time",
+                    "price_kWh", startHHS, endHHS);
+            printTimeSeriesData(shData, "Price data:", "Average price per person");
+
 
         } catch (ClassNotFoundException e) {
             System.err.println("🚨 PostgreSQL JDBC driver not found.");
