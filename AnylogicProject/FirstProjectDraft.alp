@@ -4,7 +4,7 @@
 	         AnyLogic Project File
 *************************************************
 -->
-<AnyLogicWorkspace WorkspaceVersion="1.9" AnyLogicVersion="8.9.4.202503101134" AlpVersion="8.9.4">
+<AnyLogicWorkspace WorkspaceVersion="1.9" AnyLogicVersion="8.9.4.202503101133" AlpVersion="8.9.4">
 <Model>
 	<Id>1749063971044</Id>
 	<Name><![CDATA[FirstProjectDraft]]></Name>
@@ -2144,7 +2144,7 @@ public class PVJava implements Serializable
 		if (msg instanceof DataResponseTriggerMessage)
 		{
 			owner.port.send(new DataMessageFromPV(owner, owner.time(), calculateCurrentProduction()));
-			System.out.println(calculateCurrentProduction());
+			//System.out.println(calculateCurrentProduction());
 		}
 		//TODO New type of msg for future production
 		//else if (msg instanceof DataResponseTriggerMessageFutureProduction)
@@ -2190,6 +2190,7 @@ public class PVJava implements Serializable
     {
     	double age = owner.time() / 31536000;
     	double aging_factor = 0.008;
+    	System.out.println(age);
     	return Math.pow(1 - aging_factor, age); 
     }
 
@@ -2222,7 +2223,7 @@ public class PVJava implements Serializable
         {
             Connection conn = dbConn.getConnection(); 
             //TODO: Change to use owner.time() in correct format
-            LocalDateTime time = LocalDateTime.of(2016, 12, 1, 1, 0);
+            LocalDateTime time = LocalDateTime.of(2016, 12, 1, 9, 0);
             Object raw_kWh = DBRequest.getActualValue(conn, table_name, "Time", "kWh", time);
             return ((Number) raw_kWh).doubleValue();
         } 

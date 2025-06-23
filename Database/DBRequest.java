@@ -286,7 +286,7 @@ public class DBRequest {
             System.out.println("Table: pv");
             System.out.println("Period: " + startPV + " to " + endPV);
             System.out.println("Current kWh value: " + latestKwh);
-            printTimeSeriesData(pvData, "PV data:", "kWh");
+            //printTimeSeriesData(pvData, "PV data:", "kWh");
 
             // Example 2: Query household consumption data for an hour
             LocalDateTime startHH = LocalDateTime.of(2016, 1, 1, 1, 0);
@@ -294,7 +294,7 @@ public class DBRequest {
 
             List<Object[]> hhData = getTimeSeriesData(conn, "household_data", "utc_timestamp",
                     "average_per_person_consumption", startHH, endHH);
-            printTimeSeriesData(hhData, "Household data:", "Average consumption per person");
+            //printTimeSeriesData(hhData, "Household data:", "Average consumption per person");
 
             // Example 2: Query household consumption data for an hour
             LocalDateTime startHHS = LocalDateTime.of(2015, 1, 1, 1, 0);
@@ -302,7 +302,7 @@ public class DBRequest {
 
             List<Object[]> shData = getTimeSeriesData(conn, "price", "Time",
                     "price_kWh", startHHS, endHHS);
-            printTimeSeriesData(shData, "Price data:", "Average price per person");
+            //printTimeSeriesData(shData, "Price data:", "Average price per person");
 
 
         } catch (ClassNotFoundException e) {
