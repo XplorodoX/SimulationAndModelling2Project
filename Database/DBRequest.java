@@ -186,7 +186,7 @@ public class DBRequest {
      * @return The most recent value before the given timestamp, or null if none exists
      * @throws SQLException If a database access error occurs
      */
-    public static Object getLatestValueBefore(Connection conn, String tableName,
+    public static Object getActulValue(Connection conn, String tableName,
                                               String timeColumn, String dataColumn,
                                               LocalDateTime time) throws SQLException {
         Timestamp ts = timestampFromLocalDateTime(time);
@@ -281,7 +281,7 @@ public class DBRequest {
             LocalDateTime endPV = LocalDateTime.of(2016, 12, 1, 1, 0);
 
             List<Object[]> pvData = getTimeSeriesData(conn, "pv", "Time", "kWh", startPV, endPV);
-            Object latestKwh = getLatestValueBefore(conn, "pv", "Time", "kWh", endPV);
+            Object latestKwh = getActulValue(conn, "pv", "Time", "kWh", endPV);
 
             System.out.println("Table: pv");
             System.out.println("Period: " + startPV + " to " + endPV);
