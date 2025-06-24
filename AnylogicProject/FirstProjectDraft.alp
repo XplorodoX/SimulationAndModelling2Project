@@ -2262,7 +2262,7 @@ public class PVJava implements Serializable
             LocalDateTime time = LocalDateTime.of(2023, 01, 28, 9, 0);
             Object raw_kWh = DBRequest.getActualValue(conn, table_name, "Time", "kWh", time);
             
-            System.out.println("dlsakj: " + raw_kWh);
+            //System.out.println("dlsakj: " + raw_kWh);
             return ((Number) raw_kWh).doubleValue();
         } 
         catch (ClassNotFoundException e)
