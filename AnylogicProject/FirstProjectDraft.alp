@@ -2023,95 +2023,104 @@ public class DataMessageFromPC extends firstprojectdraft.MessageType implements 
 		<JavaClass>
 			<Id>1749855173213</Id>
 			<Name><![CDATA[PCJava]]></Name>
-			<Text><![CDATA[import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-/**
- * PCJava
- */	
+			<Text><![CDATA[import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+
 public class PCJava implements Serializable {
 
-	public void sendMessageToController(DataResponseTriggerMessage msg) {
-		if (owner.getHourOfDay() < 8 || owner.getHourOfDay() > 18) {
-			owner.port.send(new DataMessageFromPC(owner, owner.time(), 0.5));		
+	public void messageIn(MessageType msg)
+	{
+		if (msg instanceof DataResponseTriggerMessage)
+		{
+			int numberOfPeople = 3;
+			owner.port.send(new DataMessageFromPC(owner, owner.time(), ((Number)getPredictedConsumptionNow(numberOfPeople)).doubleValue()));
+			// for 1 timeslot startTime = endTime
 		}
-		else {
-			owner.port.send(new DataMessageFromPC(owner, owner.time(), 1));		
-		}
-	}
-	
-	public void messageIn(MessageType msg) {
-		if (msg instanceof DataResponseTriggerMessage){
-			sendMessageToController((DataResponseTriggerMessage)(msg));
-		}
+		//else if (msg instanceof DataResponseTriggerMessageFutureProduction) {...}
 	}
 	
 	public PC owner;
-	private String csvFile;
-    private double totalConsumption;
-    private double totalProduction;
+    //private static final String DB_URL = "jdbc:postgresql://localhost:5432/simdata";
+    //private static final String DB_USER = "user";      
+    //private static final String DB_PASSWORD = "password";  
+    // not needed, because theyre set in the Database
 
-    // Residential grid imports
-    private final int[] residentialImports = {34, 40, 46, 52, 58, 66};
+    private static final String TABLE_NAME = "household_data";
+    private static final String TIME_COLUMN = "utc_timestamp";
+    private static final String DATA_COLUMN = "average_per_person_consumption";
 
-    // Residential PV production
-    private final int[] residentialPV = {36, 48, 54, 68};
-
-    private final double intervalHours = 0.25;
-    
-    
-    public PCJava(PC owner, String csvFile) {
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        
+    public PCJava(PC owner) {
     	this.owner = owner;
-    	this.csvFile = csvFile;
+    }    
+    
+    public Object getPredictedConsumptionNow(int numberOfPeople) 
+    {
+    	LocalDateTime time = LocalDateTime.of(2016, 12, 1, 9, 0);
+    	return getPredictedConsumption(time, time, numberOfPeople).get(0);
     }
     
-    public void loadAndCalculate() {
-        totalConsumption = 0;
-        totalProduction = 0;
+    // Perform the process and return the result for the controller
+    public List<Object[]> getPredictedConsumption(LocalDateTime startTime, LocalDateTime endTime, int numberOfPeople) {
+        List<Object[]> results = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
-            String header = br.readLine(); // Skip header
-            System.out.println("Reading dataset...");
+        try (DBRequest.DBConnection dbConn = new DBRequest.DBConnection()) {
+            Connection conn = dbConn.getConnection(); 
 
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split(",", -1); 
+            List<Object[]> data = DBRequest.getTimeSeriesData(conn, TABLE_NAME, TIME_COLUMN, DATA_COLUMN, startTime, endTime);
 
-                double consumption = 0;
-                for (int index : residentialImports) {
-                    if (index < data.length && !data[index].isEmpty()) {
-                        consumption += Double.parseDouble(data[index]) * intervalHours;
-                    }
+            for (Object[] row : data) {
+                Timestamp ts = (Timestamp) row[0];
+                Object valueObj = row[1];
+                if (valueObj instanceof Number) {
+                    double avgPerPerson = ((Number) valueObj).doubleValue();
+                    double predicted = avgPerPerson * numberOfPeople * 2.5;
+
+                    // Test print (remove later)
+                    System.out.println(ts + " → Average/person: " + avgPerPerson + " kWh → Predicted for " + numberOfPeople + " people: " + predicted + " kWh");
+
+                    results.add(new Object[]{ts, predicted});
                 }
-
-                double production = 0;
-                for (int index : residentialPV) {
-                    if (index < data.length && !data[index].isEmpty()) {
-                        production += Double.parseDouble(data[index]) * intervalHours;
-                    }
-                }
-
-                totalConsumption += consumption;
-                totalProduction += production;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+            }            
+        }         
+        catch (ClassNotFoundException e)
+        {
+        	System.err.println("🚨 PostgreSQL JDBC driver not found.");
+        	e.printStackTrace();
         }
-    }
+        catch (SQLException e) 
+        {
+            System.err.println("Database error: " + e.getMessage());
+        }
 
-    public double getTotalConsumption() {
-        return totalConsumption;
+        return results;  // ← to be forwarded to the house controller
     }
+    // Optional test main to check before integrating with controller
+    public void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
 
-    public double getTotalProduction() {
-        return totalProduction;
+        System.out.print("Enter start datetime (YYYY-MM-DD HH:MM:SS): ");
+        String startInput = scanner.nextLine();
+
+        System.out.print("Enter end datetime (YYYY-MM-DD HH:MM:SS): ");
+        String endInput = scanner.nextLine();
+
+        System.out.print("Enter number of people in the household: ");
+        int numberOfPeople = scanner.nextInt();
+
+        LocalDateTime startTime = LocalDateTime.parse(startInput, FORMATTER);
+        LocalDateTime endTime = LocalDateTime.parse(endInput, FORMATTER);
+
+        List<Object[]> predictions = getPredictedConsumption(startTime, endTime, numberOfPeople);
+
+        // forward 'predictions' to the house controller, should i just rerturn? whaaaaaaaaaaaaa
     }
-
-    public double getNetConsumption() {
-        return totalConsumption - totalProduction;
-    }
-    
-
 	@Override
 	public String toString() {
 		return super.toString();
