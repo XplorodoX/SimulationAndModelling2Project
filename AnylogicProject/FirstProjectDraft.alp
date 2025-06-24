@@ -1474,7 +1474,7 @@ handler.messageIn(msg);]]></OnReceiveAction>
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
 						<DefaultValue Class="CodeValue">
-							<Code><![CDATA[new PCJava(this, "csvFile")]]></Code>
+							<Code><![CDATA[new PCJava(this)]]></Code>
 						</DefaultValue>
 						<ParameterEditor>
 							<Id>1749855124925</Id>
@@ -2033,15 +2033,21 @@ import java.util.Scanner;
 
 public class PCJava implements Serializable {
 
-	public void messageIn(MessageType msg)
-	{
-		if (msg instanceof DataResponseTriggerMessage)
-		{
-			int numberOfPeople = 3;
-			owner.port.send(new DataMessageFromPC(owner, owner.time(), ((Number)getPredictedConsumptionNow(numberOfPeople)).doubleValue()));
-			// for 1 timeslot startTime = endTime
-		}
-		//else if (msg instanceof DataResponseTriggerMessageFutureProduction) {...}
+	public void messageIn(MessageType msg) {
+	    if (msg instanceof DataResponseTriggerMessage) {
+	        int numberOfPeople = 3;
+
+	        Object prediction = getPredictedConsumptionNow();
+
+	        if (prediction instanceof Number) {
+	            double consumption = ((Number) prediction).doubleValue();
+	            owner.port.send(new DataMessageFromPC(owner, owner.time(), consumption));
+	        } else {
+	            System.err.println("Vorhersage ist null oder kein Number-Objekt: " + prediction);
+	            // Optional: Sende eine Meldung mit Defaultwert oder ignoriere
+	            // owner.port.send(new DataMessageFromPC(owner, owner.time(), 0.0));
+	        }
+	    }
 	}
 	
 	public PC owner;
@@ -2060,10 +2066,33 @@ public class PCJava implements Serializable {
     	this.owner = owner;
     }    
     
-    public Object getPredictedConsumptionNow(int numberOfPeople) 
+  public Object getPredictedConsumptionNow() 
     {
-    	LocalDateTime time = LocalDateTime.of(2016, 12, 1, 9, 0);
-    	return getPredictedConsumption(time, time, numberOfPeople).get(0);
+        try (DBRequest.DBConnection dbConn = new DBRequest.DBConnection()) {
+            Connection conn = dbConn.getConnection(); 
+            LocalDateTime timeStart = LocalDateTime.of(2016, 1, 1, 0, 45);
+            LocalDateTime timeEnd = LocalDateTime.of(2016, 1, 1, 1, 45);
+            List<Object[]> data = DBRequest.getTimeSeriesData(conn, TABLE_NAME, TIME_COLUMN, DATA_COLUMN, timeStart, timeEnd);
+
+            System.out.println("📊 Gefundene Daten:");
+            for (Object[] row : data) {
+                System.out.print("→ [ ");
+                for (Object value : row) {
+                    System.out.print(value + " ");
+                }
+                System.out.println("]");
+            }
+        }
+        catch (ClassNotFoundException e)
+        {
+        	System.err.println("🚨 PostgreSQL JDBC driver not found.");
+        	e.printStackTrace();
+        }
+        catch (SQLException e) 
+        {
+            System.err.println("Database error: " + e.getMessage());
+        }
+        return null;
     }
     
     // Perform the process and return the result for the controller
@@ -2203,7 +2232,7 @@ public class PVJava implements Serializable
     	//TODO Validate correct age calculation
     	double age = owner.time() / 31536000;
     	double aging_factor = 0.008;
-    	System.out.println(age);
+    	//System.out.println("age: " + age);
     	return Math.pow(1 - aging_factor, age); 
     }
  
@@ -2229,9 +2258,11 @@ public class PVJava implements Serializable
         try (DBRequest.DBConnection dbConn = new DBRequest.DBConnection()) 
         {
             Connection conn = dbConn.getConnection(); 
-            //TODO: Change to use owner.time() in correct format
-            LocalDateTime time = LocalDateTime.of(2016, 12, 1, 9, 0);
+            //TODO: Change to use owner.time() in correct format  2023-01-28 08:30:00
+            LocalDateTime time = LocalDateTime.of(2023, 01, 28, 9, 0);
             Object raw_kWh = DBRequest.getActualValue(conn, table_name, "Time", "kWh", time);
+            
+            System.out.println("dlsakj: " + raw_kWh);
             return ((Number) raw_kWh).doubleValue();
         } 
         catch (ClassNotFoundException e)
@@ -2774,12 +2805,28 @@ public class DBRequest {
 }]]></Text>
 		</JavaClass>
 	</JavaClasses>
+	<ModelResources>
+		<Resource>
+			<Id>1750795637389</Id>
+			<Path><![CDATA[postgresql-42.7.7.jar]]></Path>
+			<ReferencedFromUserCode>false</ReferencedFromUserCode>
+			<Location>FILE_SYSTEM</Location>
+		</Resource>
+	</ModelResources>
     <RequiredLibraryReference>
 		<LibraryName><![CDATA[com.anylogic.libraries.modules.markup_descriptors]]></LibraryName>
 		<VersionMajor>1</VersionMajor>
 		<VersionMinor>0</VersionMinor>
 		<VersionBuild>0</VersionBuild>
     </RequiredLibraryReference>
+	<ClassPathEntry>
+		<ResourceReference>
+			<PackageName><![CDATA[firstprojectdraft]]></PackageName>
+			<ClassName><![CDATA[postgresql-42.7.7.jar]]></ClassName>
+		</ResourceReference>
+		<Imported>true</Imported>
+		<Folder>false</Folder>
+	</ClassPathEntry>
 </Model>
 <ConvertersApplied>
 	<Uuid>9f7858c9-b2c8-4ead-9244-fd08833f642b</Uuid>
