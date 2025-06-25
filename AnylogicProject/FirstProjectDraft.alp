@@ -2072,6 +2072,13 @@ public class PCJava implements Serializable {
             Connection conn = dbConn.getConnection(); 
             LocalDateTime timeStart = LocalDateTime.of(2016, 1, 1, 0, 45);
             LocalDateTime timeEnd = LocalDateTime.of(2016, 1, 1, 1, 45);
+            
+            LocalDateTime time = LocalDateTime.of(2023, 01, 28, 9, 0);
+            LocalDateTime time2 = DateTimeConversionJava.getTimeNow(owner);
+            LocalDateTime time3 = DateTimeConversionJava.doubleToCurrentLocalDateTime(owner.time());            
+            System.out.println("PC: time2: " + time2);
+            System.out.println("PC: time3: " + time3);
+            
             List<Object[]> data = DBRequest.getTimeSeriesData(conn, TABLE_NAME, TIME_COLUMN, DATA_COLUMN, timeStart, timeEnd);
 
             System.out.println("📊 Gefundene Daten:");
@@ -2259,10 +2266,15 @@ public class PVJava implements Serializable
         {
             Connection conn = dbConn.getConnection(); 
             //TODO: Change to use owner.time() in correct format  2023-01-28 08:30:00
+            
             LocalDateTime time = LocalDateTime.of(2023, 01, 28, 9, 0);
+            LocalDateTime time2 = DateTimeConversionJava.getTimeNow(owner);
+            LocalDateTime time3 = DateTimeConversionJava.doubleToCurrentLocalDateTime(owner.time());            
+            System.out.println("PV: time2: " + time2);
+            System.out.println("PV: time3: " + time3);
+            
             Object raw_kWh = DBRequest.getActualValue(conn, table_name, "Time", "kWh", time);
             
-            //System.out.println("dlsakj: " + raw_kWh);
             return ((Number) raw_kWh).doubleValue();
         } 
         catch (ClassNotFoundException e)
@@ -2802,6 +2814,76 @@ public class DBRequest {
             e.printStackTrace();
         }
     }
+}]]></Text>
+		</JavaClass>
+		<!--   =========   Java Class   ========  -->
+		<JavaClass>
+			<Id>1750858394369</Id>
+			<Name><![CDATA[DateTimeConversionJava]]></Name>
+			<Text><![CDATA[import java.time.*;
+
+
+/**
+ * DateTimeConversionJava
+ */	
+
+
+public class DateTimeConversionJava implements Serializable {
+
+    /**
+     * Default constructor
+     */
+	
+	
+	static LocalDateTime startDate = LocalDateTime.of(2025,1,1,0,0,0);
+    public DateTimeConversionJava() {
+    	// set startDate
+    }
+
+    
+    public static LocalDateTime doubleToCurrentLocalDateTime(double secondsSinceStart)
+    {    	
+        // Convert seconds to duration (you must cast/round double to long for Duration)
+        Duration duration = Duration.ofSeconds((long) secondsSinceStart);
+
+        // Add duration to startDate
+        LocalDateTime resultDateTime = startDate.plusSeconds(duration.getSeconds());
+        
+        // Extract components
+        int year = resultDateTime.getYear();
+        int month = resultDateTime.getMonthValue();
+        int day = resultDateTime.getDayOfMonth();
+        int hour = resultDateTime.getHour();
+        int min = resultDateTime.getMinute();
+        int sec = resultDateTime.getSecond();
+        int nano = resultDateTime.getNano(); // optional
+                
+    	return LocalDateTime.of(year, month, day, hour, min, sec);
+    }
+    
+    public static LocalDateTime getTimeNow(Agent owner)
+    {
+    	int year = owner.getYear();
+    	int mounth = owner.getMonth() + 1; // because anylocig months are 0-11 and LocalDateTime months are 1-12
+    	int day = owner.getDayOfMonth();
+    	int hour = owner.getHourOfDay();
+    	int min = owner.getMinute();
+    	int sec = owner.getSecond();
+    	
+    	return LocalDateTime.of(year, mounth, day, hour, min, sec);    	
+    }
+    
+	@Override
+	public String toString() {
+		return super.toString();
+	}
+
+	/**
+	 * This number is here for model snapshot storing purpose<br>
+	 * It needs to be changed when this class gets changed
+	 */ 
+	private static final long serialVersionUID = 1L;
+
 }]]></Text>
 		</JavaClass>
 	</JavaClasses>
