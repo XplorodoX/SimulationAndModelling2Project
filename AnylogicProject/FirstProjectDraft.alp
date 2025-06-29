@@ -18,7 +18,6 @@
 		<ActiveObjectClass>
 			<Id>1749063971047</Id>
 			<Name><![CDATA[Main]]></Name>
-			<Import><![CDATA[import com.fasterxml.jackson.databind.ser.std.DateSerializer;]]></Import>
 			<Generic>false</Generic>
 			<GenericParameter>
 				<Id>1749063971053</Id>
@@ -109,11 +108,37 @@
 			</ScaleRuler>
 			<CurrentLevel>1749063971054</CurrentLevel>
 			<ConnectionsId>1749063971048</ConnectionsId>
+			<Variables>
+				<Variable Class="Parameter">
+					<Id>1749831062189</Id>
+					<Name><![CDATA[parentParameter]]></Name>
+					<X>710</X><Y>180</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
+						<Type><![CDATA[double]]></Type>
+						<UnitType><![CDATA[NONE]]></UnitType>
+						<SdArray>false</SdArray>
+						<DefaultValue Class="CodeValue">
+							<Code><![CDATA[312]]></Code>
+						</DefaultValue>
+						<ParameterEditor>
+							<Id>1749831062187</Id>
+							<EditorContolType>TEXT_BOX</EditorContolType>
+							<MinSliderValue><![CDATA[0]]></MinSliderValue>
+							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
+							<DelimeterType>NO_DELIMETER</DelimeterType>
+						</ParameterEditor>
+					</Properties>                 
+				</Variable>
+			</Variables>
 			<Connectors>
 				<Connector>
 					<Id>1749066158043</Id>
 					<Name><![CDATA[connector]]></Name>
-					<X>395</X><Y>660</Y>
+					<X>215</X><Y>370</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -140,13 +165,13 @@
 					</TargetConnectableItemReference>
 					<Points>
 						<Point><X>0</X><Y>0</Y></Point>
-						<Point><X>165</X><Y>-460</Y></Point>
+						<Point><X>335</X><Y>-170</Y></Point>
 					</Points>
 				</Connector>
 				<Connector>
 					<Id>1749066161880</Id>
 					<Name><![CDATA[connector1]]></Name>
-					<X>390</X><Y>390</Y>
+					<X>215</X><Y>240</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -173,13 +198,13 @@
 					</TargetConnectableItemReference>
 					<Points>
 						<Point><X>0</X><Y>0</Y></Point>
-						<Point><X>170</X><Y>-190</Y></Point>
+						<Point><X>335</X><Y>-40</Y></Point>
 					</Points>
 				</Connector>
 				<Connector>
 					<Id>1749066166099</Id>
 					<Name><![CDATA[connector2]]></Name>
-					<X>390</X><Y>70</Y>
+					<X>220</X><Y>110</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -206,10 +231,84 @@
 					</TargetConnectableItemReference>
 					<Points>
 						<Point><X>0</X><Y>0</Y></Point>
-						<Point><X>170</X><Y>130</Y></Point>
+						<Point><X>330</X><Y>90</Y></Point>
 					</Points>
 				</Connector>
 			</Connectors>
+			<AnalysisData>
+    			<Statistics>
+					<Id>1749066906974</Id>
+					<Name><![CDATA[statistics]]></Name>
+					<X>170</X><Y>150</Y>
+					<Label><X>15</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<AutoUpdate>true</AutoUpdate>
+					<RecurrenceProperties>
+						<Id>1749734233549</Id>
+						<OccurrenceAtTime>true</OccurrenceAtTime>
+						<OccurrenceDate>1749110400000</OccurrenceDate>
+						<OccurrenceTime Class="CodeUnitValue">
+							<Code><![CDATA[0]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						</OccurrenceTime>
+						<RecurrenceCode Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						</RecurrenceCode>
+					</RecurrenceProperties>
+					<Discrete>true</Discrete>
+				</Statistics>
+    			<Statistics>
+					<Id>1749066910325</Id>
+					<Name><![CDATA[statistics1]]></Name>
+					<X>170</X><Y>280</Y>
+					<Label><X>15</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<AutoUpdate>true</AutoUpdate>
+					<RecurrenceProperties>
+						<Id>1749734233551</Id>
+						<OccurrenceAtTime>true</OccurrenceAtTime>
+						<OccurrenceDate>1749110400000</OccurrenceDate>
+						<OccurrenceTime Class="CodeUnitValue">
+							<Code><![CDATA[0]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						</OccurrenceTime>
+						<RecurrenceCode Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						</RecurrenceCode>
+					</RecurrenceProperties>
+					<Discrete>true</Discrete>
+				</Statistics>
+    			<Statistics>
+					<Id>1749066912362</Id>
+					<Name><![CDATA[statistics2]]></Name>
+					<X>170</X><Y>410</Y>
+					<Label><X>15</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<AutoUpdate>true</AutoUpdate>
+					<RecurrenceProperties>
+						<Id>1749734233553</Id>
+						<OccurrenceAtTime>true</OccurrenceAtTime>
+						<OccurrenceDate>1749110400000</OccurrenceDate>
+						<OccurrenceTime Class="CodeUnitValue">
+							<Code><![CDATA[0]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						</OccurrenceTime>
+						<RecurrenceCode Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						</RecurrenceCode>
+					</RecurrenceProperties>
+					<Discrete>true</Discrete>
+				</Statistics>
+			</AnalysisData>
 			<AgentLinks>
 				<AgentLink>
 					<Id>1749063971048</Id>
@@ -236,7 +335,7 @@
 				<EmbeddedObject>
 					<Id>1749065130547</Id>
 					<Name><![CDATA[houseController]]></Name>
-					<X>560</X><Y>170</Y>
+					<X>550</X><Y>170</Y>
 					<Label><X>-10</X><Y>-15</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -254,7 +353,7 @@
 					</GenericParameterSubstitute>
 					<Parameters>
 						<Parameter>
-							<Name><![CDATA[simStepSize_in_min]]></Name>
+							<Name><![CDATA[tickSize_in_min]]></Name>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[handler]]></Name>
@@ -289,7 +388,7 @@
 				<EmbeddedObject>
 					<Id>1749065922928</Id>
 					<Name><![CDATA[battery]]></Name>
-					<X>360</X><Y>70</Y>
+					<X>190</X><Y>110</Y>
 					<Label><X>-15</X><Y>-40</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -339,7 +438,7 @@
 				<EmbeddedObject>
 					<Id>1749066033905</Id>
 					<Name><![CDATA[person_Energy_Consumption]]></Name>
-					<X>365</X><Y>660</Y>
+					<X>185</X><Y>370</Y>
 					<Label><X>-70</X><Y>-40</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -389,7 +488,7 @@
 				<EmbeddedObject>
 					<Id>1749066036727</Id>
 					<Name><![CDATA[pV]]></Name>
-					<X>360</X><Y>390</Y>
+					<X>185</X><Y>240</Y>
 					<Label><X>-5</X><Y>-40</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -451,218 +550,6 @@
 					<Z>0</Z>
 					<LevelVisibility>DIM_NON_CURRENT</LevelVisibility>
 
-			<Presentation>
-    			<TimePlot>
-					<Id>1751218131500</Id>
-					<Name><![CDATA[plotForBattery]]></Name>
-					<X>-10</X><Y>-20</Y>
-					<Label><X>0</X><Y>-10</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
-					<AutoUpdate>false</AutoUpdate>
-					<RecurrenceProperties>
-						<Id>1751218131498</Id>
-						<OccurrenceAtTime>true</OccurrenceAtTime>
-						<OccurrenceDate>1751270400000</OccurrenceDate>
-						<OccurrenceTime Class="CodeUnitValue">
-							<Code><![CDATA[0]]></Code>
-							<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
-						</OccurrenceTime>
-						<RecurrenceCode Class="CodeUnitValue">
-							<Code><![CDATA[1]]></Code>
-							<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
-						</RecurrenceCode>
-					</RecurrenceProperties>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Width>300.5947955390335</Width>
-					<Height>300.59482444733425</Height>
-					<BackgroundColor/>
-					<BorderColor/>
-					<ChartArea>
-						<XOffset>50</XOffset>
-						<YOffset>30</YOffset>
-						<Width>220.5947955390335</Width>
-						<Height>160.59482444733425</Height>
-						<BackgroundColor>-1</BackgroundColor>
-						<BorderColor>-16777216</BorderColor>
-						<GridColor>-12566464</GridColor>
-					</ChartArea>
-					<Legend>
-						<Place>SOUTH</Place>
-						<TextColor>-16777216</TextColor>
-						<Size>80</Size>
-					</Legend>
-					<Labels>
-						<HorLabelsPosition>DEFAULT</HorLabelsPosition>
-						<VerLabelsPosition>DEFAULT</VerLabelsPosition>
-						<TextColor>-12566464</TextColor>
-					</Labels>
-					<ShowLegend>true</ShowLegend>
-					<TimeWindowsMovementType>MOVEMENT_WITH_TIME</TimeWindowsMovementType>		
-					<TimeWindowUnits>WEEK</TimeWindowUnits>
-					<VerScaleFromExpression><![CDATA[0]]></VerScaleFromExpression>
-					<VerScaleToExpression><![CDATA[80]]></VerScaleToExpression>
-					<VerScaleType>FIXED</VerScaleType>
-					<DrawLine>true</DrawLine>
-					<Interpolation>LINEAR</Interpolation>
-					<DatasetExpression>  
-						<Title><![CDATA[batteryStateOfCharge]]></Title>
-					<Id>1751238144205</Id>
-					<Expression><![CDATA[batteryDataSet]]></Expression>
-					<Color>-16744448</Color>
-					<Expression2><![CDATA[houseController.handler.stateOfChargeInThisStep //battery.handler.stateOfCharge]]></Expression2>
-					<Expression2Flag>true</Expression2Flag>
-						<PointStyle>NONE</PointStyle>
-						<LineWidth>2.0</LineWidth>
-					</DatasetExpression>
-					<SamplesToKeep>1000</SamplesToKeep>
-					<TimeWindowExpression><![CDATA[1]]></TimeWindowExpression>
-					<FillAreaUnderLine>false</FillAreaUnderLine>
-					<LabelFormat>dd_MM</LabelFormat>
-    			</TimePlot>
-    			<TimePlot>
-					<Id>1751238832732</Id>
-					<Name><![CDATA[plotForPV]]></Name>
-					<X>-20</X><Y>240</Y>
-					<Label><X>0</X><Y>-10</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
-					<AutoUpdate>false</AutoUpdate>
-					<RecurrenceProperties>
-						<Id>1751238832730</Id>
-						<OccurrenceAtTime>true</OccurrenceAtTime>
-						<OccurrenceDate>1751270400000</OccurrenceDate>
-						<OccurrenceTime Class="CodeUnitValue">
-							<Code><![CDATA[0]]></Code>
-							<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
-						</OccurrenceTime>
-						<RecurrenceCode Class="CodeUnitValue">
-							<Code><![CDATA[1]]></Code>
-							<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
-						</RecurrenceCode>
-					</RecurrenceProperties>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Width>300.5947955390335</Width>
-					<Height>242.7881274382315</Height>
-					<BackgroundColor/>
-					<BorderColor/>
-					<ChartArea>
-						<XOffset>50</XOffset>
-						<YOffset>30</YOffset>
-						<Width>220.5947955390335</Width>
-						<Height>152.7881274382315</Height>
-						<BackgroundColor>-1</BackgroundColor>
-						<BorderColor>-16777216</BorderColor>
-						<GridColor>-12566464</GridColor>
-					</ChartArea>
-					<Legend>
-						<Place>SOUTH</Place>
-						<TextColor>-16777216</TextColor>
-						<Size>30</Size>
-					</Legend>
-					<Labels>
-						<HorLabelsPosition>DEFAULT</HorLabelsPosition>
-						<VerLabelsPosition>DEFAULT</VerLabelsPosition>
-						<TextColor>-12566464</TextColor>
-					</Labels>
-					<ShowLegend>true</ShowLegend>
-					<TimeWindowsMovementType>MOVEMENT_WITH_TIME</TimeWindowsMovementType>		
-					<TimeWindowUnits>WEEK</TimeWindowUnits>
-					<VerScaleFromExpression><![CDATA[0]]></VerScaleFromExpression>
-					<VerScaleToExpression><![CDATA[1]]></VerScaleToExpression>
-					<VerScaleType>AUTO</VerScaleType>
-					<DrawLine>true</DrawLine>
-					<Interpolation>LINEAR</Interpolation>
-					<DatasetExpression>  
-						<Title><![CDATA[pvProduction]]></Title>
-					<Id>1751238837488</Id>
-					<Expression><![CDATA[houseController.handler.productionInThisTickPV]]></Expression>
-					<Color>-2354116</Color>
-					<Expression2><![CDATA[houseController.handler.productionInThisStepPV]]></Expression2>
-					<Expression2Flag>true</Expression2Flag>
-						<PointStyle>NONE</PointStyle>
-						<LineWidth>2.0</LineWidth>
-					</DatasetExpression>
-					<SamplesToKeep>1000</SamplesToKeep>
-					<TimeWindowExpression><![CDATA[1]]></TimeWindowExpression>
-					<FillAreaUnderLine>false</FillAreaUnderLine>
-					<LabelFormat>dd_MM</LabelFormat>
-    			</TimePlot>
-    			<TimePlot>
-					<Id>1751239592090</Id>
-					<Name><![CDATA[plotForPC]]></Name>
-					<X>-20</X><Y>517.369</Y>
-					<Label><X>0</X><Y>-10</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
-					<AutoUpdate>false</AutoUpdate>
-					<RecurrenceProperties>
-						<Id>1751239592088</Id>
-						<OccurrenceAtTime>true</OccurrenceAtTime>
-						<OccurrenceDate>1751270400000</OccurrenceDate>
-						<OccurrenceTime Class="CodeUnitValue">
-							<Code><![CDATA[0]]></Code>
-							<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
-						</OccurrenceTime>
-						<RecurrenceCode Class="CodeUnitValue">
-							<Code><![CDATA[1]]></Code>
-							<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
-						</RecurrenceCode>
-					</RecurrenceProperties>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Width>300.5947955390335</Width>
-					<Height>242.7881274382315</Height>
-					<BackgroundColor/>
-					<BorderColor/>
-					<ChartArea>
-						<XOffset>50</XOffset>
-						<YOffset>30</YOffset>
-						<Width>220.5947955390335</Width>
-						<Height>152.7881274382315</Height>
-						<BackgroundColor>-1</BackgroundColor>
-						<BorderColor>-16777216</BorderColor>
-						<GridColor>-12566464</GridColor>
-					</ChartArea>
-					<Legend>
-						<Place>SOUTH</Place>
-						<TextColor>-16777216</TextColor>
-						<Size>30</Size>
-					</Legend>
-					<Labels>
-						<HorLabelsPosition>DEFAULT</HorLabelsPosition>
-						<VerLabelsPosition>DEFAULT</VerLabelsPosition>
-						<TextColor>-12566464</TextColor>
-					</Labels>
-					<ShowLegend>true</ShowLegend>
-					<TimeWindowsMovementType>MOVEMENT_WITH_TIME</TimeWindowsMovementType>		
-					<TimeWindowUnits>WEEK</TimeWindowUnits>
-					<VerScaleFromExpression><![CDATA[0]]></VerScaleFromExpression>
-					<VerScaleToExpression><![CDATA[1]]></VerScaleToExpression>
-					<VerScaleType>AUTO</VerScaleType>
-					<DrawLine>true</DrawLine>
-					<Interpolation>LINEAR</Interpolation>
-					<DatasetExpression>  
-						<Title><![CDATA[pcConsumption]]></Title>
-					<Id>1751239594136</Id>
-					<Expression><![CDATA[pcDataSet]]></Expression>
-					<Color>-7667573</Color>
-					<Expression2><![CDATA[houseController.handler.consumptionInThisStepPC]]></Expression2>
-					<Expression2Flag>true</Expression2Flag>
-						<PointStyle>NONE</PointStyle>
-						<LineWidth>1.0</LineWidth>
-					</DatasetExpression>
-					<SamplesToKeep>1000</SamplesToKeep>
-					<TimeWindowExpression><![CDATA[1]]></TimeWindowExpression>
-					<FillAreaUnderLine>false</FillAreaUnderLine>
-					<LabelFormat>dd_MM</LabelFormat>
-    			</TimePlot>
-			</Presentation>
 
 				</Level>
 			</Presentation>
@@ -792,7 +679,7 @@
 				</Variable>
 				<Variable Class="Parameter">
 					<Id>1749066364626</Id>
-					<Name><![CDATA[simStepSize_in_min]]></Name>
+					<Name><![CDATA[tickSize_in_min]]></Name>
 					<X>565</X><Y>180</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
@@ -867,9 +754,9 @@ handler.messageIn(msg);]]></OnReceiveAction>
 			<StatechartElements>
 				<StatechartElement Class="State" ParentState="ROOT_NODE">
 					<Id>1749066240613</Id>
-					<Name><![CDATA[simStep]]></Name>
+					<Name><![CDATA[tick]]></Name>
 					<X>460</X><Y>195</Y>
-					<Label><X>15</X><Y>15</Y></Label>
+					<Label><X>25</X><Y>15</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
@@ -910,26 +797,9 @@ handler.messageIn(msg);]]></OnReceiveAction>
 					</Points>
 					<IconOffset>50.0</IconOffset>
 					<Properties Source="1749066240613" Target="1749066240613" Trigger="timeout">
-						<Action><![CDATA[handler.sendMessagesToAll();
-get_Main().plotForBattery.updateData();
-//get_Main().batteryStateOfChargeStat.update();
-//get_Main().batteryStateOfChargeVar = get_Main().battery.handler.stateOfCharge;
-//get_Main().batteryDataSet.add(time(), get_Main().battery.handler.stateOfCharge);
-
-get_Main().plotForPV.updateData();
-//get_Main().pvProductionStat.update();
-//get_Main().pvProductionVar = handler.productionInThisTickPV;
-//get_Main().pvDataSet.add(time(), get_Main().pvProductionVar);
-
-get_Main().plotForPC.updateData();
-//get_Main().pcConsumptionStat.update();
-//get_Main().pcConsumptionVar = handler.consumptionInThisTickPC;
-//get_Main().pcConsumptionVar = handler.consumptionInThisTickPV;
-//get_Main().pvDataSet.add(time(), get_Main().pvProductionVar);
-
-//get_Main().plotPC2.updateData();]]></Action>
+						<Action><![CDATA[handler.sendMessagesToAll();]]></Action>
 						<Timeout Class="CodeUnitValue">
-							<Code><![CDATA[simStepSize_in_min]]></Code>
+							<Code><![CDATA[tickSize_in_min]]></Code>
 							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
 						</Timeout>
 						<Condition><![CDATA[true]]></Condition>
@@ -1732,14 +1602,14 @@ if (false && msg instanceof DataResponseTriggerMessage){
 	<TimeAccuracy>1.0E-5</TimeAccuracy>
 	<Frame>
 		<Id>1749063959999</Id>
-		<Width>840</Width>
-		<Height>800</Height>
+		<Width>1000</Width>
+		<Height>600</Height>
 	</Frame>
 	<Database>
 		<Id>1749063959989</Id>
-		<Logging>true</Logging>
+		<Logging>false</Logging>
 		<AutoExport>false</AutoExport>
-		<ShutdownCompact>true</ShutdownCompact>
+		<ShutdownCompact>false</ShutdownCompact>
 		<ImportSettings>
 		</ImportSettings>
 		<ExportSettings>
@@ -1809,6 +1679,9 @@ if (false && msg instanceof DataResponseTriggerMessage){
 			</Presentation>
 
 			<Parameters>
+				<Parameter>
+					<ParameterName><![CDATA[parentParameter]]></ParameterName>
+				</Parameter>
 			</Parameters>
 			<PresentationProperties>
 				<EnableZoomAndPanning>true</EnableZoomAndPanning>
@@ -1820,10 +1693,10 @@ if (false && msg instanceof DataResponseTriggerMessage){
 			</PresentationProperties>
 			<ModelTimeProperties>
 				<StopOption><![CDATA[Stop at specified date]]></StopOption>
-				<InitialDate><![CDATA[1451606400000]]></InitialDate>
+				<InitialDate><![CDATA[1104537600000]]></InitialDate>
 				<InitialTime><![CDATA[0.0]]></InitialTime>
-				<FinalDate><![CDATA[1452211200000]]></FinalDate>
-				<FinalTime><![CDATA[604800.0]]></FinalTime>
+				<FinalDate><![CDATA[1107129600000]]></FinalDate>
+				<FinalTime><![CDATA[2592000.0]]></FinalTime>
 			</ModelTimeProperties>
 			<BypassInitialScreen>true</BypassInitialScreen>
 		</SimulationExperiment>	
@@ -1880,24 +1753,21 @@ public class MyTestClass implements Serializable {
 			<Text><![CDATA[/**
  * HouseControllerHandler
  */	
-public class HouseControllerJava implements Serializable 
-{
+public class HouseControllerJava implements Serializable {
 
 	public HouseController owner;
-	public double productionInThisStepPV;
-	public double consumptionInThisStepPC;
-	public double stateOfChargeInThisStep;
-	//private double powerBalanceInThisStep;
-	private double differenceInThisStep;
+	private double productionInThisTickPV;
+	private double consumptionInThisTickPC;
+	//private double powerBalanceInThisTick;
+	private double differenceInThisTick;
 	private int messageCounter = 0;
-	private int numMessagesPerStep = 2;
-	private double powerBalanceInThisStep;
+	private int numMessagesPerTick = 2;
+	private double powerBalanceInThisTick;
 	
     /**
      * Constructor
      */
-    public HouseControllerJava(HouseController owner) 
-    {
+    public HouseControllerJava(HouseController owner) {
     	this.owner = owner;
     }
 
@@ -1906,66 +1776,58 @@ public class HouseControllerJava implements Serializable
 		return super.toString();
 	}
 	
-	public boolean sendMessagesToAll() 
-	{
+	public boolean sendMessagesToAll() {
 		
 		owner.port.send(new DataResponseTriggerMessage(owner, owner.time())); 
 		// should only trigger the sending of the data, so it doesnt be a specific message
 		return true;
 	}	
 	
-	public void messageIn(MessageType msg) 
-	{
+	public void messageIn(MessageType msg) {
 		//System.out.println("msg in HouseController: " + msg);
 		messageCounter++;
 
-		if (msg instanceof DataMessageFromPV)
-		{
-			double data = ((DataMessageFromPV) msg).productionInThisStep;
+		if (msg instanceof DataMessageFromPV){
+
+			double data = ((DataMessageFromPV) msg).productionInThisTick;
 			owner.energy_saved += data;
 			owner.energy_saved_stat.add(data);
 			
-			this.productionInThisStepPV = ((DataMessageFromPV) msg).productionInThisStep;
-			//this.powerBalanceInThisStep = this.productionInThisStepPV - this.consumptionInThisStepPC;
+			this.productionInThisTickPV = ((DataMessageFromPV) msg).productionInThisTick;
+			//this.powerBalanceInThisTick = this.productionInThisTickPV - this.consumptionInThisTickPC;
 			
 			//System.out.println("THIS WAS PV");
 		}
-		else if (msg instanceof DataMessageFromPC)
-		{
+		else if (msg instanceof DataMessageFromPC){
 			
-			double data = ((DataMessageFromPC) msg).consumptionInThisStep;
+			double data = ((DataMessageFromPC) msg).consumptionInThisTick;
 			owner.energy_saved += data;
 			owner.energy_saved_stat.add(data);
-
-			//owner.meinDatensatz.add(owner.time(), data);
 			
-			this.consumptionInThisStepPC = ((DataMessageFromPC) msg).consumptionInThisStep;
-			//this.powerBalanceInThisStep = this.productionInThisStepPV - this.consumptionInThisStepPC;
+			this.consumptionInThisTickPC = ((DataMessageFromPC) msg).consumptionInThisTick;
+			//this.powerBalanceInThisTick = this.productionInThisTickPV - this.consumptionInThisTickPC;
 			
 			//System.out.println("THIS WAS PC");			
 		}
-		else if (msg instanceof DataMessageFromBattery)
-		{			
-			differenceInThisStep = ((DataMessageFromBattery) msg).difference;
-			stateOfChargeInThisStep = ((DataMessageFromBattery) msg).stateOfCharge;
+		else if (msg instanceof DataMessageFromBattery){
+			
+			differenceInThisTick = ((DataMessageFromBattery) msg).difference;
 		}
 		else{
 		 	System.out.println("ERROR IN \"messageIn\". ");
 		}
 		
 		
-		if (messageCounter < numMessagesPerStep) 
-		{
+		if (messageCounter < numMessagesPerTick) {
 			// still have to get messages from first ones (now PC, PV)
 		}
-		else if (messageCounter == numMessagesPerStep)
+		else if (messageCounter == numMessagesPerTick)
 		{
-			powerBalanceInThisStep = productionInThisStepPV - consumptionInThisStepPC;		
+			powerBalanceInThisTick = productionInThisTickPV - consumptionInThisTickPC;		
 			
-			owner.port.send(new DataMessageToBattery(owner, owner.time(), powerBalanceInThisStep));
+			owner.port.send(new DataMessageToBattery(owner, owner.time(), powerBalanceInThisTick));
 		}
-		else 
-		{
+		else {
 			simpleStrat();
 			messageCounter = 0;
 		}
@@ -1973,24 +1835,21 @@ public class HouseControllerJava implements Serializable
 		
 	}	
 	
-	public void simpleStrat() 
-	{
+	public void simpleStrat() {
 		// what strat does: 
 		// 1) determine what to do
 		// 2) buy / sell energy
 		// 3) send orders to battery
 		
 		
-		//System.out.println(differenceInThisStep);
-		//System.out.println(powerBalanceInThisStep);
+		//System.out.println(differenceInThisTick);
+		//System.out.println(powerBalanceInThisTick);
 		
 		
-		if(powerBalanceInThisStep > 0) 
-		{
-			owner.energy += differenceInThisStep;
-		}else 
-		{
-			owner.energy -= differenceInThisStep;
+		if(powerBalanceInThisTick > 0) {
+			owner.energy += differenceInThisTick;
+		}else {
+			owner.energy -= differenceInThisTick;
 		}		
 		
 		
@@ -1999,9 +1858,9 @@ public class HouseControllerJava implements Serializable
 	}
 	
 	
-	public void tstFct1() 
-	{
+	public void tstFct1() {
 		System.out.println("Do I have access to a parameter in Main from HouseController? => yes");
+		System.out.println("root.parentParameter: " + ((Main)owner.getOwner()).parentParameter);
 		
 		List<?> items = owner.getConnections();		
 		items.forEach(item -> System.out.println(item));
@@ -2092,26 +1951,26 @@ public class DataResponseTriggerMessage extends firstprojectdraft.MessageType im
  */	
 public class DataMessageFromPV extends firstprojectdraft.MessageType implements Serializable {
 
-	double productionInThisStep;
+	double productionInThisTick;
 
     /**
      * Constructor initializing the fields
      */
-    public DataMessageFromPV(Agent sender, double timestamp, double productionInThisStep) {
+    public DataMessageFromPV(Agent sender, double timestamp, double productionInThisTick) {
     	super(sender, timestamp);
-		this.productionInThisStep = productionInThisStep;
+		this.productionInThisTick = productionInThisTick;
     }
     
-    public DataMessageFromPV(Agent sender, double productionInThisStep) {
+    public DataMessageFromPV(Agent sender, double productionInThisTick) {
     	super(sender, sender.time());
-		this.productionInThisStep = productionInThisStep;
+		this.productionInThisTick = productionInThisTick;
     }
 
 	@Override
 	public String toString() {
 		return  
 			super.toString() + 	
-			"productionInThisStep = " + productionInThisStep +" ";
+			"productionInThisTick = " + productionInThisTick +" ";
 	}
 
 	/**
@@ -2130,26 +1989,26 @@ public class DataMessageFromPV extends firstprojectdraft.MessageType implements 
  */	
 public class DataMessageFromPC extends firstprojectdraft.MessageType implements Serializable {
 
-	double consumptionInThisStep;
+	double consumptionInThisTick;
 
     /**
      * Constructor initializing the fields
      */
-    public DataMessageFromPC(Agent sender, double timestamp, double consumptionInThisStep) {
+    public DataMessageFromPC(Agent sender, double timestamp, double consumptionInThisTick) {
     	super(sender, timestamp);
-		this.consumptionInThisStep = consumptionInThisStep;
+		this.consumptionInThisTick = consumptionInThisTick;
     }
     
-    public DataMessageFromPC(Agent sender, double consumptionInThisStep) {
+    public DataMessageFromPC(Agent sender, double consumptionInThisTick) {
     	super(sender, sender.time());
-		this.consumptionInThisStep = consumptionInThisStep;
+		this.consumptionInThisTick = consumptionInThisTick;
     }
 
 	@Override
 	public String toString() {
 		return  
 			super.toString() + 
-			"consumptionInThisStep = " + consumptionInThisStep +" ";
+			"consumptionInThisTick = " + consumptionInThisTick +" ";
 	}
 
 	/**
@@ -2171,125 +2030,84 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+//startend - this is for me find thie piece easily
 
 public class PCJava implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-	public void messageIn(MessageType msg) {
-	    if (msg instanceof DataResponseTriggerMessage) {
-	        int numberOfPeople = 3;
-
-	        Object prediction = getPredictedConsumptionNow();
-
-	        if (prediction instanceof Number) {
-	            double consumption = ((Number) prediction).doubleValue();
-	            owner.port.send(new DataMessageFromPC(owner, owner.time(), consumption));
-	        } else {
-	            System.err.println("Vorhersage ist null oder kein Number-Objekt: " + prediction + " ||| aktuelle Zeit: " + DateTimeConversionJava.getTimeNow(owner));
-	            // Optional: Sende eine Meldung mit Defaultwert oder ignoriere
-	            // owner.port.send(new DataMessageFromPC(owner, owner.time(), 0.0));
-	        }
-	    }
-	}
-	
-	public PC owner;
-    //private static final String DB_URL = "jdbc:postgresql://localhost:5432/simdata";
-    //private static final String DB_USER = "user";      
-    //private static final String DB_PASSWORD = "password";  
-    // not needed, because theyre set in the Database
+    private PC owner;
+    private int numberOfPeople;
 
     private static final String TABLE_NAME = "household_data";
     private static final String TIME_COLUMN = "utc_timestamp";
     private static final String DATA_COLUMN = "average_per_person_consumption";
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        
-    public PCJava(PC owner) {
-    	this.owner = owner;
-    }    
-    
-  public Object getPredictedConsumptionNow() 
-    {
-        try (DBRequest.DBConnection dbConn = new DBRequest.DBConnection()) {
-            Connection conn = dbConn.getConnection(); 
-            LocalDateTime timeStart = LocalDateTime.of(2016, 1, 1, 0, 45);
-            LocalDateTime timeEnd = LocalDateTime.of(2016, 1, 1, 1, 45);
-            
-            //LocalDateTime time = LocalDateTime.of(2023, 01, 28, 9, 0);
-            LocalDateTime time2 = DateTimeConversionJava.getTimeNow(owner);
-            LocalDateTime time25 = DateTimeConversionJava.getTimeIn15(owner);
-            LocalDateTime time3 = DateTimeConversionJava.doubleToCurrentLocalDateTime(owner.time());            
-            System.out.println("PC: time2: " + time2);
-            System.out.println("PC: time3: " + time3);
-            
-            // use DBRequest.getActualValue(...) instead!!
-            List<Object[]> data = DBRequest.getTimeSeriesData(conn, TABLE_NAME, TIME_COLUMN, DATA_COLUMN, time2, time25);
 
-            //System.out.println("📊 Gefundene Daten:");
-            for (Object[] row : data) {
-                //System.out.print("→ [ ");
-                for (Object value : row) {
-                    //System.out.print(value + " ");
-                }
-                //System.out.println("]");
-            }
-            double val = ((Number) data.get(0)[1]).doubleValue();
-            System.out.println("PC: val: " + val);
-        	return val;
-            
-        }
-        catch (ClassNotFoundException e)
-        {
-        	System.err.println("🚨 PostgreSQL JDBC driver not found.");
-        	e.printStackTrace();
-        }
-        catch (SQLException e) 
-        {
-            System.err.println("Database error: " + e.getMessage());
-        }
-        catch(IndexOutOfBoundsException e)
-        {
-        	System.out.println("PC: IndexOutOfBoundsException message: " + e.getMessage());
-        }
-;		return null;
+    // Constructor that sets owner and number of people
+    public PCJava(PC owner, int numberOfPeople) {
+        this.owner = owner;
+        this.numberOfPeople = numberOfPeople;
     }
-    
-    // Perform the process and return the result for the controller
-    public List<Object[]> getPredictedConsumption(LocalDateTime startTime, LocalDateTime endTime, int numberOfPeople) {
+
+    // Returns predicted consumption for current time step
+    public double getPredictedConsumptionNow() {
+        try (DBRequest.DBConnection dbConn = new DBRequest.DBConnection()) {
+            Connection conn = dbConn.getConnection();
+
+            LocalDateTime now = DateTimeConversionJava.getTimeNow(owner);
+
+            List<Object[]> data = DBRequest.getTimeSeriesData(
+                conn, TABLE_NAME, TIME_COLUMN, DATA_COLUMN,
+                now, now // query a single timestamp
+            );
+
+            if (!data.isEmpty()) {
+                Object valueObj = data.get(0)[1];
+                if (valueObj instanceof Number) {
+                    double avgPerPerson = ((Number) valueObj).doubleValue();
+                    return avgPerPerson * numberOfPeople;
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0.0; // fallback
+    }
+
+    // Range query to get values for all timestamps in the interval
+    public List<Object[]> getPredictedConsumption(LocalDateTime startTime, LocalDateTime endTime) {
         List<Object[]> results = new ArrayList<>();
 
         try (DBRequest.DBConnection dbConn = new DBRequest.DBConnection()) {
-            Connection conn = dbConn.getConnection(); 
+            Connection conn = dbConn.getConnection();
 
-            List<Object[]> data = DBRequest.getTimeSeriesData(conn, TABLE_NAME, TIME_COLUMN, DATA_COLUMN, startTime, endTime);
+            List<Object[]> data = DBRequest.getTimeSeriesData(
+                conn, TABLE_NAME, TIME_COLUMN, DATA_COLUMN,
+                startTime, endTime
+            );
 
             for (Object[] row : data) {
                 Timestamp ts = (Timestamp) row[0];
                 Object valueObj = row[1];
                 if (valueObj instanceof Number) {
                     double avgPerPerson = ((Number) valueObj).doubleValue();
-                    double predicted = avgPerPerson * numberOfPeople * 2.5;
-
-                    // Test print (remove later)
-                    System.out.println(ts + " → Average/person: " + avgPerPerson + " kWh → Predicted for " + numberOfPeople + " people: " + predicted + " kWh");
-
+                    double predicted = avgPerPerson * numberOfPeople;
                     results.add(new Object[]{ts, predicted});
                 }
-            }            
-        }         
-        catch (ClassNotFoundException e)
-        {
-        	System.err.println("🚨 PostgreSQL JDBC driver not found.");
-        	e.printStackTrace();
-        }
-        catch (SQLException e) 
-        {
-            System.err.println("Database error: " + e.getMessage());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        return results;  // ← to be forwarded to the house controller
+        return results;
     }
-    // Optional test main to check before integrating with controller
-    public void main(String[] args) {
+
+    // Optional test utility
+    public void testWithScanner() {
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Enter start datetime (YYYY-MM-DD HH:MM:SS): ");
@@ -2298,16 +2116,18 @@ public class PCJava implements Serializable {
         System.out.print("Enter end datetime (YYYY-MM-DD HH:MM:SS): ");
         String endInput = scanner.nextLine();
 
-        System.out.print("Enter number of people in the household: ");
-        int numberOfPeople = scanner.nextInt();
-
         LocalDateTime startTime = LocalDateTime.parse(startInput, FORMATTER);
         LocalDateTime endTime = LocalDateTime.parse(endInput, FORMATTER);
 
-        List<Object[]> predictions = getPredictedConsumption(startTime, endTime, numberOfPeople);
+        List<Object[]> predictions = getPredictedConsumption(startTime, endTime);
 
-        // forward 'predictions' to the house controller, should i just rerturn? whaaaaaaaaaaaaa
+        System.out.println("Results for " + numberOfPeople + " people:");
+        for (Object[] row : predictions) {
+            System.out.println(row[0] + " → Predicted: " + row[1] + " kWh");
+        }
     }
+}
+//editend - this is for me find thie piece easily
 	@Override
 	public String toString() {
 		return super.toString();
@@ -2458,13 +2278,12 @@ public class PVJava implements Serializable
 			<Text><![CDATA[/**
  * BatteryHandler
  */	
-public class BatteryJava implements Serializable 
-{
+public class BatteryJava implements Serializable {
 
 	// --- Batteryparameter ---
 	private Battery owner;
-	private double capacity;            // Capacity [kWh]
-	private double stateOfCharge;       // Current charge [kWh]
+    private double capacity;            // Capacity [kWh]
+    private double stateOfCharge;       // Current charge [kWh]
     private double maxChargePower;      // Maximum charge in one timestep [kWh]
     private double maxDischargePower;   // Maximum discharge in one timestep [kWh]
     private double roundTripEfficiency; // Charge-Discharge efficiency (applied twice)
@@ -2472,8 +2291,7 @@ public class BatteryJava implements Serializable
 
     private double cycles;              // Charging cycles
 
-    public BatteryJava(Battery owner, double capacity, double maxChargePower, double maxDischargePower, double roundTripEfficiency, double degradationPerCycle) 
-    {
+    public BatteryJava(Battery owner, double capacity, double maxChargePower, double maxDischargePower, double roundTripEfficiency, double degradationPerCycle) {
     	this.owner = owner;
         this.capacity = capacity;
         this.stateOfCharge = 0.0;
@@ -2485,8 +2303,7 @@ public class BatteryJava implements Serializable
     }
 
     // Charges battery and returns overflow
-    public double charge(double requestedEnergy) 
-    {
+    public double charge(double requestedEnergy) {
         double maxPossibleCharge = Math.min(maxChargePower, (capacity - stateOfCharge));
         double reducedEnergy = requestedEnergy * roundTripEfficiency;
         double actualCharge = Math.min(reducedEnergy, maxPossibleCharge);
@@ -2502,8 +2319,7 @@ public class BatteryJava implements Serializable
 
     // Discharges battery and returns missing
     // trueDischarge tries to consider roundTripEfficiency beforehand
-    public double discharge(double requestedEnergy, boolean trueDischarge) 
-    {
+    public double discharge(double requestedEnergy, boolean trueDischarge) {
         double newRequestedEnergy = Math.abs(requestedEnergy);
         if(trueDischarge) {
             newRequestedEnergy /= roundTripEfficiency;
@@ -2528,43 +2344,36 @@ public class BatteryJava implements Serializable
     }
 
     // Simulate Degradation
-    public void applyDegradation() 
-    {
+    public void applyDegradation() {
         double degradedCapacity = capacity * (1 - degradationPerCycle * cycles);
         capacity = Math.max(degradedCapacity, 0);
         stateOfCharge = Math.min(stateOfCharge, capacity);
     }
 
     // Getter
-    public double getSOC() 
-    {
+    public double getSOC() {
         return stateOfCharge;
     }
 
-    public double getCapacity() 
-    {
+    public double getCapacity() {
         return capacity;
     }
 
-    public double getCycles() 
-    {
+    public double getCycles() {
         return cycles;
     }
 
-    public double getSOCPercentage() 
-    {
+    public double getSOCPercentage() {
         return (stateOfCharge / capacity) * 100.0;
     }
 
 
 	@Override
-	public String toString() 
-	{
+	public String toString() {
 		return super.toString();
 	}
 	
-	public void messageIn(MessageType generalMsg) 
-	{
+	public void messageIn(MessageType generalMsg) {
 		
 		
 		if (generalMsg instanceof DataMessageToBattery)
@@ -2573,15 +2382,12 @@ public class BatteryJava implements Serializable
 			
 			double difference;
 			double powerBalance = msg.powerBalance;
-			if(powerBalance > 0) 
-			{
+			if(powerBalance > 0) {
 				difference = charge(powerBalance);
-			}
-			else 
-			{
+			}else {
 				difference = discharge(powerBalance, true);
 			}
-			owner.port.send(new DataMessageFromBattery(owner, owner.time(), difference, this.stateOfCharge));
+			owner.port.send(new DataMessageFromBattery(owner, owner.time(), difference));
 		}
 	}
 
@@ -2600,24 +2406,21 @@ public class BatteryJava implements Serializable
 			<Text><![CDATA[/**
  * DataMessageFromBattery
  */	
-public class DataMessageFromBattery extends firstprojectdraft.MessageType implements Serializable 
-{
+public class DataMessageFromBattery extends firstprojectdraft.MessageType implements Serializable {
 	
 	public double difference;
-	public double stateOfCharge;
+	
     /**
      * Default constructor
      */
-    public DataMessageFromBattery(Agent sender, double timestamp, double difference, double stateOfCharge) 
-    {    	
+    public DataMessageFromBattery(Agent sender, double timestamp, double difference) {
     	super(sender, timestamp);
     	this.difference = difference;
-    	this.stateOfCharge = stateOfCharge;    	
+    	
     }
 
 	@Override
-	public String toString() 
-	{
+	public String toString() {
 		return super.toString();
 	}
 
@@ -2999,7 +2802,7 @@ public class DateTimeConversionJava implements Serializable {
      */
 	
 	
-	static LocalDateTime startDate = LocalDateTime.of(2016,1,1,0,0,0);
+	static LocalDateTime startDate = LocalDateTime.of(2025,1,1,0,0,0);
     public DateTimeConversionJava() {
     	// set startDate
     }
@@ -3036,24 +2839,6 @@ public class DateTimeConversionJava implements Serializable {
     	
     	return LocalDateTime.of(year, mounth, day, hour, min, sec);    	
     }
-    
-    public static LocalDateTime getTimeIn15(Agent owner)
-    {
-    	int year = owner.getYear();
-    	int mounth = owner.getMonth() + 1; // because anylocig months are 0-11 and LocalDateTime months are 1-12
-    	int day = owner.getDayOfMonth();
-    	int hour = owner.getHourOfDay();
-    	int min = owner.getMinute();
-    	int sec = owner.getSecond();
-    	
-    	LocalDateTime currentTime = LocalDateTime.of(year, mounth, day, hour, min, sec);    	
-        Duration duration = Duration.ofSeconds((long) 15*60);
-
-        LocalDateTime timeIn15Min= currentTime.plusSeconds(duration.getSeconds());
-    	
-    	return timeIn15Min;
-    }
-    
     
 	@Override
 	public String toString() {
