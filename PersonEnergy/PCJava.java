@@ -64,7 +64,7 @@ public class PCJava implements Serializable {
                 Object valueObj = row[1];
                 if (valueObj instanceof Number) {
                     double avgPerPerson = ((Number) valueObj).doubleValue();
-                    double predicted = avgPerPerson * numberOfPeople;
+                    double predicted = avgPerPerson * numberOfPeople * 5;
                     results.add(new Object[]{ts, predicted});
                 }
             }
