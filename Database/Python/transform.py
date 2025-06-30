@@ -21,8 +21,8 @@ def remove_column(df: pd.DataFrame, column_name: str) -> pd.DataFrame:
     return df.drop(columns=[column_name])
 
 if __name__ == '__main__':
-    input_path = 'oldi/household_data_15min_singleindex.csv'
-    output_path = 'household_data_15min_singleindex.csv'
+    input_path = 'oldi/heatpump.csv'
+    output_path = 'heatpump.csv'
     timestamp_column = 'utc_timestamp'
     column_to_remove = 'cet_cest_timestamp'
 
