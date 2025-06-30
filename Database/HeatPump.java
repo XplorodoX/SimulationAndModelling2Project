@@ -16,10 +16,9 @@ public class HeatPump implements Serializable {
         {
             Connection conn = dbConn.getConnection();
 
-            LocalDateTime startHH = LocalDateTime.of(2016, 1, 1, 1, 0);
-            LocalDateTime endHH = LocalDateTime.of(2016, 1, 1, 2, 0);
+            LocalDateTime time = LocalDateTime.of(2016, 1, 1, 1, 0);
 
-            Object raw_kWh = DBRequest.getActualValue(conn, table_name, "utc_timestamp", "DE_KN_residential1_heat_pump", startHH);
+            Object raw_kWh = DBRequest.getActualValue(conn, table_name, "utc_timestamp", "DE_KN_residential1_heat_pump", time);
 
             return ((Number) raw_kWh).doubleValue();
         }
@@ -36,6 +35,7 @@ public class HeatPump implements Serializable {
         return Double.NaN;
     }
 
+    //Only for testing purposes
     public static void main(String[] args) {
         HeatPump heatPump = new HeatPump();
         double heatPumpValue = heatPump.db_communication();
