@@ -109,6 +109,92 @@
 			</ScaleRuler>
 			<CurrentLevel>1749063971054</CurrentLevel>
 			<ConnectionsId>1749063971048</ConnectionsId>
+			<Variables>
+				<Variable Class="PlainVariable">
+					<Id>1751297152150</Id>
+					<Name><![CDATA[cumulatedPV]]></Name>
+					<X>50</X><Y>490</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
+						<Type><![CDATA[double]]></Type>        
+						<InitialValue Class="CodeValue">
+							<Code><![CDATA[0]]></Code>
+						</InitialValue>
+					</Properties>
+				</Variable>
+				<Variable Class="PlainVariable">
+					<Id>1751297171848</Id>
+					<Name><![CDATA[cumulatedPC]]></Name>
+					<X>40</X><Y>760</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
+						<Type><![CDATA[double]]></Type>        
+						<InitialValue Class="CodeValue">
+							<Code><![CDATA[0]]></Code>
+						</InitialValue>
+					</Properties>
+				</Variable>
+				<Variable Class="PlainVariable">
+					<Id>1751302317110</Id>
+					<Name><![CDATA[cumulatedHP]]></Name>
+					<X>40</X><Y>1012.631</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
+						<Type><![CDATA[double]]></Type>        
+						<InitialValue Class="CodeValue">
+							<Code><![CDATA[0]]></Code>
+						</InitialValue>
+					</Properties>
+				</Variable>
+				<Variable Class="PlainVariable">
+					<Id>1751318119705</Id>
+					<Name><![CDATA[totalEnergySaved]]></Name>
+					<X>580</X><Y>290</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
+						<Type><![CDATA[double]]></Type>        
+						<InitialValue Class="CodeValue">
+							<Code><![CDATA[0]]></Code>
+						</InitialValue>
+					</Properties>
+				</Variable>
+				<Variable Class="Parameter">
+					<Id>1751318301300</Id>
+					<Name><![CDATA[heatPumpActivated]]></Name>
+					<X>430</X><Y>890</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
+						<Type><![CDATA[boolean]]></Type>
+						<UnitType><![CDATA[NONE]]></UnitType>
+						<SdArray>false</SdArray>
+						<DefaultValue Class="CodeValue">
+							<Code><![CDATA[true]]></Code>
+						</DefaultValue>
+						<ParameterEditor>
+							<Id>1751318301298</Id>
+							<EditorContolType>CHECK_BOX</EditorContolType>
+							<MinSliderValue><![CDATA[0]]></MinSliderValue>
+							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
+							<DelimeterType>NO_DELIMETER</DelimeterType>
+						</ParameterEditor>
+					</Properties>                 
+				</Variable>
+			</Variables>
 			<Connectors>
 				<Connector>
 					<Id>1749066158043</Id>
@@ -207,6 +293,39 @@
 					<Points>
 						<Point><X>0</X><Y>0</Y></Point>
 						<Point><X>170</X><Y>130</Y></Point>
+					</Points>
+				</Connector>
+				<Connector>
+					<Id>1751302274126</Id>
+					<Name><![CDATA[connector3]]></Name>
+					<X>390</X><Y>890</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<SourceEmbeddedObjectReference>
+						<PackageName><![CDATA[firstprojectdraft]]></PackageName>
+						<ClassName><![CDATA[Main]]></ClassName>
+						<ItemName><![CDATA[heatPump]]></ItemName>
+					</SourceEmbeddedObjectReference>
+					<SourceConnectableItemReference>
+						<PackageName><![CDATA[firstprojectdraft]]></PackageName>
+						<ClassName><![CDATA[HeatPump]]></ClassName>
+						<ItemName><![CDATA[port]]></ItemName>
+					</SourceConnectableItemReference>
+					<TargetEmbeddedObjectReference>
+						<PackageName><![CDATA[firstprojectdraft]]></PackageName>
+						<ClassName><![CDATA[Main]]></ClassName>
+						<ItemName><![CDATA[houseController]]></ItemName>
+					</TargetEmbeddedObjectReference>
+					<TargetConnectableItemReference>
+						<PackageName><![CDATA[firstprojectdraft]]></PackageName>
+						<ClassName><![CDATA[HouseController]]></ClassName>
+						<ItemName><![CDATA[port]]></ItemName>
+					</TargetConnectableItemReference>
+					<Points>
+						<Point><X>0</X><Y>0</Y></Point>
+						<Point><X>170</X><Y>-690</Y></Point>
 					</Points>
 				</Connector>
 			</Connectors>
@@ -429,6 +548,56 @@
 					<InitializationType>SPECIFIED_NUMBER</InitializationType>
 					<InitializationDatabaseTableQuery>
 						<Id>1749063959994</Id>
+						<TableReference>
+						</TableReference>
+					</InitializationDatabaseTableQuery>
+					<InitializationDatabaseType>ONE_AGENT_PER_DATABASE_RECORD</InitializationDatabaseType>
+					<QuantityColumn>
+					</QuantityColumn>
+				</EmbeddedObject>
+				<EmbeddedObject>
+					<Id>1751302261893</Id>
+					<Name><![CDATA[heatPump]]></Name>
+					<X>360</X><Y>890</Y>
+					<Label><X>-20</X><Y>-50</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<ActiveObjectClass>
+						<PackageName><![CDATA[firstprojectdraft]]></PackageName>
+						<ClassName><![CDATA[HeatPump]]></ClassName>
+					</ActiveObjectClass>
+					<GenericParameterSubstitute>
+						<GenericParameterSubstituteReference>
+							<PackageName><![CDATA[firstprojectdraft]]></PackageName>
+							<ClassName><![CDATA[HeatPump]]></ClassName>
+							<ItemName><![CDATA[1751302035000]]></ItemName>
+						</GenericParameterSubstituteReference>
+					</GenericParameterSubstitute>
+					<Parameters>
+						<Parameter>
+							<Name><![CDATA[handler]]></Name>
+						</Parameter>
+					</Parameters>
+					<ReplicationFlag>false</ReplicationFlag>
+					<Replication Class="CodeValue">
+						<Code><![CDATA[100]]></Code>
+					</Replication>
+					<CollectionType>ARRAY_LIST_BASED</CollectionType>
+					<InEnvironment>true</InEnvironment>
+					<InitialLocationType>XYZ</InitialLocationType>
+					<ColumnCode Class="CodeValue">
+						<Code><![CDATA[0]]></Code>
+					</ColumnCode>
+					<RowCode Class="CodeValue">
+						<Code><![CDATA[0]]></Code>
+					</RowCode>
+					<LocationNameCode Class="CodeValue">
+						<Code><![CDATA[""]]></Code>
+					</LocationNameCode>
+					<InitializationType>SPECIFIED_NUMBER</InitializationType>
+					<InitializationDatabaseTableQuery>
+						<Id>1751302261891</Id>
 						<TableReference>
 						</TableReference>
 					</InitializationDatabaseTableQuery>
@@ -662,6 +831,76 @@
 					<FillAreaUnderLine>false</FillAreaUnderLine>
 					<LabelFormat>dd_MM</LabelFormat>
     			</TimePlot>
+    			<TimePlot>
+					<Id>1751302317108</Id>
+					<Name><![CDATA[plotForHP]]></Name>
+					<X>-20</X><Y>770</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<AutoUpdate>false</AutoUpdate>
+					<RecurrenceProperties>
+						<Id>1751302317106</Id>
+						<OccurrenceAtTime>true</OccurrenceAtTime>
+						<OccurrenceDate>1751270400000</OccurrenceDate>
+						<OccurrenceTime Class="CodeUnitValue">
+							<Code><![CDATA[0]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						</OccurrenceTime>
+						<RecurrenceCode Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						</RecurrenceCode>
+					</RecurrenceProperties>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Width>300.5947955390335</Width>
+					<Height>242.7881274382315</Height>
+					<BackgroundColor/>
+					<BorderColor/>
+					<ChartArea>
+						<XOffset>50</XOffset>
+						<YOffset>30</YOffset>
+						<Width>220.5947955390335</Width>
+						<Height>152.7881274382315</Height>
+						<BackgroundColor>-1</BackgroundColor>
+						<BorderColor>-16777216</BorderColor>
+						<GridColor>-12566464</GridColor>
+					</ChartArea>
+					<Legend>
+						<Place>SOUTH</Place>
+						<TextColor>-16777216</TextColor>
+						<Size>30</Size>
+					</Legend>
+					<Labels>
+						<HorLabelsPosition>DEFAULT</HorLabelsPosition>
+						<VerLabelsPosition>DEFAULT</VerLabelsPosition>
+						<TextColor>-12566464</TextColor>
+					</Labels>
+					<ShowLegend>true</ShowLegend>
+					<TimeWindowsMovementType>MOVEMENT_WITH_TIME</TimeWindowsMovementType>		
+					<TimeWindowUnits>WEEK</TimeWindowUnits>
+					<VerScaleFromExpression><![CDATA[0]]></VerScaleFromExpression>
+					<VerScaleToExpression><![CDATA[1]]></VerScaleToExpression>
+					<VerScaleType>AUTO</VerScaleType>
+					<DrawLine>true</DrawLine>
+					<Interpolation>LINEAR</Interpolation>
+					<DatasetExpression>  
+						<Title><![CDATA[hpConsumption]]></Title>
+					<Id>1751302317105</Id>
+					<Expression><![CDATA[pcDataSet]]></Expression>
+					<Color>-7667573</Color>
+					<Expression2><![CDATA[houseController.handler.consumptionInThisStepHP]]></Expression2>
+					<Expression2Flag>true</Expression2Flag>
+						<PointStyle>NONE</PointStyle>
+						<LineWidth>1.0</LineWidth>
+					</DatasetExpression>
+					<SamplesToKeep>1000</SamplesToKeep>
+					<TimeWindowExpression><![CDATA[1]]></TimeWindowExpression>
+					<FillAreaUnderLine>false</FillAreaUnderLine>
+					<LabelFormat>dd_MM</LabelFormat>
+    			</TimePlot>
 			</Presentation>
 
 				</Level>
@@ -764,21 +1003,24 @@
 			<ConnectionsId>1749065069247</ConnectionsId>
 			<Variables>
 				<Variable Class="PlainVariable">
-					<Id>1749556010501</Id>
-					<Name><![CDATA[energy_saved]]></Name>
-					<X>350</X><Y>315</Y>
+					<Id>1750190950826</Id>
+					<Name><![CDATA[energy]]></Name>
+					<X>350</X><Y>270</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
 					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
 						<Type><![CDATA[double]]></Type>        
+						<InitialValue Class="CodeValue">
+							<Code><![CDATA[0]]></Code>
+						</InitialValue>
 					</Properties>
 				</Variable>
 				<Variable Class="PlainVariable">
-					<Id>1750190950826</Id>
-					<Name><![CDATA[energy]]></Name>
-					<X>350</X><Y>350</Y>
+					<Id>1751300004157</Id>
+					<Name><![CDATA[moneySaved]]></Name>
+					<X>350</X><Y>290</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -911,23 +1153,21 @@ handler.messageIn(msg);]]></OnReceiveAction>
 					<IconOffset>50.0</IconOffset>
 					<Properties Source="1749066240613" Target="1749066240613" Trigger="timeout">
 						<Action><![CDATA[handler.sendMessagesToAll();
+
+
+
 get_Main().plotForBattery.updateData();
-//get_Main().batteryStateOfChargeStat.update();
-//get_Main().batteryStateOfChargeVar = get_Main().battery.handler.stateOfCharge;
-//get_Main().batteryDataSet.add(time(), get_Main().battery.handler.stateOfCharge);
-
 get_Main().plotForPV.updateData();
-//get_Main().pvProductionStat.update();
-//get_Main().pvProductionVar = handler.productionInThisTickPV;
-//get_Main().pvDataSet.add(time(), get_Main().pvProductionVar);
-
 get_Main().plotForPC.updateData();
-//get_Main().pcConsumptionStat.update();
-//get_Main().pcConsumptionVar = handler.consumptionInThisTickPC;
-//get_Main().pcConsumptionVar = handler.consumptionInThisTickPV;
-//get_Main().pvDataSet.add(time(), get_Main().pvProductionVar);
+if (get_Main().heatPumpActivated)
+	get_Main().plotForHP.updateData();
 
-//get_Main().plotPC2.updateData();]]></Action>
+
+
+get_Main().cumulatedPV += handler.productionInThisStepPV;
+get_Main().cumulatedPC += handler.consumptionInThisStepPC;
+if (get_Main().heatPumpActivated)
+	get_Main().cumulatedHP += handler.consumptionInThisStepHP;]]></Action>
 						<Timeout Class="CodeUnitValue">
 							<Code><![CDATA[simStepSize_in_min]]></Code>
 							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
@@ -945,32 +1185,6 @@ get_Main().plotForPC.updateData();
 					</Properties>	
 				</StatechartElement>
 			</StatechartElements>
-			<AnalysisData>
-    			<Statistics>
-					<Id>1749555966487</Id>
-					<Name><![CDATA[energy_saved_stat]]></Name>
-					<X>350</X><Y>295</Y>
-					<Label><X>15</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<AutoUpdate>true</AutoUpdate>
-					<RecurrenceProperties>
-						<Id>1749734233578</Id>
-						<OccurrenceAtTime>true</OccurrenceAtTime>
-						<OccurrenceDate>1749628800000</OccurrenceDate>
-						<OccurrenceTime Class="CodeUnitValue">
-							<Code><![CDATA[0]]></Code>
-							<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
-						</OccurrenceTime>
-						<RecurrenceCode Class="CodeUnitValue">
-							<Code><![CDATA[1]]></Code>
-							<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
-						</RecurrenceCode>
-					</RecurrenceProperties>
-					<Discrete>true</Discrete>
-				</Statistics>
-			</AnalysisData>
 			<AgentLinks>
 				<AgentLink>
 					<Id>1749065069247</Id>
@@ -1604,7 +1818,7 @@ handler.messageIn(msg);]]></OnReceiveAction>
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
 						<DefaultValue Class="CodeValue">
-							<Code><![CDATA[new PCJava(this)]]></Code>
+							<Code><![CDATA[new PCJava(this, 3)]]></Code>
 						</DefaultValue>
 						<ParameterEditor>
 							<Id>1749855124925</Id>
@@ -1722,6 +1936,272 @@ if (false && msg instanceof DataResponseTriggerMessage){
 			</Presentation>
 
 		</ActiveObjectClass>
+		<!--   =========   Active Object Class   ========  -->
+		<ActiveObjectClass>
+			<Id>1751302034995</Id>
+			<Name><![CDATA[HeatPump]]></Name>
+			<Generic>false</Generic>
+			<GenericParameter>
+				<Id>1751302035000</Id>
+				<Name><![CDATA[1751302035000]]></Name>
+				<GenericParameterValue Class="CodeValue">
+					<Code><![CDATA[T extends Agent]]></Code>
+				</GenericParameterValue>
+				<GenericParameterLabel><![CDATA[Generic parameter:]]></GenericParameterLabel>
+			</GenericParameter>
+			<FlowChartsUsage>ENTITY</FlowChartsUsage>
+			<SamplesToKeep>100</SamplesToKeep>
+			<LimitNumberOfArrayElements>false</LimitNumberOfArrayElements>
+			<ElementsLimitValue>100</ElementsLimitValue>
+			<MakeDefaultViewArea>true</MakeDefaultViewArea>
+			<SceneGridColor/>
+			<SceneBackgroundColor/>
+			<SceneSkybox>null</SceneSkybox>
+			<AgentProperties>
+				<EnvironmentDefinesInitialLocation>true</EnvironmentDefinesInitialLocation>
+				<RotateAnimationTowardsMovement>true</RotateAnimationTowardsMovement>
+				<RotateAnimationVertically>false</RotateAnimationVertically>
+				<VelocityCode Class="CodeUnitValue">
+					<Code><![CDATA[10]]></Code>
+					<Unit Class="SpeedUnits"><![CDATA[MPS]]></Unit>
+				</VelocityCode>
+				<PhysicalLength Class="CodeUnitValue">
+					<Code><![CDATA[1]]></Code>
+					<Unit Class="LengthUnits"><![CDATA[METER]]></Unit>
+				</PhysicalLength>
+				<PhysicalWidth Class="CodeUnitValue">
+					<Code><![CDATA[1]]></Code>
+					<Unit Class="LengthUnits"><![CDATA[METER]]></Unit>
+				</PhysicalWidth>
+				<PhysicalHeight Class="CodeUnitValue">
+					<Code><![CDATA[1]]></Code>
+					<Unit Class="LengthUnits"><![CDATA[METER]]></Unit>
+				</PhysicalHeight>
+			</AgentProperties>
+			<EnvironmentProperties>
+					<EnableSteps>false</EnableSteps>
+					<StepDurationCode Class="CodeUnitValue">
+						<Code><![CDATA[1.0]]></Code>
+						<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+					</StepDurationCode>
+					<SpaceType>CONTINUOUS</SpaceType>
+					<WidthCode><![CDATA[500]]></WidthCode>
+					<HeightCode><![CDATA[500]]></HeightCode>
+					<ZHeightCode><![CDATA[0]]></ZHeightCode>
+					<ColumnsCountCode><![CDATA[100]]></ColumnsCountCode>
+					<RowsCountCode><![CDATA[100]]></RowsCountCode>
+					<NeigborhoodType>MOORE</NeigborhoodType>
+					<LayoutType>USER_DEF</LayoutType>
+					<NetworkType>USER_DEF</NetworkType>
+					<ConnectionsPerAgentCode><![CDATA[2]]></ConnectionsPerAgentCode>
+					<ConnectionsRangeCode><![CDATA[50]]></ConnectionsRangeCode>
+					<NeighborLinkFractionCode><![CDATA[0.95]]></NeighborLinkFractionCode>
+					<MCode><![CDATA[10]]></MCode>
+			</EnvironmentProperties>
+			<DatasetsCreationProperties>
+				<AutoCreate>true</AutoCreate>
+					<Id>1751302034994</Id>
+					<OccurrenceAtTime>true</OccurrenceAtTime>
+					<OccurrenceDate>1751356800000</OccurrenceDate>
+					<OccurrenceTime Class="CodeUnitValue">
+						<Code><![CDATA[0]]></Code>
+						<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+					</OccurrenceTime>
+					<RecurrenceCode Class="CodeUnitValue">
+						<Code><![CDATA[1]]></Code>
+						<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+					</RecurrenceCode>
+			</DatasetsCreationProperties>
+			<ScaleRuler>
+				<Id>1751302034998</Id>
+				<Name><![CDATA[scale]]></Name>
+				<X>0</X><Y>-150</Y>
+				<PublicFlag>false</PublicFlag>
+				<PresentationFlag>false</PresentationFlag>
+				<ShowLabel>false</ShowLabel>
+				<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+				<Length>100</Length>
+				<Rotation>0</Rotation>
+				<ScaleType>BASED_ON_LENGTH</ScaleType>
+				<ModelLength>10</ModelLength>
+				<LengthUnits>METER</LengthUnits>
+				<Scale>10</Scale>
+				<InheritedFromParentAgentType>true</InheritedFromParentAgentType>
+			</ScaleRuler>
+			<CurrentLevel>1751302035001</CurrentLevel>
+			<ConnectionsId>1751302034996</ConnectionsId>
+			<Variables>
+				<Variable Class="Parameter">
+					<Id>1751302073937</Id>
+					<Name><![CDATA[handler]]></Name>
+					<X>420</X><Y>210</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
+						<Type><![CDATA[HeatPumpJava]]></Type>
+						<UnitType><![CDATA[NONE]]></UnitType>
+						<SdArray>false</SdArray>
+						<DefaultValue Class="CodeValue">
+							<Code><![CDATA[new HeatPumpJava(this)]]></Code>
+						</DefaultValue>
+						<ParameterEditor>
+							<Id>1751302073935</Id>
+							<EditorContolType>TEXT_BOX</EditorContolType>
+							<MinSliderValue><![CDATA[0]]></MinSliderValue>
+							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
+							<DelimeterType>NO_DELIMETER</DelimeterType>
+						</ParameterEditor>
+					</Properties>                 
+				</Variable>
+			</Variables>
+			<Ports>
+				<Port>
+					<Id>1751302073939</Id>
+					<Name><![CDATA[port]]></Name>
+					<X>350</X><Y>220</Y>
+					<Label><X>0</X><Y>-15</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<IncomingMessageType><![CDATA[MessageType]]></IncomingMessageType>
+					<OutgoingMessageType><![CDATA[MessageType]]></OutgoingMessageType>
+					<CustomPort><![CDATA[false]]></CustomPort>
+					<OnReceiveAction><![CDATA[// calc current consumption: 
+
+handler.messageIn(msg);]]></OnReceiveAction>
+				</Port>
+			</Ports>
+			<AgentLinks>
+				<AgentLink>
+					<Id>1751302034996</Id>
+					<Name><![CDATA[connections]]></Name>
+					<X>50</X><Y>-50</Y>
+					<Label><X>15</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<HandleReceiveInConnections>false</HandleReceiveInConnections>
+					<AgentLinkType>COLLECTION_OF_LINKS</AgentLinkType>
+					<AgentLinkBidirectional>true</AgentLinkBidirectional>
+					<MessageType><![CDATA[Object]]></MessageType>
+					<LineStyle>SOLID</LineStyle>
+					<LineWidth>1</LineWidth>
+					<LineColor>-16777216</LineColor>
+					<LineZOrder>UNDER_AGENTS</LineZOrder>
+					<LineArrow>NONE</LineArrow>
+					<LineArrowPosition>END</LineArrowPosition>
+				</AgentLink>
+			</AgentLinks>
+
+			<ContainerLinks>
+				<ContainerLink>
+					<Id>1751302266698</Id>
+					<Name><![CDATA[main]]></Name>
+					<X>50</X><Y>-100</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<ActiveObjectClass>
+						<PackageName><![CDATA[firstprojectdraft]]></PackageName>
+						<ClassName><![CDATA[Main]]></ClassName>
+					</ActiveObjectClass>
+				</ContainerLink>
+			</ContainerLinks>
+
+			<Presentation>
+				<Level>
+					<Id>1751302035001</Id>
+					<Name><![CDATA[level]]></Name>
+					<X>0</X><Y>0</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<Z>0</Z>
+					<LevelVisibility>DIM_NON_CURRENT</LevelVisibility>
+
+			<Presentation>
+				<Figure3D>
+					<Id>1751302035024</Id>
+					<Name><![CDATA[person]]></Name>
+					<X>0</X><Y>0</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<X>0</X><Y>0</Y><Z>0</Z>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<ResourceReference>
+						<PackageName><![CDATA[firstprojectdraft]]></PackageName>
+						<ClassName><![CDATA[3d/person.dae]]></ClassName>
+					</ResourceReference>
+					<ColorTable>
+						<ColorMapping>
+							<Name><![CDATA[Material__3__Surf]]></Name>
+							<OriginalColor>-3355444</OriginalColor>
+						</ColorMapping>
+						<ColorMapping>
+							<Name><![CDATA[Material__5__Surf]]></Name>
+							<OriginalColor>-3355444</OriginalColor>
+						</ColorMapping>
+						<ColorMapping>
+							<Name><![CDATA[Material__6__Surf]]></Name>
+							<OriginalColor>-4083577</OriginalColor>
+						</ColorMapping>
+						<ColorMapping>
+							<Name><![CDATA[Material__2__Surf]]></Name>
+							<OriginalColor>-13355980</OriginalColor>
+						</ColorMapping>
+						<ColorMapping>
+							<Name><![CDATA[Material__4__Surf]]></Name>
+							<OriginalColor>-13355980</OriginalColor>
+						</ColorMapping>
+						<ColorMapping>
+							<Name><![CDATA[Material__1__Surf]]></Name>
+							<OriginalColor>-5279952</OriginalColor>
+						</ColorMapping>
+					</ColorTable>
+					<AutoScale>true</AutoScale>
+					<Scale>1.0</Scale>
+					<Rotation>0.0</Rotation>
+					<AxisOrder>YZX_AXIS_ORDER</AxisOrder>
+					<ApplyShading>true</ApplyShading>
+					<InternalLighting>OFF</InternalLighting>
+					<IgnoreSceneLights>false</IgnoreSceneLights>
+</Figure3D>
+				<Oval>
+					<Id>1751302073933</Id>
+					<Name><![CDATA[oval]]></Name>
+					<X>320</X><Y>220</Y>
+					<Label><X>0</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>true</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>0</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-16777216</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>30</RadiusX>
+					<RadiusY>30</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-23296</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+			</Presentation>
+
+				</Level>
+			</Presentation>
+
+		</ActiveObjectClass>
 	</ActiveObjectClasses>
 	<DifferentialEquationsMethod>EULER</DifferentialEquationsMethod>
 	<MixedEquationsMethod>RK45_NEWTON</MixedEquationsMethod>
@@ -1733,13 +2213,13 @@ if (false && msg instanceof DataResponseTriggerMessage){
 	<Frame>
 		<Id>1749063959999</Id>
 		<Width>840</Width>
-		<Height>800</Height>
+		<Height>1130</Height>
 	</Frame>
 	<Database>
 		<Id>1749063959989</Id>
-		<Logging>true</Logging>
+		<Logging>false</Logging>
 		<AutoExport>false</AutoExport>
-		<ShutdownCompact>true</ShutdownCompact>
+		<ShutdownCompact>false</ShutdownCompact>
 		<ImportSettings>
 		</ImportSettings>
 		<ExportSettings>
@@ -1809,6 +2289,9 @@ if (false && msg instanceof DataResponseTriggerMessage){
 			</Presentation>
 
 			<Parameters>
+				<Parameter>
+					<ParameterName><![CDATA[heatPumpActivated]]></ParameterName>
+				</Parameter>
 			</Parameters>
 			<PresentationProperties>
 				<EnableZoomAndPanning>true</EnableZoomAndPanning>
@@ -1880,17 +2363,21 @@ public class MyTestClass implements Serializable {
 			<Text><![CDATA[/**
  * HouseControllerHandler
  */	
+import java.time.*;
+
+
 public class HouseControllerJava implements Serializable 
 {
 
 	public HouseController owner;
 	public double productionInThisStepPV;
 	public double consumptionInThisStepPC;
+	public double consumptionInThisStepHP;
 	public double stateOfChargeInThisStep;
 	//private double powerBalanceInThisStep;
 	private double differenceInThisStep;
 	private int messageCounter = 0;
-	private int numMessagesPerStep = 2;
+	private int numMessagesPerStep = 3;
 	private double powerBalanceInThisStep;
 	
     /**
@@ -1922,8 +2409,6 @@ public class HouseControllerJava implements Serializable
 		if (msg instanceof DataMessageFromPV)
 		{
 			double data = ((DataMessageFromPV) msg).productionInThisStep;
-			owner.energy_saved += data;
-			owner.energy_saved_stat.add(data);
 			
 			this.productionInThisStepPV = ((DataMessageFromPV) msg).productionInThisStep;
 			//this.powerBalanceInThisStep = this.productionInThisStepPV - this.consumptionInThisStepPC;
@@ -1934,8 +2419,6 @@ public class HouseControllerJava implements Serializable
 		{
 			
 			double data = ((DataMessageFromPC) msg).consumptionInThisStep;
-			owner.energy_saved += data;
-			owner.energy_saved_stat.add(data);
 
 			//owner.meinDatensatz.add(owner.time(), data);
 			
@@ -1944,6 +2427,12 @@ public class HouseControllerJava implements Serializable
 			
 			//System.out.println("THIS WAS PC");			
 		}
+		else if (msg instanceof DataMessageFromHP)
+		{
+			
+			this.consumptionInThisStepHP = ((DataMessageFromHP) msg).consumptionInThisStep;
+		}   
+		
 		else if (msg instanceof DataMessageFromBattery)
 		{			
 			differenceInThisStep = ((DataMessageFromBattery) msg).difference;
@@ -1960,7 +2449,10 @@ public class HouseControllerJava implements Serializable
 		}
 		else if (messageCounter == numMessagesPerStep)
 		{
-			powerBalanceInThisStep = productionInThisStepPV - consumptionInThisStepPC;		
+			powerBalanceInThisStep = productionInThisStepPV - consumptionInThisStepPC;
+			
+			if (owner.get_Main().heatPumpActivated)
+				powerBalanceInThisStep -= consumptionInThisStepHP;
 			
 			owner.port.send(new DataMessageToBattery(owner, owner.time(), powerBalanceInThisStep));
 		}
@@ -1968,9 +2460,7 @@ public class HouseControllerJava implements Serializable
 		{
 			simpleStrat();
 			messageCounter = 0;
-		}
-		
-		
+		}		
 	}	
 	
 	public void simpleStrat() 
@@ -1984,13 +2474,39 @@ public class HouseControllerJava implements Serializable
 		//System.out.println(differenceInThisStep);
 		//System.out.println(powerBalanceInThisStep);
 		
+		double currentEnergyCost = 0;
+
+				
+		try (DBRequest.DBConnection dbConn = new DBRequest.DBConnection()) 
+		{
+            Connection conn = dbConn.getConnection();
+
+            // Use current simulation time from AnyLogic
+            LocalDateTime now = DateTimeConversionJava.getTimeNow(owner);
+
+            // Get the most recent known value before or at the current time
+            Object valueObj = DBRequest.getActualValue(
+                conn, "price", "Time", "price_kWh", now
+            );
+
+            currentEnergyCost = ((Number)valueObj).doubleValue() / 4;
+        } 
+		catch (Exception e) 
+		{
+            e.printStackTrace();
+        }
 		
 		if(powerBalanceInThisStep > 0) 
 		{
 			owner.energy += differenceInThisStep;
-		}else 
+			owner.get_Main().totalEnergySaved += differenceInThisStep;
+			owner.moneySaved += differenceInThisStep * currentEnergyCost;
+		}
+		else 
 		{
 			owner.energy -= differenceInThisStep;
+			owner.get_Main().totalEnergySaved -= differenceInThisStep;
+			owner.moneySaved -= differenceInThisStep * currentEnergyCost;
 		}		
 		
 		
@@ -2090,25 +2606,29 @@ public class DataResponseTriggerMessage extends firstprojectdraft.MessageType im
 			<Text><![CDATA[/**
  * DataMessageFromPV
  */	
-public class DataMessageFromPV extends firstprojectdraft.MessageType implements Serializable {
+public class DataMessageFromPV extends firstprojectdraft.MessageType implements Serializable 
+{
 
 	double productionInThisStep;
 
     /**
      * Constructor initializing the fields
      */
-    public DataMessageFromPV(Agent sender, double timestamp, double productionInThisStep) {
+    public DataMessageFromPV(Agent sender, double timestamp, double productionInThisStep) 
+    {
     	super(sender, timestamp);
 		this.productionInThisStep = productionInThisStep;
     }
     
-    public DataMessageFromPV(Agent sender, double productionInThisStep) {
+    public DataMessageFromPV(Agent sender, double productionInThisStep) 
+    {
     	super(sender, sender.time());
 		this.productionInThisStep = productionInThisStep;
     }
 
 	@Override
-	public String toString() {
+	public String toString() 
+	{
 		return  
 			super.toString() + 	
 			"productionInThisStep = " + productionInThisStep +" ";
@@ -2128,25 +2648,29 @@ public class DataMessageFromPV extends firstprojectdraft.MessageType implements 
 			<Text><![CDATA[/**
  * DataMessageFromPC
  */	
-public class DataMessageFromPC extends firstprojectdraft.MessageType implements Serializable {
+public class DataMessageFromPC extends firstprojectdraft.MessageType implements Serializable 
+{
 
 	double consumptionInThisStep;
 
     /**
      * Constructor initializing the fields
      */
-    public DataMessageFromPC(Agent sender, double timestamp, double consumptionInThisStep) {
+    public DataMessageFromPC(Agent sender, double timestamp, double consumptionInThisStep) 
+    {
     	super(sender, timestamp);
 		this.consumptionInThisStep = consumptionInThisStep;
     }
     
-    public DataMessageFromPC(Agent sender, double consumptionInThisStep) {
+    public DataMessageFromPC(Agent sender, double consumptionInThisStep) 
+    {
     	super(sender, sender.time());
 		this.consumptionInThisStep = consumptionInThisStep;
     }
 
 	@Override
-	public String toString() {
+	public String toString() 
+	{
 		return  
 			super.toString() + 
 			"consumptionInThisStep = " + consumptionInThisStep +" ";
@@ -2165,131 +2689,96 @@ public class DataMessageFromPC extends firstprojectdraft.MessageType implements 
 			<Id>1749855173213</Id>
 			<Name><![CDATA[PCJava]]></Name>
 			<Text><![CDATA[import java.sql.*;
-import java.time.LocalDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+import java.io.Serializable;
 
+public class PCJava implements Serializable 
+{
+    private static final long serialVersionUID = 1L;
 
-public class PCJava implements Serializable {
-
-	public void messageIn(MessageType msg) {
-	    if (msg instanceof DataResponseTriggerMessage) {
-	        int numberOfPeople = 3;
-
-	        Object prediction = getPredictedConsumptionNow();
-
-	        if (prediction instanceof Number) {
-	            double consumption = ((Number) prediction).doubleValue();
-	            owner.port.send(new DataMessageFromPC(owner, owner.time(), consumption));
-	        } else {
-	            System.err.println("Vorhersage ist null oder kein Number-Objekt: " + prediction + " ||| aktuelle Zeit: " + DateTimeConversionJava.getTimeNow(owner));
-	            // Optional: Sende eine Meldung mit Defaultwert oder ignoriere
-	            // owner.port.send(new DataMessageFromPC(owner, owner.time(), 0.0));
-	        }
-	    }
-	}
-	
-	public PC owner;
-    //private static final String DB_URL = "jdbc:postgresql://localhost:5432/simdata";
-    //private static final String DB_USER = "user";      
-    //private static final String DB_PASSWORD = "password";  
-    // not needed, because theyre set in the Database
+    private PC owner;
+    private int numberOfPeople;
 
     private static final String TABLE_NAME = "household_data";
     private static final String TIME_COLUMN = "utc_timestamp";
     private static final String DATA_COLUMN = "average_per_person_consumption";
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        
-    public PCJava(PC owner) {
-    	this.owner = owner;
-    }    
-    
-  public Object getPredictedConsumptionNow() 
-    {
-        try (DBRequest.DBConnection dbConn = new DBRequest.DBConnection()) {
-            Connection conn = dbConn.getConnection(); 
-            LocalDateTime timeStart = LocalDateTime.of(2016, 1, 1, 0, 45);
-            LocalDateTime timeEnd = LocalDateTime.of(2016, 1, 1, 1, 45);
-            
-            //LocalDateTime time = LocalDateTime.of(2023, 01, 28, 9, 0);
-            LocalDateTime time2 = DateTimeConversionJava.getTimeNow(owner);
-            LocalDateTime time25 = DateTimeConversionJava.getTimeIn15(owner);
-            LocalDateTime time3 = DateTimeConversionJava.doubleToCurrentLocalDateTime(owner.time());            
-            System.out.println("PC: time2: " + time2);
-            System.out.println("PC: time3: " + time3);
-            
-            // use DBRequest.getActualValue(...) instead!!
-            List<Object[]> data = DBRequest.getTimeSeriesData(conn, TABLE_NAME, TIME_COLUMN, DATA_COLUMN, time2, time25);
 
-            //System.out.println("📊 Gefundene Daten:");
-            for (Object[] row : data) {
-                //System.out.print("→ [ ");
-                for (Object value : row) {
-                    //System.out.print(value + " ");
-                }
-                //System.out.println("]");
-            }
-            double val = ((Number) data.get(0)[1]).doubleValue();
-            System.out.println("PC: val: " + val);
-        	return val;
-            
-        }
-        catch (ClassNotFoundException e)
-        {
-        	System.err.println("🚨 PostgreSQL JDBC driver not found.");
-        	e.printStackTrace();
-        }
-        catch (SQLException e) 
-        {
-            System.err.println("Database error: " + e.getMessage());
-        }
-        catch(IndexOutOfBoundsException e)
-        {
-        	System.out.println("PC: IndexOutOfBoundsException message: " + e.getMessage());
-        }
-;		return null;
+    // Constructor that sets owner and number of people
+    public PCJava(PC owner, int numberOfPeople) {
+        this.owner = owner;
+        this.numberOfPeople = numberOfPeople;
+    }
+
+    public void messageIn(MessageType msg) 
+    {
+	    if (msg instanceof DataResponseTriggerMessage)
+	    {
+	        double consumption = getPredictedConsumptionNow();
+            owner.port.send(new DataMessageFromPC(owner, owner.time(), consumption));
+	    }
     }
     
-    // Perform the process and return the result for the controller
-    public List<Object[]> getPredictedConsumption(LocalDateTime startTime, LocalDateTime endTime, int numberOfPeople) {
+    // Returns predicted consumption for current time step using getActualValue
+    public double getPredictedConsumptionNow() 
+    {
+        try (DBRequest.DBConnection dbConn = new DBRequest.DBConnection()) {
+            Connection conn = dbConn.getConnection();
+
+            // Use current simulation time from AnyLogic
+            LocalDateTime now = DateTimeConversionJava.getTimeNow(owner);
+
+            // Get the most recent known value before or at the current time
+            Object valueObj = DBRequest.getActualValue(
+                conn, TABLE_NAME, TIME_COLUMN, DATA_COLUMN, now
+            );
+
+            if (valueObj instanceof Number) {
+                double avgPerPerson = ((Number) valueObj).doubleValue();
+                return avgPerPerson * numberOfPeople;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0.0; // fallback if no value or error
+    }
+
+    // Returns predicted consumption for a given time range
+    public List<Object[]> getPredictedConsumption(LocalDateTime startTime, LocalDateTime endTime) {
         List<Object[]> results = new ArrayList<>();
 
         try (DBRequest.DBConnection dbConn = new DBRequest.DBConnection()) {
-            Connection conn = dbConn.getConnection(); 
+            Connection conn = dbConn.getConnection();
 
-            List<Object[]> data = DBRequest.getTimeSeriesData(conn, TABLE_NAME, TIME_COLUMN, DATA_COLUMN, startTime, endTime);
+            List<Object[]> data = DBRequest.getTimeSeriesData(
+                conn, TABLE_NAME, TIME_COLUMN, DATA_COLUMN,
+                startTime, endTime
+            );
 
             for (Object[] row : data) {
                 Timestamp ts = (Timestamp) row[0];
                 Object valueObj = row[1];
                 if (valueObj instanceof Number) {
                     double avgPerPerson = ((Number) valueObj).doubleValue();
-                    double predicted = avgPerPerson * numberOfPeople * 2.5;
-
-                    // Test print (remove later)
-                    System.out.println(ts + " → Average/person: " + avgPerPerson + " kWh → Predicted for " + numberOfPeople + " people: " + predicted + " kWh");
-
+                    double predicted = avgPerPerson * numberOfPeople;
                     results.add(new Object[]{ts, predicted});
                 }
-            }            
-        }         
-        catch (ClassNotFoundException e)
-        {
-        	System.err.println("🚨 PostgreSQL JDBC driver not found.");
-        	e.printStackTrace();
-        }
-        catch (SQLException e) 
-        {
-            System.err.println("Database error: " + e.getMessage());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        return results;  // ← to be forwarded to the house controller
+        return results;
     }
-    // Optional test main to check before integrating with controller
-    public void main(String[] args) {
+
+    // Optional utility to test from console
+    public void testWithScanner() {
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Enter start datetime (YYYY-MM-DD HH:MM:SS): ");
@@ -2298,27 +2787,16 @@ public class PCJava implements Serializable {
         System.out.print("Enter end datetime (YYYY-MM-DD HH:MM:SS): ");
         String endInput = scanner.nextLine();
 
-        System.out.print("Enter number of people in the household: ");
-        int numberOfPeople = scanner.nextInt();
-
         LocalDateTime startTime = LocalDateTime.parse(startInput, FORMATTER);
         LocalDateTime endTime = LocalDateTime.parse(endInput, FORMATTER);
 
-        List<Object[]> predictions = getPredictedConsumption(startTime, endTime, numberOfPeople);
+        List<Object[]> predictions = getPredictedConsumption(startTime, endTime);
 
-        // forward 'predictions' to the house controller, should i just rerturn? whaaaaaaaaaaaaa
+        System.out.println("Results for " + numberOfPeople + " people:");
+        for (Object[] row : predictions) {
+            System.out.println(row[0] + " → Predicted: " + row[1] + " kWh");
+        }
     }
-	@Override
-	public String toString() {
-		return super.toString();
-	}
-
-	/**
-	 * This number is here for model snapshot storing purpose<br>
-	 * It needs to be changed when this class gets changed
-	 */ 
-	private static final long serialVersionUID = 1L;
-
 }]]></Text>
 		</JavaClass>
 		<!--   =========   Java Class   ========  -->
@@ -2382,6 +2860,7 @@ public class PVJava implements Serializable
 
         int count_length = (int) (roof_length / pv_module_length);
         int count_width = (int) (roof_width / pv_module_width);
+        System.out.println("PV: pcCount: " + (int) (count_length * count_width * usable_roof_modifier));
         return (int) (count_length * count_width * usable_roof_modifier);
     }
 
@@ -2464,6 +2943,7 @@ public class BatteryJava implements Serializable
 	// --- Batteryparameter ---
 	private Battery owner;
 	private double capacity;            // Capacity [kWh]
+	private double maxCapacity;         // maxCapacity [kWh]
 	private double stateOfCharge;       // Current charge [kWh]
     private double maxChargePower;      // Maximum charge in one timestep [kWh]
     private double maxDischargePower;   // Maximum discharge in one timestep [kWh]
@@ -2476,6 +2956,7 @@ public class BatteryJava implements Serializable
     {
     	this.owner = owner;
         this.capacity = capacity;
+        this.maxCapacity = capacity;
         this.stateOfCharge = 0.0;
         this.maxChargePower = maxChargePower;
         this.maxDischargePower = maxDischargePower;
@@ -2490,12 +2971,14 @@ public class BatteryJava implements Serializable
         double maxPossibleCharge = Math.min(maxChargePower, (capacity - stateOfCharge));
         double reducedEnergy = requestedEnergy * roundTripEfficiency;
         double actualCharge = Math.min(reducedEnergy, maxPossibleCharge);
-        double overflow = reducedEnergy - actualCharge; // For usage in Anylogic
+        double overflow = (reducedEnergy - actualCharge) / roundTripEfficiency; // For usage in Anylogic
 
         stateOfCharge += actualCharge;
 
-        cycles += actualCharge / capacity;
+        cycles += actualCharge / maxCapacity;
         System.out.println("stateOfCharge: " +stateOfCharge);
+
+        applyDegradation();
 
         return overflow;
     }
@@ -2511,11 +2994,11 @@ public class BatteryJava implements Serializable
         double maxPossibleDischarge = Math.min(maxDischargePower, stateOfCharge);
         double actualDischarge = Math.min(newRequestedEnergy, maxPossibleDischarge);
 
-        double missing = newRequestedEnergy - actualDischarge;
+        double missing = (newRequestedEnergy - actualDischarge) * roundTripEfficiency;
 
         stateOfCharge -= actualDischarge;
 
-        cycles += actualDischarge / capacity;
+        cycles += actualDischarge / maxCapacity;
         
         //System.out.println("maxPossibleDischarge: " +maxPossibleDischarge);
         //System.out.println("actualDischarge: " +actualDischarge);
@@ -2523,14 +3006,16 @@ public class BatteryJava implements Serializable
         //System.out.println("maxDischargePower: " +maxDischargePower);
         //System.out.println("requestedEnergy: " +requestedEnergy);
         //System.out.println("missing: " +missing);
-
+        
+        applyDegradation();
+        
         return missing;
     }
 
     // Simulate Degradation
     public void applyDegradation() 
     {
-        double degradedCapacity = capacity * (1 - degradationPerCycle * cycles);
+        double degradedCapacity = maxCapacity * (1 - degradationPerCycle * cycles);
         capacity = Math.max(degradedCapacity, 0);
         stateOfCharge = Math.min(stateOfCharge, capacity);
     }
@@ -3068,11 +3553,139 @@ public class DateTimeConversionJava implements Serializable {
 
 }]]></Text>
 		</JavaClass>
+		<!--   =========   Java Class   ========  -->
+		<JavaClass>
+			<Id>1751301368144</Id>
+			<Name><![CDATA[HeatPumpJava]]></Name>
+			<Text><![CDATA[import java.io.Serializable;
+import java.sql.*;
+import java.time.*;
+
+/**
+ * HeatPumpJava
+ */	
+public class HeatPumpJava implements Serializable 
+{
+	HeatPump owner;
+    String table_name = "heatpump";
+    String timestamp_columns = "Time";
+    
+    public HeatPumpJava(HeatPump owner) 
+    {
+    	this.owner = owner;
+    }
+    
+    public void messageIn(MessageType msg)
+	{
+		if (msg instanceof DataResponseTriggerMessage)
+		{
+			owner.port.send(new DataMessageFromHP(owner, owner.time(), 0.5 * db_communication()));
+		}
+		//TODO New type of msg for future production
+		//else if (msg instanceof DataResponseTriggerMessageFutureProduction)
+		//{
+			//TODO set start and end 
+		//	int start = 0;
+		//	int end = 0;
+			//forecastFutureProduction(start,end);
+			//TODO maybe different msg type as a response 
+			//owner.port.send(new DataMessageFromPV(owner, owner.time(), forecastFutureProduction(start,end);));
+		//}
+	}
+
+    public double db_communication()
+    {
+        try (DBRequest.DBConnection dbConn = new DBRequest.DBConnection())
+        {
+            Connection conn = dbConn.getConnection();
+
+            LocalDateTime time = DateTimeConversionJava.getTimeNow(owner);
+
+            Object raw_consumption = DBRequest.getActualValue(conn, table_name, "utc_timestamp", "Fraction", time);
+
+            return ((Number) raw_consumption).doubleValue();
+        }
+        catch (ClassNotFoundException e)
+        {
+            System.err.println("🚨 PostgreSQL JDBC driver not found.");
+            e.printStackTrace();
+        }
+        catch (SQLException e)
+        {
+            System.err.println("🚨 Database connection failed!");
+            e.printStackTrace();
+        }
+        return Double.NaN;
+    }
+
+	@Override
+	public String toString() 
+	{
+		return super.toString();
+	}
+
+	/**
+	 * This number is here for model snapshot storing purpose<br>
+	 * It needs to be changed when this class gets changed
+	 */ 
+	private static final long serialVersionUID = 1L;
+
+}]]></Text>
+		</JavaClass>
+		<!--   =========   Java Class   ========  -->
+		<JavaClass>
+			<Id>1751301797415</Id>
+			<Name><![CDATA[DataMessageFromHP]]></Name>
+			<Text><![CDATA[/**
+ * DataMessageFromHeatPump
+ */	
+public class DataMessageFromHP extends firstprojectdraft.MessageType implements Serializable 
+{
+	public double consumptionInThisStep;
+
+    /**
+     * Default constructor
+     */
+    public DataMessageFromHP(Agent sender, double timestamp, double consumptionInThisStep) 
+    {
+    	super(sender, timestamp);
+		this.consumptionInThisStep = consumptionInThisStep;
+    }
+    
+    public DataMessageFromHP(Agent sender, double consumptionInThisStep) 
+    {
+    	super(sender, sender.time());
+		this.consumptionInThisStep = consumptionInThisStep;
+    }
+		
+
+	@Override
+	public String toString() 
+	{
+		return  
+				super.toString() + 
+				"consumptionInThisStep = " + consumptionInThisStep +" ";
+	}
+
+	/**
+	 * This number is here for model snapshot storing purpose<br>
+	 * It needs to be changed when this class gets changed
+	 */ 
+	private static final long serialVersionUID = 1L;
+
+}]]></Text>
+		</JavaClass>
 	</JavaClasses>
 	<ModelResources>
 		<Resource>
 			<Id>1750795637389</Id>
 			<Path><![CDATA[postgresql-42.7.7.jar]]></Path>
+			<ReferencedFromUserCode>false</ReferencedFromUserCode>
+			<Location>FILE_SYSTEM</Location>
+		</Resource>
+		<Resource>
+			<Id>1751302035028</Id>
+			<Path><![CDATA[3d/person.dae]]></Path>
 			<ReferencedFromUserCode>false</ReferencedFromUserCode>
 			<Location>FILE_SYSTEM</Location>
 		</Resource>
@@ -3082,6 +3695,12 @@ public class DateTimeConversionJava implements Serializable {
 		<VersionMajor>1</VersionMajor>
 		<VersionMinor>0</VersionMinor>
 		<VersionBuild>0</VersionBuild>
+    </RequiredLibraryReference>
+    <RequiredLibraryReference>
+		<LibraryName><![CDATA[com.anylogic.libraries.processmodeling]]></LibraryName>
+		<VersionMajor>8</VersionMajor>
+		<VersionMinor>0</VersionMinor>
+		<VersionBuild>5</VersionBuild>
     </RequiredLibraryReference>
 	<ClassPathEntry>
 		<ResourceReference>
