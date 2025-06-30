@@ -295,6 +295,14 @@ public class DBRequest {
             List<Object[]> hhData = getTimeSeriesData(conn, "household_data", "utc_timestamp",
                     "average_per_person_consumption", startHH, endHH);
             //printTimeSeriesData(hhData, "Household data:", "Average consumption per person");
+            System.out.println("Table: Household Data");
+            System.out.println("Period: " + startHH + " to " + endHH);
+            //print hhdata
+            for (Object[] row : hhData) {
+                Timestamp ts = (Timestamp) row[0];
+                Object value = row[1];
+                System.out.println(ts + " -> " + value);
+            }
 
             // Example 2: Query household consumption data for an hour
             LocalDateTime startHHS = LocalDateTime.of(2015, 1, 1, 1, 0);
