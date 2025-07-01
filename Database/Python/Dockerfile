@@ -15,11 +15,11 @@ COPY Database/Python/main.py ./main.py
 # Copy CSV data used by the script
 COPY Database/Python/ ./
 
-# Default environment variables (can be overridden by docker-compose)
-ENV DB_HOST=db \
-    DB_PORT=5432 \
-    DB_USER=user \
-    DB_PASSWORD=password \
-    DB_NAME=simdata
+# Default environment variables for Redis (can be overridden by docker-compose)
+ENV REDIS_HOST=redis \
+    REDIS_PORT=6379 \
+    # Optional password, uncomment if needed
+    # REDIS_PASSWORD=password \
+    REDIS_DB=0
 
 CMD ["python", "main.py"]
