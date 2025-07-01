@@ -78,7 +78,7 @@ def import_csv_to_db(engine, file_path: str, table_name: str, timestamp_columns:
         print("DataFrame info (dtypes):")
         df.info()
 
-        #df.to_sql(table_name, engine, if_exists='replace', index=False)
+        df.to_sql(table_name, engine, if_exists='replace', index=False)
         print(f"Data successfully imported into table '{table_name}'.")
 
     except FileNotFoundError:
