@@ -274,50 +274,56 @@ public class DBRequest {
     public static void main(String[] args) {
         try (DBConnection dbConn = new DBConnection()) {
             Connection conn = dbConn.getConnection();
-            System.out.println("✅ Successfully connected to the PostgreSQL database!");
+            System.out.println("✅ Verbindung zur PostgreSQL-Datenbank hergestellt");
 
-            // Example 1: Query photovoltaic (PV) energy generation data for a year
-            LocalDateTime startPV = LocalDateTime.of(2016, 1, 1, 0, 0);
-            LocalDateTime endPV = LocalDateTime.of(2016, 12, 1, 1, 0);
+            LocalDateTime simStart = LocalDateTime.of(2016, 1, 1, 0, 0);
+            LocalDateTime simEnd = LocalDateTime.of(2016, 12, 31, 23, 59);
 
-            List<Object[]> pvData = getTimeSeriesData(conn, "pv", "Time", "kWh", startPV, endPV);
-            Object latestKwh = getActualValue(conn, "pv", "Time", "kWh", endPV);
+            System.out.println("⏱️ Starte Benchmark mit 100 Abfragen...");
 
-            System.out.println("Table: pv");
-            System.out.println("Period: " + startPV + " to " + endPV);
-            System.out.println("Current kWh value: " + latestKwh);
-            //printTimeSeriesData(pvData, "PV data:", "kWh");
+            LocalDateTime current = simStart;
+            long startTime = System.currentTimeMillis();
 
-            // Example 2: Query household consumption data for an hour
-            LocalDateTime startHH = LocalDateTime.of(2016, 1, 1, 1, 0);
-            LocalDateTime endHH = LocalDateTime.of(2016, 1, 1, 2, 0);
+            // Schleife auf 100 Durchläufe geändert
+            for (int i = 0; i < 100; i++) {
+                // Daten abfragen
+                Object pvObj = getActualValue(conn, "pv", "Time", "kWh", current);
+                Object hhObj = getActualValue(conn, "household_data", "utc_timestamp",
+                        "average_per_person_consumption", current);
 
-            List<Object[]> hhData = getTimeSeriesData(conn, "household_data", "utc_timestamp",
-                    "average_per_person_consumption", startHH, endHH);
-            //printTimeSeriesData(hhData, "Household data:", "Average consumption per person");
-            System.out.println("Table: Household Data");
-            System.out.println("Period: " + startHH + " to " + endHH);
-            //print hhdata
-            for (Object[] row : hhData) {
-                Timestamp ts = (Timestamp) row[0];
-                Object value = row[1];
-                System.out.println(ts + " -> " + value);
+                double pvValue = (pvObj instanceof Number) ? ((Number)pvObj).doubleValue() : 0.0;
+                double householdValue = (hhObj instanceof Number) ? ((Number)hhObj).doubleValue() : 0.0;
+
+                // Fortschritt alle 20 Abfragen anzeigen
+                if (i > 0 && i % 20 == 0) {
+                    long elapsed = System.currentTimeMillis() - startTime;
+                    System.out.printf("🔄 %d Abfragen (%d%%) - Laufzeit: %d ms%n",
+                            i, (i * 100 / 100), elapsed);
+                }
+
+                if (i % 20 == 0) {
+                    System.out.println("Zeit: " + current + ", PV: " + pvValue + ", Haushalt: " + householdValue);
+                }
+
+                current = current.plusMinutes(15);
+                if (current.isAfter(simEnd)) {
+                    current = simStart;
+                }
             }
 
-            // Example 2: Query household consumption data for an hour
-            LocalDateTime startHHS = LocalDateTime.of(2015, 1, 1, 1, 0);
-            LocalDateTime endHHS = LocalDateTime.of(2016, 1, 1, 2, 0);
+            long endTime = System.currentTimeMillis();
+            long totalTime = endTime - startTime;
 
-            List<Object[]> shData = getTimeSeriesData(conn, "price", "Time",
-                    "price_kWh", startHHS, endHHS);
-            //printTimeSeriesData(shData, "Price data:", "Average price per person");
-
+            System.out.println("\n📊 BENCHMARK ERGEBNISSE:");
+            System.out.println("⚡ 100 Abfragen abgeschlossen in " + totalTime + " ms");
+            System.out.printf("⏱️ Durchschnitt: %.3f ms pro Abfrage%n", totalTime / 100.0);
+            System.out.printf("🚀 Durchsatz: %.0f Abfragen pro Sekunde%n", 100 * 1000.0 / totalTime);
 
         } catch (ClassNotFoundException e) {
-            System.err.println("🚨 PostgreSQL JDBC driver not found.");
+            System.err.println("🚨 PostgreSQL JDBC-Treiber nicht gefunden.");
             e.printStackTrace();
         } catch (SQLException e) {
-            System.err.println("🚨 Database connection failed!");
+            System.err.println("🚨 Datenbankverbindung fehlgeschlagen!");
             e.printStackTrace();
         }
     }
