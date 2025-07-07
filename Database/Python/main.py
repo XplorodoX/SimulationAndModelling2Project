@@ -40,6 +40,7 @@ IMPORTS_CONFIG: List[Dict[str, Any]] = [
     },
     {
         "path": "heatpump.csv",
+        #"path": "heatpumpDataHeapo.csv",
         "table_name": "heatpump",
         "timestamp_columns": ["time"]
     }

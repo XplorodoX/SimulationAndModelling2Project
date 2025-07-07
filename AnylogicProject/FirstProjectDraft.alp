@@ -113,7 +113,7 @@
 				<Variable Class="PlainVariable">
 					<Id>1751297152150</Id>
 					<Name><![CDATA[cumulatedPV]]></Name>
-					<X>50</X><Y>490</Y>
+					<X>130</X><Y>840</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -128,7 +128,7 @@
 				<Variable Class="PlainVariable">
 					<Id>1751297171848</Id>
 					<Name><![CDATA[cumulatedPC]]></Name>
-					<X>40</X><Y>760</Y>
+					<X>120</X><Y>1110</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -143,7 +143,7 @@
 				<Variable Class="PlainVariable">
 					<Id>1751302317110</Id>
 					<Name><![CDATA[cumulatedHP]]></Name>
-					<X>40</X><Y>1012.631</Y>
+					<X>120</X><Y>1362.631</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -158,8 +158,23 @@
 				<Variable Class="PlainVariable">
 					<Id>1751318119705</Id>
 					<Name><![CDATA[totalEnergySaved]]></Name>
-					<X>580</X><Y>290</Y>
+					<X>660</X><Y>640</Y>
 					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
+						<Type><![CDATA[double]]></Type>        
+						<InitialValue Class="CodeValue">
+							<Code><![CDATA[0]]></Code>
+						</InitialValue>
+					</Properties>
+				</Variable>
+				<Variable Class="PlainVariable">
+					<Id>1751878601937</Id>
+					<Name><![CDATA[averageEnergyCost_Euro]]></Name>
+					<X>130</X><Y>300</Y>
+					<Label><X>13</X><Y>-2.667</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
@@ -173,7 +188,7 @@
 				<Variable Class="Parameter">
 					<Id>1751318301300</Id>
 					<Name><![CDATA[heatPumpActivated]]></Name>
-					<X>430</X><Y>890</Y>
+					<X>510</X><Y>1240</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -183,7 +198,7 @@
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
 						<DefaultValue Class="CodeValue">
-							<Code><![CDATA[false]]></Code>
+							<Code><![CDATA[true]]></Code>
 						</DefaultValue>
 						<ParameterEditor>
 							<Id>1751318301298</Id>
@@ -199,7 +214,7 @@
 				<Connector>
 					<Id>1749066158043</Id>
 					<Name><![CDATA[connector]]></Name>
-					<X>395</X><Y>660</Y>
+					<X>475</X><Y>1010</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -232,7 +247,7 @@
 				<Connector>
 					<Id>1749066161880</Id>
 					<Name><![CDATA[connector1]]></Name>
-					<X>390</X><Y>390</Y>
+					<X>470</X><Y>740</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -265,7 +280,7 @@
 				<Connector>
 					<Id>1749066166099</Id>
 					<Name><![CDATA[connector2]]></Name>
-					<X>390</X><Y>70</Y>
+					<X>470</X><Y>420</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -298,7 +313,7 @@
 				<Connector>
 					<Id>1751302274126</Id>
 					<Name><![CDATA[connector3]]></Name>
-					<X>390</X><Y>890</Y>
+					<X>470</X><Y>1240</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -331,7 +346,7 @@
 				<Connector>
 					<Id>1751731601919</Id>
 					<Name><![CDATA[connector4]]></Name>
-					<X>370</X><Y>-150</Y>
+					<X>470</X><Y>200</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -358,7 +373,7 @@
 					</TargetConnectableItemReference>
 					<Points>
 						<Point><X>0</X><Y>0</Y></Point>
-						<Point><X>190</X><Y>350</Y></Point>
+						<Point><X>170</X><Y>350</Y></Point>
 					</Points>
 				</Connector>
 			</Connectors>
@@ -388,7 +403,7 @@
 				<EmbeddedObject>
 					<Id>1749065130547</Id>
 					<Name><![CDATA[houseController]]></Name>
-					<X>560</X><Y>170</Y>
+					<X>640</X><Y>520</Y>
 					<Label><X>-10</X><Y>-15</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -441,7 +456,7 @@
 				<EmbeddedObject>
 					<Id>1749065922928</Id>
 					<Name><![CDATA[battery]]></Name>
-					<X>360</X><Y>70</Y>
+					<X>440</X><Y>420</Y>
 					<Label><X>-15</X><Y>-40</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -491,7 +506,7 @@
 				<EmbeddedObject>
 					<Id>1749066033905</Id>
 					<Name><![CDATA[person_Energy_Consumption]]></Name>
-					<X>365</X><Y>660</Y>
+					<X>445</X><Y>1010</Y>
 					<Label><X>-70</X><Y>-40</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -541,7 +556,7 @@
 				<EmbeddedObject>
 					<Id>1749066036727</Id>
 					<Name><![CDATA[pV]]></Name>
-					<X>360</X><Y>390</Y>
+					<X>440</X><Y>740</Y>
 					<Label><X>-5</X><Y>-40</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -591,7 +606,7 @@
 				<EmbeddedObject>
 					<Id>1751302261893</Id>
 					<Name><![CDATA[heatPump]]></Name>
-					<X>360</X><Y>890</Y>
+					<X>440</X><Y>1240</Y>
 					<Label><X>-20</X><Y>-50</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -641,7 +656,7 @@
 				<EmbeddedObject>
 					<Id>1751731499464</Id>
 					<Name><![CDATA[price]]></Name>
-					<X>340</X><Y>-150</Y>
+					<X>440</X><Y>200</Y>
 					<Label><X>-10</X><Y>-50</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -707,7 +722,7 @@
     			<TimePlot>
 					<Id>1751218131500</Id>
 					<Name><![CDATA[plotForBattery]]></Name>
-					<X>-10</X><Y>-20</Y>
+					<X>70</X><Y>330</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -753,7 +768,7 @@
 					</Labels>
 					<ShowLegend>true</ShowLegend>
 					<TimeWindowsMovementType>MOVEMENT_WITH_TIME</TimeWindowsMovementType>		
-					<TimeWindowUnits>WEEK</TimeWindowUnits>
+					<TimeWindowUnits>YEAR</TimeWindowUnits>
 					<VerScaleFromExpression><![CDATA[0]]></VerScaleFromExpression>
 					<VerScaleToExpression><![CDATA[80]]></VerScaleToExpression>
 					<VerScaleType>FIXED</VerScaleType>
@@ -763,13 +778,13 @@
 						<Title><![CDATA[batteryStateOfCharge]]></Title>
 					<Id>1751238144205</Id>
 					<Expression><![CDATA[batteryDataSet]]></Expression>
-					<Color>-16744448</Color>
+					<Color>-14774017</Color>
 					<Expression2><![CDATA[houseController.handler.stateOfChargeInThisStep //battery.handler.stateOfCharge]]></Expression2>
 					<Expression2Flag>true</Expression2Flag>
 						<PointStyle>NONE</PointStyle>
-						<LineWidth>2.0</LineWidth>
+						<LineWidth>1.0</LineWidth>
 					</DatasetExpression>
-					<SamplesToKeep>1000</SamplesToKeep>
+					<SamplesToKeep>40000</SamplesToKeep>
 					<TimeWindowExpression><![CDATA[1]]></TimeWindowExpression>
 					<FillAreaUnderLine>false</FillAreaUnderLine>
 					<LabelFormat>dd_MM</LabelFormat>
@@ -777,7 +792,7 @@
     			<TimePlot>
 					<Id>1751238832732</Id>
 					<Name><![CDATA[plotForPV]]></Name>
-					<X>-20</X><Y>240</Y>
+					<X>60</X><Y>580</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -798,15 +813,15 @@
 						</RecurrenceCode>
 					</RecurrenceProperties>
 					<EmbeddedIcon>false</EmbeddedIcon>
-					<Width>300.5947955390335</Width>
-					<Height>242.7881274382315</Height>
+					<Width>309.524</Width>
+					<Height>250</Height>
 					<BackgroundColor/>
 					<BorderColor/>
 					<ChartArea>
 						<XOffset>50</XOffset>
 						<YOffset>30</YOffset>
-						<Width>220.5947955390335</Width>
-						<Height>152.7881274382315</Height>
+						<Width>229.524</Width>
+						<Height>160</Height>
 						<BackgroundColor>-1</BackgroundColor>
 						<BorderColor>-16777216</BorderColor>
 						<GridColor>-12566464</GridColor>
@@ -823,7 +838,7 @@
 					</Labels>
 					<ShowLegend>true</ShowLegend>
 					<TimeWindowsMovementType>MOVEMENT_WITH_TIME</TimeWindowsMovementType>		
-					<TimeWindowUnits>WEEK</TimeWindowUnits>
+					<TimeWindowUnits>YEAR</TimeWindowUnits>
 					<VerScaleFromExpression><![CDATA[0]]></VerScaleFromExpression>
 					<VerScaleToExpression><![CDATA[1]]></VerScaleToExpression>
 					<VerScaleType>AUTO</VerScaleType>
@@ -833,13 +848,13 @@
 						<Title><![CDATA[pvProduction]]></Title>
 					<Id>1751238837488</Id>
 					<Expression><![CDATA[houseController.handler.productionInThisTickPV]]></Expression>
-					<Color>-2354116</Color>
+					<Color>-16744448</Color>
 					<Expression2><![CDATA[houseController.handler.productionInThisStepPV]]></Expression2>
 					<Expression2Flag>true</Expression2Flag>
 						<PointStyle>NONE</PointStyle>
-						<LineWidth>2.0</LineWidth>
+						<LineWidth>1.0</LineWidth>
 					</DatasetExpression>
-					<SamplesToKeep>1000</SamplesToKeep>
+					<SamplesToKeep>40000</SamplesToKeep>
 					<TimeWindowExpression><![CDATA[1]]></TimeWindowExpression>
 					<FillAreaUnderLine>false</FillAreaUnderLine>
 					<LabelFormat>dd_MM</LabelFormat>
@@ -847,7 +862,7 @@
     			<TimePlot>
 					<Id>1751239592090</Id>
 					<Name><![CDATA[plotForPC]]></Name>
-					<X>-20</X><Y>517.369</Y>
+					<X>60</X><Y>867.369</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -893,7 +908,7 @@
 					</Labels>
 					<ShowLegend>true</ShowLegend>
 					<TimeWindowsMovementType>MOVEMENT_WITH_TIME</TimeWindowsMovementType>		
-					<TimeWindowUnits>WEEK</TimeWindowUnits>
+					<TimeWindowUnits>YEAR</TimeWindowUnits>
 					<VerScaleFromExpression><![CDATA[0]]></VerScaleFromExpression>
 					<VerScaleToExpression><![CDATA[1]]></VerScaleToExpression>
 					<VerScaleType>AUTO</VerScaleType>
@@ -909,7 +924,7 @@
 						<PointStyle>NONE</PointStyle>
 						<LineWidth>1.0</LineWidth>
 					</DatasetExpression>
-					<SamplesToKeep>1000</SamplesToKeep>
+					<SamplesToKeep>40000</SamplesToKeep>
 					<TimeWindowExpression><![CDATA[1]]></TimeWindowExpression>
 					<FillAreaUnderLine>false</FillAreaUnderLine>
 					<LabelFormat>dd_MM</LabelFormat>
@@ -917,7 +932,7 @@
     			<TimePlot>
 					<Id>1751302317108</Id>
 					<Name><![CDATA[plotForHP]]></Name>
-					<X>-20</X><Y>770</Y>
+					<X>60</X><Y>1120</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -963,7 +978,7 @@
 					</Labels>
 					<ShowLegend>true</ShowLegend>
 					<TimeWindowsMovementType>MOVEMENT_WITH_TIME</TimeWindowsMovementType>		
-					<TimeWindowUnits>WEEK</TimeWindowUnits>
+					<TimeWindowUnits>YEAR</TimeWindowUnits>
 					<VerScaleFromExpression><![CDATA[0]]></VerScaleFromExpression>
 					<VerScaleToExpression><![CDATA[1]]></VerScaleToExpression>
 					<VerScaleType>AUTO</VerScaleType>
@@ -979,15 +994,15 @@
 						<PointStyle>NONE</PointStyle>
 						<LineWidth>1.0</LineWidth>
 					</DatasetExpression>
-					<SamplesToKeep>1000</SamplesToKeep>
+					<SamplesToKeep>40000</SamplesToKeep>
 					<TimeWindowExpression><![CDATA[1]]></TimeWindowExpression>
 					<FillAreaUnderLine>false</FillAreaUnderLine>
 					<LabelFormat>dd_MM</LabelFormat>
     			</TimePlot>
     			<TimePlot>
 					<Id>1751737144194</Id>
-					<Name><![CDATA[plot]]></Name>
-					<X>0</X><Y>-270</Y>
+					<Name><![CDATA[plotForPrices]]></Name>
+					<X>80</X><Y>80</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1033,23 +1048,23 @@
 					</Labels>
 					<ShowLegend>true</ShowLegend>
 					<TimeWindowsMovementType>MOVEMENT_WITH_TIME</TimeWindowsMovementType>		
-					<TimeWindowUnits>WEEK</TimeWindowUnits>
+					<TimeWindowUnits>YEAR</TimeWindowUnits>
 					<VerScaleFromExpression><![CDATA[0]]></VerScaleFromExpression>
 					<VerScaleToExpression><![CDATA[1]]></VerScaleToExpression>
-					<VerScaleType>FIXED</VerScaleType>
+					<VerScaleType>AUTO</VerScaleType>
 					<DrawLine>true</DrawLine>
 					<Interpolation>LINEAR</Interpolation>
 					<DatasetExpression>  
 						<Title><![CDATA[Price in Euro / kWh]]></Title>
 					<Id>1751737145872</Id>
 					<Expression><![CDATA[my_dataset]]></Expression>
-					<Color>-12004916</Color>
+					<Color>-16777216</Color>
 					<Expression2><![CDATA[houseController.handler.priceInThisStep]]></Expression2>
 					<Expression2Flag>true</Expression2Flag>
 						<PointStyle>NONE</PointStyle>
-						<LineWidth>2.0</LineWidth>
+						<LineWidth>1.0</LineWidth>
 					</DatasetExpression>
-					<SamplesToKeep>1000</SamplesToKeep>
+					<SamplesToKeep>40000</SamplesToKeep>
 					<TimeWindowExpression><![CDATA[1]]></TimeWindowExpression>
 					<FillAreaUnderLine>false</FillAreaUnderLine>
 					<LabelFormat>dd_MM</LabelFormat>
@@ -1185,6 +1200,21 @@
 						</InitialValue>
 					</Properties>
 				</Variable>
+				<Variable Class="PlainVariable">
+					<Id>1751878990665</Id>
+					<Name><![CDATA[averageEnergyCostCount]]></Name>
+					<X>485</X><Y>285</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
+						<Type><![CDATA[double]]></Type>        
+						<InitialValue Class="CodeValue">
+							<Code><![CDATA[0]]></Code>
+						</InitialValue>
+					</Properties>
+				</Variable>
 				<Variable Class="Parameter">
 					<Id>1749066364626</Id>
 					<Name><![CDATA[simStepSize_in_min]]></Name>
@@ -1308,15 +1338,15 @@ handler.messageIn(msg);]]></OnReceiveAction>
 						<Action><![CDATA[handler.sendMessagesToAll();
 
 
-
+get_Main().plotForPrices.updateData();
 get_Main().plotForBattery.updateData();
 get_Main().plotForPV.updateData();
 get_Main().plotForPC.updateData();
 if (get_Main().heatPumpActivated)
 	get_Main().plotForHP.updateData();
 
-
-
+// mean += (new_value - mean) / count:
+get_Main().averageEnergyCost_Euro += (handler.priceInThisStep - get_Main().averageEnergyCost_Euro) / ++averageEnergyCostCount;
 get_Main().cumulatedPV += handler.productionInThisStepPV;
 get_Main().cumulatedPC += handler.consumptionInThisStepPC;
 if (get_Main().heatPumpActivated)
@@ -2581,8 +2611,8 @@ handler.messageIn(msg);]]></OnReceiveAction>
 	<TimeAccuracy>1.0E-5</TimeAccuracy>
 	<Frame>
 		<Id>1749063959999</Id>
-		<Width>840</Width>
-		<Height>1130</Height>
+		<Width>2320</Width>
+		<Height>1460</Height>
 	</Frame>
 	<Database>
 		<Id>1749063959989</Id>
@@ -2628,6 +2658,10 @@ handler.messageIn(msg);]]></OnReceiveAction>
 			<MaximumMemory>512</MaximumMemory>
 			<RandomNumberGenerationType>fixedSeed</RandomNumberGenerationType>
 			<CustomGeneratorCode>new Random()</CustomGeneratorCode>
+			<AfterSimulationRunCode><![CDATA[System.out.println("capacity of battery at end: " + root.battery.handler.capacity + " / " + root.battery.handler.maxCapacity); 
+// without HP: 67
+// with HP: 26
+]]></AfterSimulationRunCode>
 			<SeedValue>1</SeedValue>
 			<SelectionModeForSimultaneousEvents>LIFO</SelectionModeForSimultaneousEvents>
 			<VmArgs><![CDATA[]]></VmArgs>
@@ -2674,8 +2708,8 @@ handler.messageIn(msg);]]></OnReceiveAction>
 				<StopOption><![CDATA[Stop at specified date]]></StopOption>
 				<InitialDate><![CDATA[1451606400000]]></InitialDate>
 				<InitialTime><![CDATA[0.0]]></InitialTime>
-				<FinalDate><![CDATA[1452211200000]]></FinalDate>
-				<FinalTime><![CDATA[604800.0]]></FinalTime>
+				<FinalDate><![CDATA[1483228800000]]></FinalDate>
+				<FinalTime><![CDATA[3.16224E7]]></FinalTime>
 			</ModelTimeProperties>
 			<BypassInitialScreen>true</BypassInitialScreen>
 		</SimulationExperiment>	
@@ -3328,8 +3362,8 @@ public class BatteryJava implements Serializable
 
 	// --- Batteryparameter ---
 	private Battery owner;
-	private double capacity;            // Capacity [kWh]
-	private double maxCapacity;         // maxCapacity [kWh]
+	public double capacity;            // Capacity [kWh]
+	public double maxCapacity;         // maxCapacity [kWh]
 	private double stateOfCharge;       // Current charge [kWh]
     private double maxChargePower;      // Maximum charge in one timestep [kWh]
     private double maxDischargePower;   // Maximum discharge in one timestep [kWh]
