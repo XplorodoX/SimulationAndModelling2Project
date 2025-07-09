@@ -19,6 +19,12 @@
 			<Id>1749063971047</Id>
 			<Name><![CDATA[Main]]></Name>
 			<Import><![CDATA[import com.fasterxml.jackson.databind.ser.std.DateSerializer;]]></Import>
+			<StartupCode><![CDATA[ParamSetter initializer = new ParamSetter(init);
+battery.handler = initializer.initBattery(paramIndex, battery);
+pV.handler = initializer.initPV(paramIndex, pV);
+person_Energy_Consumption.handler = initializer.initPC(paramIndex, person_Energy_Consumption);
+houseController.handler = initializer.initHouseController(paramIndex, houseController);
+heatPumpActivated = initializer.heatPumpActivation(paramIndex);]]></StartupCode>
 			<Generic>false</Generic>
 			<GenericParameter>
 				<Id>1749063971053</Id>
@@ -209,6 +215,30 @@
 						</ParameterEditor>
 					</Properties>                 
 				</Variable>
+				<Variable Class="Parameter">
+					<Id>1751995712820</Id>
+					<Name><![CDATA[paramIndex]]></Name>
+					<X>750</X><Y>190</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
+						<Type><![CDATA[int]]></Type>
+						<UnitType><![CDATA[NONE]]></UnitType>
+						<SdArray>false</SdArray>
+						<DefaultValue Class="CodeValue">
+							<Code><![CDATA[65]]></Code>
+						</DefaultValue>
+						<ParameterEditor>
+							<Id>1751995712818</Id>
+							<EditorContolType>TEXT_BOX</EditorContolType>
+							<MinSliderValue><![CDATA[0]]></MinSliderValue>
+							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
+							<DelimeterType>NO_DELIMETER</DelimeterType>
+						</ParameterEditor>
+					</Properties>                 
+				</Variable>
 			</Variables>
 			<Connectors>
 				<Connector>
@@ -377,6 +407,26 @@
 					</Points>
 				</Connector>
 			</Connectors>
+			<Connectivity>
+				<TextFile>
+					<Id>1751906009948</Id>
+					<Name><![CDATA[init]]></Name>
+					<X>750</X><Y>140</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<FileType>FILE</FileType>
+					<Url><![CDATA[]]></Url>
+					<ResourceReference>
+						<PackageName><![CDATA[firstprojectdraft]]></PackageName>
+						<ClassName><![CDATA[init.csv]]></ClassName>
+					</ResourceReference>
+					<FileMode>READ</FileMode>
+					<CharsetName>null</CharsetName>
+					<Separators>,</Separators>
+				</TextFile>
+			</Connectivity>
 			<AgentLinks>
 				<AgentLink>
 					<Id>1749063971048</Id>
@@ -1252,7 +1302,7 @@
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
 						<DefaultValue Class="CodeValue">
-							<Code><![CDATA[new HouseControllerJava(this)]]></Code>
+							<Code><![CDATA[new HouseControllerJava(this, 0)]]></Code>
 						</DefaultValue>
 						<ParameterEditor>
 							<Id>1749830588420</Id>
@@ -1785,7 +1835,7 @@ handler.messageIn(msg);
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
 						<DefaultValue Class="CodeValue">
-							<Code><![CDATA[new PVJava(this, 0.44, 10.0, 10.0, 1.134, 1.762)]]></Code>
+							<Code><![CDATA[new PVJava(this, 0.44, 10)]]></Code>
 						</DefaultValue>
 						<ParameterEditor>
 							<Id>1749855097557</Id>
@@ -2695,6 +2745,9 @@ handler.messageIn(msg);]]></OnReceiveAction>
 				<Parameter>
 					<ParameterName><![CDATA[heatPumpActivated]]></ParameterName>
 				</Parameter>
+				<Parameter>
+					<ParameterName><![CDATA[paramIndex]]></ParameterName>
+				</Parameter>
 			</Parameters>
 			<PresentationProperties>
 				<EnableZoomAndPanning>true</EnableZoomAndPanning>
@@ -2712,7 +2765,117 @@ handler.messageIn(msg);]]></OnReceiveAction>
 				<FinalTime><![CDATA[3.16224E7]]></FinalTime>
 			</ModelTimeProperties>
 			<BypassInitialScreen>true</BypassInitialScreen>
-		</SimulationExperiment>	
+		</SimulationExperiment>
+		<!--   =========  Parameter Variation Experiment   ========  -->
+		<ParamVariationExperiment ActiveObjectClassId="1749063971047">
+			<Id>1751982608937</Id>
+			<Name><![CDATA[ParametersVariation]]></Name>
+			<CommandLineArguments><![CDATA[]]></CommandLineArguments>
+			<MaximumMemory>512</MaximumMemory>
+			<RandomNumberGenerationType>fixedSeed</RandomNumberGenerationType>
+			<CustomGeneratorCode>new Random()</CustomGeneratorCode>
+			<SeedValue>1</SeedValue>
+			<SelectionModeForSimultaneousEvents>LIFO</SelectionModeForSimultaneousEvents>
+			<VmArgs><![CDATA[]]></VmArgs>
+			<LoadRootFromSnapshot>false</LoadRootFromSnapshot>
+
+
+			<AllowParallelEvaluations>true</AllowParallelEvaluations>
+			<UseFreeformParameters>false</UseFreeformParameters>
+			<NumberOfRuns>10</NumberOfRuns>
+			<FreeformParamValue>	
+				<Id>1751318301300</Id>
+			</FreeformParamValue>
+			<FreeformParamValue>	
+				<Id>1751995712820</Id>
+			</FreeformParamValue>
+			<RangeVariationParamValue>	
+				<Id>1751318301300</Id>
+				<Type>FIXED</Type>
+			</RangeVariationParamValue>
+			<RangeVariationParamValue>	
+				<Id>1751995712820</Id>
+				<Type>FIXED</Type>
+			</RangeVariationParamValue>
+			<ModelTimeProperties>
+				<StopOption><![CDATA[Stop at specified date]]></StopOption>
+				<InitialDate><![CDATA[1451606400000]]></InitialDate>	
+				<InitialTime><![CDATA[0.0]]></InitialTime>	
+				<FinalDate><![CDATA[1483228800000]]></FinalDate>	
+				<FinalTime><![CDATA[3.16224E7]]></FinalTime>	
+			</ModelTimeProperties>
+			<PresentationProperties>
+				<EnableZoomAndPanning>true</EnableZoomAndPanning>
+				<Title><![CDATA[FirstProjectDraft : ParametersVariation]]></Title>
+				<EnableDeveloperPanel>true</EnableDeveloperPanel>
+				<ShowDeveloperPanelOnStart>false</ShowDeveloperPanelOnStart>
+			</PresentationProperties>
+			<ReplicationsProperties>
+				<UseReplication>false</UseReplication>
+				<FixedReplicationsNumber>true</FixedReplicationsNumber>
+				<ReplicationPerIteration>10</ReplicationPerIteration>
+				<MinimumReplication>2</MinimumReplication>
+				<MaximumReplication>10</MaximumReplication>
+				<ConfidenceLevel>LEVEL_80</ConfidenceLevel>
+				<ErrorPercent>0.5</ErrorPercent>
+				<ExpressionForConfidenceComputation><![CDATA[0]]></ExpressionForConfidenceComputation>
+			</ReplicationsProperties>
+		</ParamVariationExperiment>
+		<!--   =========  Parameter Variation Experiment   ========  -->
+		<ParamVariationExperiment ActiveObjectClassId="1749063971047">
+			<Id>1752057274728</Id>
+			<Name><![CDATA[ParametersVariation1]]></Name>
+			<CommandLineArguments><![CDATA[]]></CommandLineArguments>
+			<MaximumMemory>4096</MaximumMemory>
+			<RandomNumberGenerationType>fixedSeed</RandomNumberGenerationType>
+			<CustomGeneratorCode>new Random()</CustomGeneratorCode>
+			<SeedValue>1</SeedValue>
+			<SelectionModeForSimultaneousEvents>LIFO</SelectionModeForSimultaneousEvents>
+			<VmArgs><![CDATA[]]></VmArgs>
+			<LoadRootFromSnapshot>false</LoadRootFromSnapshot>
+
+
+			<AllowParallelEvaluations>true</AllowParallelEvaluations>
+			<UseFreeformParameters>false</UseFreeformParameters>
+			<NumberOfRuns>10</NumberOfRuns>
+			<FreeformParamValue>	
+				<Id>1751318301300</Id>
+			</FreeformParamValue>
+			<FreeformParamValue>	
+				<Id>1751995712820</Id>
+			</FreeformParamValue>
+			<RangeVariationParamValue>	
+				<Id>1751318301300</Id>
+				<Type>FIXED</Type>
+			</RangeVariationParamValue>
+			<RangeVariationParamValue>	
+				<Id>1751995712820</Id>
+				<Type>FIXED</Type>
+			</RangeVariationParamValue>
+			<ModelTimeProperties>
+				<StopOption><![CDATA[Stop at specified date]]></StopOption>
+				<InitialDate><![CDATA[1451606400000]]></InitialDate>	
+				<InitialTime><![CDATA[0.0]]></InitialTime>	
+				<FinalDate><![CDATA[1483228800000]]></FinalDate>	
+				<FinalTime><![CDATA[3.16224E7]]></FinalTime>	
+			</ModelTimeProperties>
+			<PresentationProperties>
+				<EnableZoomAndPanning>true</EnableZoomAndPanning>
+				<Title><![CDATA[FirstProjectDraft : ParametersVariation1]]></Title>
+				<EnableDeveloperPanel>true</EnableDeveloperPanel>
+				<ShowDeveloperPanelOnStart>false</ShowDeveloperPanelOnStart>
+			</PresentationProperties>
+			<ReplicationsProperties>
+				<UseReplication>false</UseReplication>
+				<FixedReplicationsNumber>true</FixedReplicationsNumber>
+				<ReplicationPerIteration>10</ReplicationPerIteration>
+				<MinimumReplication>2</MinimumReplication>
+				<MaximumReplication>10</MaximumReplication>
+				<ConfidenceLevel>LEVEL_80</ConfidenceLevel>
+				<ErrorPercent>0.5</ErrorPercent>
+				<ExpressionForConfidenceComputation><![CDATA[0]]></ExpressionForConfidenceComputation>
+			</ReplicationsProperties>
+		</ParamVariationExperiment>	
 	</Experiments>
 	<JavaClasses>
 		<!--   =========   Java Class   ========  -->
@@ -2773,6 +2936,7 @@ import java.util.List;
 public class HouseControllerJava implements Serializable 
 {
 	public HouseController owner;
+	public int strategy;
 	public double productionInThisStepPV;
 	public double consumptionInThisStepPC;
 	public double consumptionInThisStepHP;
@@ -2793,9 +2957,10 @@ public class HouseControllerJava implements Serializable
     /**
      * Constructor
      */
-    public HouseControllerJava(HouseController owner) 
+    public HouseControllerJava(HouseController owner, int strategy) 
     {
     	this.owner = owner;
+    	this.strategy = strategy;
     	
 		DBRequest.initializeConnectionPool();
     	
@@ -2904,7 +3069,14 @@ public class HouseControllerJava implements Serializable
 		}
 		else 
 		{
-			simpleStrat();
+			if(strategy == 1) {
+				// optimal strategy
+			}else if(strategy == 2) {
+				// heuristic
+			}else {
+				// greedy
+				simpleStrat();
+			}
 			messageCounter = 0;
 		}		
 	}	
@@ -3268,10 +3440,7 @@ public class PVJava implements Serializable
 
     public PVJava(PV owner,
                   double module_kWp,
-                  double roof_length,
-                  double roof_width,
-                  double pv_module_length,
-                  double pv_module_width)
+                  int module_count)
     {
         DBRequest.initializeConnectionPool();
         LocalDateTime simStart = LocalDateTime.of(2005, 1, 1, 0, 0);
@@ -3282,7 +3451,7 @@ public class PVJava implements Serializable
         this.owner = owner;
         this.module_kWp = module_kWp;
 
-        module_count = pvCount(roof_length, roof_width, pv_module_length, pv_module_width);
+        this.module_count = module_count;
     }
 
     //TODO: Change location from pvCount / get solar pannel count from constructor
@@ -3394,8 +3563,10 @@ public class BatteryJava implements Serializable
         double overflow = (reducedEnergy - actualCharge) / roundTripEfficiency; // For usage in Anylogic
 
         stateOfCharge += actualCharge;
-
-        cycles += actualCharge / maxCapacity;
+        if(maxCapacity != 0){
+        	cycles += actualCharge / maxCapacity;
+        }
+        
         //System.out.println("stateOfCharge: " +stateOfCharge);
 
         applyDegradation();
@@ -3417,8 +3588,10 @@ public class BatteryJava implements Serializable
         double missing = (newRequestedEnergy - actualDischarge) * roundTripEfficiency;
 
         stateOfCharge -= actualDischarge;
-
-        cycles += actualDischarge / maxCapacity;
+        
+        if(maxCapacity != 0){
+        	cycles += actualDischarge / maxCapacity;
+        }
         
         //System.out.println("maxPossibleDischarge: " +maxPossibleDischarge);
         //System.out.println("actualDischarge: " +actualDischarge);
@@ -4350,6 +4523,69 @@ public class DataMessageFromPriceForecast extends firstprojectdraft.MessageType 
 	private static final long serialVersionUID = 1L;
 }]]></Text>
 		</JavaClass>
+		<!--   =========   Java Class   ========  -->
+		<JavaClass>
+			<Id>1751893934902</Id>
+			<Name><![CDATA[ParamSetter]]></Name>
+			<Text><![CDATA[/**
+ * ParamSetter
+ */	
+import java.util.List;
+
+public class ParamSetter {
+    public List<List<String>> rawData;
+    public ParamSetter(TextFile csvFile){
+    	List<List<String>> csvData = new ArrayList<>();
+    	boolean first = true;
+    	String line;
+    	while((line = csvFile.readLine()) != null){
+    		if(first){
+    			first = false;
+    			continue;
+    		}
+    		String[] fields = line.split(",");
+    		List<String> row = Arrays.asList(fields);
+    		csvData.add(row);
+    	}
+        this.rawData = csvData;
+        csvFile.close();
+    }
+    public List<String> getParams(int paramIndex){
+    	return this.rawData.get(paramIndex);
+    }
+    public BatteryJava initBattery(int paramIndex, Battery owner){
+    	List<String> params = getParams(paramIndex);
+    	double numBatteries = Double.parseDouble(params.get(22));
+    	double capacity = Double.parseDouble(params.get(13));
+    	double maxChargePower = Double.parseDouble(params.get(14));
+    	double maxDischargePower = Double.parseDouble(params.get(15));
+    	double roundTripEfficiency = Double.parseDouble(params.get(16));
+    	double degradationPerCycle = Double.parseDouble(params.get(17));
+        return new BatteryJava(owner, numBatteries * capacity, maxChargePower, maxDischargePower, roundTripEfficiency, degradationPerCycle);
+    }
+    public PCJava initPC(int paramIndex, PC owner){
+    	List<String> params = getParams(paramIndex);
+    	int numberOfPeople = Integer.parseInt(params.get(2));
+    	return new PCJava(owner, numberOfPeople);
+    }
+    public PVJava initPV(int paramIndex, PV owner){
+    	List<String> params = getParams(paramIndex);
+    	double kWp = Double.parseDouble(params.get(5));
+    	int moduleCount = Integer.parseInt(params.get(21));
+    	return new PVJava(owner, kWp, moduleCount);
+    }
+    public HouseControllerJava initHouseController(int paramIndex, HouseController owner){
+    	List<String> params = getParams(paramIndex);
+    	int strategy = Integer.parseInt(params.get(20));
+    	return new HouseControllerJava(owner, strategy);
+    }
+    public boolean heatPumpActivation(int paramIndex){
+    	List<String> params = getParams(paramIndex);
+    	boolean activation = Boolean.parseBoolean(params.get(18));
+    	return activation;
+    }
+}]]></Text>
+		</JavaClass>
 	</JavaClasses>
 	<ModelResources>
 		<Resource>
@@ -4373,6 +4609,12 @@ public class DataMessageFromPriceForecast extends firstprojectdraft.MessageType 
 		<Resource>
 			<Id>1751567963662</Id>
 			<Path><![CDATA[slf4j-api-2.0.9.jar]]></Path>
+			<ReferencedFromUserCode>false</ReferencedFromUserCode>
+			<Location>FILE_SYSTEM</Location>
+		</Resource>
+		<Resource>
+			<Id>1751995657544</Id>
+			<Path><![CDATA[init.csv]]></Path>
 			<ReferencedFromUserCode>false</ReferencedFromUserCode>
 			<Location>FILE_SYSTEM</Location>
 		</Resource>
