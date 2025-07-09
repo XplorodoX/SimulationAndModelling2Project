@@ -1,6 +1,4 @@
-import java.sql.*;
 import java.time.*;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.io.Serializable;
 
@@ -8,92 +6,51 @@ public class PCJava implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private PC owner;
-    private int numberOfPeople;
 
     private static final String TABLE_NAME = "household_data";
     private static final String TIME_COLUMN = "utc_timestamp";
     private static final String DATA_COLUMN = "average_per_person_consumption";
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-    // Constructor that sets owner and number of people
-    public PCJava(PC owner, int numberOfPeople) {
+    public PCJava(PC owner) {
         this.owner = owner;
-        this.numberOfPeople = numberOfPeople;
+        DBRequest.initializeConnectionPool(); // ensure pool is available
     }
 
-    // Returns predicted consumption for current time step using getActualValue
-    public double getPredictedConsumptionNow() {
-        try (DBRequest.DBConnection dbConn = new DBRequest.DBConnection()) {
-            Connection conn = dbConn.getConnection();
+    public void messageIn(MessageType msg) {
+        if (msg instanceof DataResponceTriggerMessageForForecast forecastMsg) {
+            double start = forecastMsg.timestampStart;
+            double end = forecastMsg.timestampEnd;
+            int numberOfPeople = forecastMsg.numberOfPeople;
 
-            // Use current simulation time from AnyLogic
-            LocalDateTime now = DateTimeConversionJava.getTimeNow(owner);
+            double[] forecast = getForecastUsingHistoricalData(start, end, numberOfPeople);
+            owner.port.send(new DataMessageFromPCForecast(owner, forecast));
+        }
+    }
 
-            // Get the most recent known value before or at the current time
-            Object valueObj = DBRequest.getActualValue(
-                conn, TABLE_NAME, TIME_COLUMN, DATA_COLUMN, now
+    public double[] getForecastUsingHistoricalData(double start, double end, int numberOfPeople) {
+        int steps = (int) ((end - start) / 900);  // 15-min intervals
+        double[] result = new double[steps];
+
+        for (int i = 0; i < steps; i++) {
+            double simTime = start + i * 900.0;  // simulation timestamp
+            LocalDateTime actualTime = DateTimeConversionJava.doubleToCurrentLocalDateTime(simTime);
+            LocalDateTime mappedTo2016 = convertTo2016Equivalent(actualTime);
+
+            double avgPerPerson = DBRequest.getValueAtTime(
+                TABLE_NAME, TIME_COLUMN, DATA_COLUMN, mappedTo2016
             );
 
-            if (valueObj instanceof Number) {
-                double avgPerPerson = ((Number) valueObj).doubleValue();
-                return avgPerPerson * numberOfPeople;
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            result[i] = avgPerPerson * numberOfPeople;
         }
 
-        return 0.0; // fallback if no value or error
+        return result;
     }
 
-    // Returns predicted consumption for a given time range
-    public List<Object[]> getPredictedConsumption(LocalDateTime startTime, LocalDateTime endTime) {
-        List<Object[]> results = new ArrayList<>();
+    private LocalDateTime convertTo2016Equivalent(LocalDateTime actualTime) {
+        // Handles overflow (e.g., Feb 29 in non-leap year)
+        int day = Math.min(actualTime.getDayOfMonth(),
+            Year.of(2016).atMonth(actualTime.getMonth()).lengthOfMonth());
 
-        try (DBRequest.DBConnection dbConn = new DBRequest.DBConnection()) {
-            Connection conn = dbConn.getConnection();
-
-            List<Object[]> data = DBRequest.getTimeSeriesData(
-                conn, TABLE_NAME, TIME_COLUMN, DATA_COLUMN,
-                startTime, endTime
-            );
-
-            for (Object[] row : data) {
-                Timestamp ts = (Timestamp) row[0];
-                Object valueObj = row[1];
-                if (valueObj instanceof Number) {
-                    double avgPerPerson = ((Number) valueObj).doubleValue();
-                    double predicted = avgPerPerson * numberOfPeople * 5;
-                    results.add(new Object[]{ts, predicted});
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return results;
-    }
-
-    // Optional utility to test from console
-    public void testWithScanner() {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.print("Enter start datetime (YYYY-MM-DD HH:MM:SS): ");
-        String startInput = scanner.nextLine();
-
-        System.out.print("Enter end datetime (YYYY-MM-DD HH:MM:SS): ");
-        String endInput = scanner.nextLine();
-
-        LocalDateTime startTime = LocalDateTime.parse(startInput, FORMATTER);
-        LocalDateTime endTime = LocalDateTime.parse(endInput, FORMATTER);
-
-        List<Object[]> predictions = getPredictedConsumption(startTime, endTime);
-
-        System.out.println("Results for " + numberOfPeople + " people:");
-        for (Object[] row : predictions) {
-            System.out.println(row[0] + " → Predicted: " + row[1] + " kWh");
-        }
+        return LocalDateTime.of(2016, actualTime.getMonth(), day, actualTime.getHour(), actualTime.getMinute());
     }
 }
