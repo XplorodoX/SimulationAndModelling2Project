@@ -1,3 +1,28 @@
+https://www.eon.de/de/pk/solar/photovoltaik-kosten.html#1v2dc7uyrurgo1fnvyc0
+4 kwp = 8800€
+7 kwp = 10000€
+9 kwp = 11400€
+11 kwp = 12600€
+
+https://www.mauderer.de/produkte/bavaria-absturzsicherungen/wie-hoch-sind-die-montagekosten-fuer-eine-pv-anlage/
+1.200 – 1.800 € per kwp
+
+1.500 – 3.000 Montage 
+
+https://www.solarwatt.de/ratgeber/photovoltaik-kosten
+1.800 € Wechselrichtertausch 
+
+https://gruenes.haus/solaranlage-installieren-lassen/
+5 kWp: 3000 / 7000
+7 kWp: 3500 / 9000
+9 kWp: 4500 / 12500
+11 kWp: 5500 / 17000
+
+Whole price:
+
+Wechselrichter +  Installation + price per kWp * kWp 
+
+= 1500 + 3000 + 900 * kWp
 
 
 https://scholarworks.boisestate.edu/cgi/viewcontent.cgi?article=1549&context=electrical_facpubs
