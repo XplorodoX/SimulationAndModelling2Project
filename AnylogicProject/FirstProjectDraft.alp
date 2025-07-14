@@ -228,7 +228,7 @@ heatPumpActivated = initializer.heatPumpActivation(paramIndex);]]></StartupCode>
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
 						<DefaultValue Class="CodeValue">
-							<Code><![CDATA[86]]></Code>
+							<Code><![CDATA[207 //86]]></Code>
 						</DefaultValue>
 						<ParameterEditor>
 							<Id>1751995712818</Id>
@@ -3315,7 +3315,7 @@ public class HouseControllerJava implements Serializable
 	public double[] forecastevEnergyUsed;
 	public double[] forecastPowerbalance;
 	public double[] optimalStrategy;
-	public int strategyStepCounter;
+	public int strategyStepCounter = 0;
 	//private double powerBalanceInThisStep;
 	private double differenceInThisStep;
 	private int messageCounter = 0;
@@ -3537,8 +3537,10 @@ public class HouseControllerJava implements Serializable
 	}
 	
 	public void followOptimalStrategy(){
+		//System.out.println(strategyStepCounter);
 		double difference = optimalStrategy[strategyStepCounter];
-		double chargeChange = difference + powerBalanceInThisStep;
+		double chargeChange = difference + forecastPowerbalance[strategyStepCounter]; // TODO powerBalanceInThisStep
+		//System.out.println(productionInThisStepPV - consumptionInThisStepPC == forecastPowerbalance[strategyStepCounter]);
 		owner.port.send(new DataMessageToBattery(owner, owner.time(), chargeChange));
 		
 		owner.energy -= difference;
@@ -3546,7 +3548,7 @@ public class HouseControllerJava implements Serializable
 		owner.moneySaved -= difference * priceInThisStep;
 		strategyStepCounter ++;
 		
-		if(optimalStrategy.length == strategyStepCounter) {
+		if(strategyStepCounter == 96) {
 			strategyStepCounter = 0;
 		}
 	}
