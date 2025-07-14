@@ -1,24 +1,15 @@
 import java.time.;
-
-
-
   DateTimeConversionJava
  	
-
-
 public class DateTimeConversionJava implements Serializable {
 
-    
       Default constructor
-     
-	
-	
+     	
 	static LocalDateTime startDate = LocalDateTime.of(2016,1,1,0,0,0);
     public DateTimeConversionJava() {
     	 set startDate
     }
 
-    
     public static LocalDateTime doubleToCurrentLocalDateTime(double secondsSinceStart)
     {    	
          Convert seconds to duration (you must castround double to long for Duration)
@@ -63,24 +54,27 @@ public class DateTimeConversionJava implements Serializable {
     		return now;
     	}
     }
+
+
     //todo todo todo todo todo todo todoooooooooooooooooooooooooooooo todododooooo
 
 
     public static boolean weDontHaveDataForThisTime(LocalDateTime now)
     {
+	// return boolean value if i have data for this time stamp or not // before the conversion
     	return 
     }
     
-    public static LocalDateTime getDataFrom2016()
-    {
-		now.year = 2016;
-    	return 
+    public static LocalDateTime getDataFrom2016(LocalDateTime now)
+    {	// get the data for the converted date from the database, and return that data
+	now.year = 2016;
+    	return now;
     }
     
     public static LocalDateTime getTimeIn15(Agent owner)
     {
     	int year = owner.getYear();
-    	int mounth = owner.getMonth() + 1;  because anylocig months are 0-11 and LocalDateTime months are 1-12
+    	int mounth = owner.getMonth() + 1;  // because anylogic months are 0-11 and LocalDateTime months are 1-12
     	int day = owner.getDayOfMonth();
     	int hour = owner.getHourOfDay();
     	int min = owner.getMinute();
