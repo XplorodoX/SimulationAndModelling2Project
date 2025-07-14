@@ -44,7 +44,7 @@ public double[] getForecastFromDatabase(double start, double end) {
             DATA_COLUMN,
             DateTimeConversionJava.doubleToCurrentLocalDateTime(start),
             DateTimeConversionJava.doubleToCurrentLocalDateTime(end)
-            //todotodo
+            //todotodo, i want these to convert the given time stamp to 2016s time stamp
         );
 
         double[] result = new double[rows.size()];
