@@ -228,7 +228,7 @@ heatPumpActivated = initializer.heatPumpActivation(paramIndex);]]></StartupCode>
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
 						<DefaultValue Class="CodeValue">
-							<Code><![CDATA[65]]></Code>
+							<Code><![CDATA[86]]></Code>
 						</DefaultValue>
 						<ParameterEditor>
 							<Id>1751995712818</Id>
@@ -3174,6 +3174,73 @@ handler.messageIn(msg);]]></OnReceiveAction>
 				<ErrorPercent>0.5</ErrorPercent>
 				<ExpressionForConfidenceComputation><![CDATA[0]]></ExpressionForConfidenceComputation>
 			</ReplicationsProperties>
+		</ParamVariationExperiment>
+		<!--   =========  Parameter Variation Experiment   ========  -->
+		<ParamVariationExperiment ActiveObjectClassId="1749063971047">
+			<Id>1752518180885</Id>
+			<Name><![CDATA[ParametersVariation2]]></Name>
+			<CommandLineArguments><![CDATA[]]></CommandLineArguments>
+			<MaximumMemory>512</MaximumMemory>
+			<RandomNumberGenerationType>fixedSeed</RandomNumberGenerationType>
+			<CustomGeneratorCode>new Random()</CustomGeneratorCode>
+			<SeedValue>1</SeedValue>
+			<SelectionModeForSimultaneousEvents>LIFO</SelectionModeForSimultaneousEvents>
+			<VmArgs><![CDATA[]]></VmArgs>
+			<LoadRootFromSnapshot>false</LoadRootFromSnapshot>
+
+
+			<AllowParallelEvaluations>true</AllowParallelEvaluations>
+			<UseFreeformParameters>false</UseFreeformParameters>
+			<NumberOfRuns>10</NumberOfRuns>
+			<FreeformParamValue>	
+				<Id>1751318301300</Id>
+			</FreeformParamValue>
+			<FreeformParamValue>	
+				<Id>1751995712820</Id>
+			</FreeformParamValue>
+			<RangeVariationParamValue>	
+				<Id>1751318301300</Id>
+				<Type>FIXED</Type>
+			</RangeVariationParamValue>
+			<RangeVariationParamValue>	
+				<Id>1751995712820</Id>
+				<Type>RANGE</Type>
+				<Expression Class="CodeValue">
+					<Code><![CDATA[204]]></Code>
+				</Expression>
+				<From Class="CodeValue">
+					<Code><![CDATA[204]]></Code>
+				</From>
+				<To Class="CodeValue">
+					<Code><![CDATA[207]]></Code>
+				</To>
+				<Step Class="CodeValue">
+					<Code><![CDATA[1]]></Code>
+				</Step>
+			</RangeVariationParamValue>
+			<ModelTimeProperties>
+				<StopOption><![CDATA[Stop at specified date]]></StopOption>
+				<InitialDate><![CDATA[1451606400000]]></InitialDate>	
+				<InitialTime><![CDATA[0.0]]></InitialTime>	
+				<FinalDate><![CDATA[1483228800000]]></FinalDate>	
+				<FinalTime><![CDATA[3.16224E7]]></FinalTime>	
+			</ModelTimeProperties>
+			<PresentationProperties>
+				<EnableZoomAndPanning>true</EnableZoomAndPanning>
+				<Title><![CDATA[FirstProjectDraft : ParametersVariation2]]></Title>
+				<EnableDeveloperPanel>true</EnableDeveloperPanel>
+				<ShowDeveloperPanelOnStart>false</ShowDeveloperPanelOnStart>
+			</PresentationProperties>
+			<ReplicationsProperties>
+				<UseReplication>false</UseReplication>
+				<FixedReplicationsNumber>true</FixedReplicationsNumber>
+				<ReplicationPerIteration>10</ReplicationPerIteration>
+				<MinimumReplication>2</MinimumReplication>
+				<MaximumReplication>10</MaximumReplication>
+				<ConfidenceLevel>LEVEL_80</ConfidenceLevel>
+				<ErrorPercent>0.5</ErrorPercent>
+				<ExpressionForConfidenceComputation><![CDATA[0]]></ExpressionForConfidenceComputation>
+			</ReplicationsProperties>
 		</ParamVariationExperiment>	
 	</Experiments>
 	<JavaClasses>
@@ -3253,7 +3320,8 @@ public class HouseControllerJava implements Serializable
 	private double differenceInThisStep;
 	private int messageCounter = 0;
 	private int numMessagesPerStep = 4;
-	private int numMessagesChange = 3;// +5 Forecasts + EV normal TODO
+	private int numMessagesBase = 4;
+	private int numMessagesChange = 7;//4 +5 Forecasts + EV normal TODO
 	private double powerBalanceInThisStep;
 	
 	private Optimizer optimizer;
@@ -3291,21 +3359,21 @@ public class HouseControllerJava implements Serializable
 	{
 		owner.port.send(new DataResponseTriggerMessage(owner, owner.time())); 
 		// should only trigger the sending of the data, so it doesnt be a specific message
-		
 		if(stepCounter == 96) {
 		//send to EV
+		stepCounter = 0;
 		owner.port.send(new DataResponceTriggerMessageForForecast(owner, owner.time(), owner.time() + 900 * 96));
 		}
+		stepCounter++;
 		return true;
 	}	
 	
 	public void messageIn(MessageType msg) 
 	{
+		//System.out.println(numMessagesPerStep);
 		if(stepCounter == 96) {
-			numMessagesPerStep += numMessagesChange;
-			stepCounter = 0;
+			numMessagesPerStep = numMessagesChange;
 		}
-		stepCounter++;
 		//System.out.println("msg in HouseController: " + msg);
 		messageCounter++;
 		
@@ -3358,7 +3426,13 @@ public class HouseControllerJava implements Serializable
 		}
 		else if(msg instanceof DataMessageFromPCForecast)
 		{
+			//System.out.println("Das ist die PC forecast!");
 			this.forecastPC = ((DataMessageFromPCForecast) msg).forecast;
+			
+			//for(int x = 0; x < forecastPC.length; x++)
+			//{
+			//	System.out.println(forecastPC[x]);
+			//}
 		}
 		else if (msg instanceof DataMessageFromPriceForecast)
 		{
@@ -3393,10 +3467,11 @@ public class HouseControllerJava implements Serializable
 		else if (messageCounter == numMessagesPerStep)
 		{
 			powerBalanceInThisStep = productionInThisStepPV - consumptionInThisStepPC;
-			
-			if(stepCounter == 1) {
-				this.forecastPowerbalance = calculatePowerbalanceForecast();
-				this.optimalStrategy = optimizer.solve(this.forecastPrice, this.forecastPowerbalance, owner.get_Main().battery.handler.capacity, owner.get_Main().battery.handler.stateOfCharge);
+			if(stepCounter == 0) {
+				if(strategy == 1) {
+					this.forecastPowerbalance = calculatePowerbalanceForecast();
+					this.optimalStrategy = optimizer.solve(this.forecastPrice, this.forecastPowerbalance, owner.get_Main().battery.handler.capacity, owner.get_Main().battery.handler.stateOfCharge);
+				}
 			}
 			
 			if (owner.get_Main().heatPumpActivated)
@@ -3422,8 +3497,8 @@ public class HouseControllerJava implements Serializable
 				simpleStrat();
 			}
 			messageCounter = 0;
-			if(stepCounter == 1) {
-				numMessagesPerStep -= numMessagesChange;
+			if(stepCounter == 0) {
+				numMessagesPerStep = numMessagesBase;
 			}
 		}		
 	}	
@@ -3465,10 +3540,14 @@ public class HouseControllerJava implements Serializable
 		double chargeChange = difference + powerBalanceInThisStep;
 		owner.port.send(new DataMessageToBattery(owner, owner.time(), chargeChange));
 		
-		owner.energy += difference;
-		owner.get_Main().totalEnergySaved += difference;
-		owner.moneySaved += difference * priceInThisStep;
+		owner.energy -= difference;
+		owner.get_Main().totalEnergySaved -= difference;
+		owner.moneySaved -= difference * priceInThisStep;
 		strategyStepCounter ++;
+		
+		if(optimalStrategy.length == strategyStepCounter) {
+			strategyStepCounter = 0;
+		}
 	}
 	
 	public double[] calculatePowerbalanceForecast() {
@@ -3679,6 +3758,11 @@ public class PCJava implements Serializable {
         this.owner = owner;
         this.numPeople = numPeople;
         DBRequest.initializeConnectionPool(); // Ensure connection is available
+        
+        LocalDateTime simStart = LocalDateTime.of(2016, 1, 1, 0, 0);
+        LocalDateTime simEnd = LocalDateTime.of(2016, 12, 31, 23, 59);
+        
+        DBRequest.preloadTimeSeriesData(TABLE_NAME, TIME_COLUMN, DATA_COLUMN, simStart, simEnd);
     }
 
     public void messageIn(MessageType msg) {
@@ -3724,6 +3808,7 @@ public class PCJava implements Serializable {
             time.getDayOfMonth(),
             Year.of(2016).atMonth(time.getMonth()).lengthOfMonth()
         );
+        //System.out.println(LocalDateTime.of(2016, time.getMonth(), day, time.getHour(), time.getMinute()));
         return LocalDateTime.of(2016, time.getMonth(), day, time.getHour(), time.getMinute());
     }
 }]]></Text>
@@ -3820,7 +3905,7 @@ public class PVJava implements Serializable
     {
 
         LocalDateTime time = DateTimeConversionJava.doubleToCurrentLocalDateTime(loopUpTime);
-
+        //System.out.println(time);
         double raw_kWh = DBRequest.getValueAtTime(table_name, timestamp_column, data_column, time);
 
         return raw_kWh;
@@ -4188,7 +4273,7 @@ public class DBRequest {
 
         // Prüfe ob Daten im Cache vorhanden und aktuell sind
         if (!isCacheValid(cacheKey)) {
-            //System.err.println("⚠️ Cache miss or expired for " + cacheKey);
+            System.err.println("⚠️ Cache miss or expired for " + cacheKey);
             return getValueFromDatabase(tableName, timeColumn, dataColumn, targetTime);
         }
 
@@ -5119,6 +5204,7 @@ public class Optimizer {
             throw new IllegalArgumentException("c und p müssen gleich lang sein (t+1 Werte)");
 
         GRBEnv env = new GRBEnv(false);
+        env.set(GRB.IntParam.OutputFlag, 0);
         GRBModel model = new GRBModel(env);
         model.set(GRB.StringAttr.ModelName, "SimMod2_Optimization");
 
