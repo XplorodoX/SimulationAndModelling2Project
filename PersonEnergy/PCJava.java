@@ -36,29 +36,23 @@ public class PCJava implements Serializable {
         }
     }
 
-    // Forecast future consumption using mapped historical data (e.g. Jan 5 2048 → Jan 5 2016)
-    public double[] getForecastUsingHistoricalData(double start, double end, int numberOfPeople) {
-        int steps = (int) ((end - start) / 900);  // 900 seconds = 15 min
-        double[] result = new double[steps];
-
-        for (int i = 0; i < steps; i++) {
-            double simTime = start + i * 900.0;
-            LocalDateTime actualTime = DateTimeConversionJava.doubleToCurrentLocalDateTime(simTime);
-            LocalDateTime mappedTime = convertTo2016Equivalent(actualTime);
-
-            double avgPerPerson = DBRequest.getValueAtTime(TABLE_NAME, TIME_COLUMN, DATA_COLUMN, mappedTime);
-            result[i] = avgPerPerson * numberOfPeople;
-        }
-
-        return result;
-    }
-
-    // If year is not 2016, map date to the same MM-DD hh:mm in 2016.
-    private LocalDateTime convertTo2016Equivalent(LocalDateTime time) {
-        int day = Math.min(
-            time.getDayOfMonth(),
-            Year.of(2016).atMonth(time.getMonth()).lengthOfMonth()
+public double[] getForecastFromDatabase(double start, double end, int numberOfPeople) {
+        List<Object[]> rows = DBRequest.getTimeSeriesData(
+            TABLE_NAME,
+            TIME_COLUMN,
+            DATA_COLUMN,
+            DateTimeConversionJava.doubleToCurrentLocalDateTime(start),
+            DateTimeConversionJava.doubleToCurrentLocalDateTime(end)
         );
-        return LocalDateTime.of(2016, time.getMonth(), day, time.getHour(), time.getMinute());
+
+        double[] result = new double[rows.size()];
+        for (int i = 0; i < rows.size(); i++) {
+            Object[] row = rows.get(i);
+            if (row[1] instanceof Number) {
+                double avg = ((Number) row[1]).doubleValue();
+                result[i] = avg * numberOfPeople;
+            }
+        }
+        return result;
     }
 }
