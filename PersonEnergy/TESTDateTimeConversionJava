@@ -62,7 +62,8 @@ public class DateTimeConversionJava implements Serializable {
     public static boolean weDontHaveDataForThisTime(LocalDateTime now)
     {
 	// return boolean value if i have data for this time stamp or not // before the conversion
-    	return 
+	return now.getYear() != 2016;
+	// done
     }
     
     public static LocalDateTime getDataFrom2016(LocalDateTime now)
