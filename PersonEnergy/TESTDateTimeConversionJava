@@ -62,14 +62,18 @@ public class DateTimeConversionJava implements Serializable {
     public static boolean weDontHaveDataForThisTime(LocalDateTime now)
     {
 	// return boolean value if i have data for this time stamp or not // before the conversion
-	return now.getYear() != 2016;
+	return now.getYear() != 2016; //agar 2016 na ho to return krna
 	// done
     }
     
     public static LocalDateTime getDataFrom2016(LocalDateTime now)
     {	// get the data for the converted date from the database, and return that data
-	now.year = 2016;
-    	return now;
+	// now.year = 2016;
+    	// return now;
+	int month = now.getMonthValue(); // date me se month alag krna
+    	int day = Math.min(now.getDayOfMonth(), Year.of(2016).atMonth(month).lengthOfMonth()); //date me se day alag krna
+    	return LocalDateTime.of(2016, month, day, now.getHour(), now.getMinute(), now.getSecond()); // same time date stamp se year ko change krna 2016 me aur baki sab as it is return kr dena
+
     }
     
     public static LocalDateTime getTimeIn15(Agent owner)
