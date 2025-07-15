@@ -191,29 +191,20 @@ heatPumpActivated = initializer.heatPumpActivation(paramIndex);]]></StartupCode>
 						</InitialValue>
 					</Properties>
 				</Variable>
-				<Variable Class="Parameter">
-					<Id>1751318301300</Id>
+				<Variable Class="PlainVariable">
+					<Id>1752573089819</Id>
 					<Name><![CDATA[heatPumpActivated]]></Name>
 					<X>510</X><Y>1240</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
-					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
-						<Type><![CDATA[boolean]]></Type>
-						<UnitType><![CDATA[NONE]]></UnitType>
-						<SdArray>false</SdArray>
-						<DefaultValue Class="CodeValue">
+					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
+						<Type><![CDATA[boolean]]></Type>        
+						<InitialValue Class="CodeValue">
 							<Code><![CDATA[true]]></Code>
-						</DefaultValue>
-						<ParameterEditor>
-							<Id>1751318301298</Id>
-							<EditorContolType>CHECK_BOX</EditorContolType>
-							<MinSliderValue><![CDATA[0]]></MinSliderValue>
-							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
-							<DelimeterType>NO_DELIMETER</DelimeterType>
-						</ParameterEditor>
-					</Properties>                 
+						</InitialValue>
+					</Properties>
 				</Variable>
 				<Variable Class="Parameter">
 					<Id>1751995712820</Id>
@@ -3042,9 +3033,6 @@ handler.messageIn(msg);]]></OnReceiveAction>
 
 			<Parameters>
 				<Parameter>
-					<ParameterName><![CDATA[heatPumpActivated]]></ParameterName>
-				</Parameter>
-				<Parameter>
 					<ParameterName><![CDATA[paramIndex]]></ParameterName>
 				</Parameter>
 			</Parameters>
@@ -3083,136 +3071,16 @@ handler.messageIn(msg);]]></OnReceiveAction>
 			<UseFreeformParameters>false</UseFreeformParameters>
 			<NumberOfRuns>10</NumberOfRuns>
 			<FreeformParamValue>	
-				<Id>1751318301300</Id>
-			</FreeformParamValue>
-			<FreeformParamValue>	
 				<Id>1751995712820</Id>
 			</FreeformParamValue>
-			<RangeVariationParamValue>	
-				<Id>1751318301300</Id>
-				<Type>FIXED</Type>
-			</RangeVariationParamValue>
-			<RangeVariationParamValue>	
-				<Id>1751995712820</Id>
-				<Type>FIXED</Type>
-			</RangeVariationParamValue>
-			<ModelTimeProperties>
-				<StopOption><![CDATA[Stop at specified date]]></StopOption>
-				<InitialDate><![CDATA[1451606400000]]></InitialDate>	
-				<InitialTime><![CDATA[0.0]]></InitialTime>	
-				<FinalDate><![CDATA[1483228800000]]></FinalDate>	
-				<FinalTime><![CDATA[3.16224E7]]></FinalTime>	
-			</ModelTimeProperties>
-			<PresentationProperties>
-				<EnableZoomAndPanning>true</EnableZoomAndPanning>
-				<Title><![CDATA[FirstProjectDraft : ParametersVariation]]></Title>
-				<EnableDeveloperPanel>true</EnableDeveloperPanel>
-				<ShowDeveloperPanelOnStart>false</ShowDeveloperPanelOnStart>
-			</PresentationProperties>
-			<ReplicationsProperties>
-				<UseReplication>false</UseReplication>
-				<FixedReplicationsNumber>true</FixedReplicationsNumber>
-				<ReplicationPerIteration>10</ReplicationPerIteration>
-				<MinimumReplication>2</MinimumReplication>
-				<MaximumReplication>10</MaximumReplication>
-				<ConfidenceLevel>LEVEL_80</ConfidenceLevel>
-				<ErrorPercent>0.5</ErrorPercent>
-				<ExpressionForConfidenceComputation><![CDATA[0]]></ExpressionForConfidenceComputation>
-			</ReplicationsProperties>
-		</ParamVariationExperiment>
-		<!--   =========  Parameter Variation Experiment   ========  -->
-		<ParamVariationExperiment ActiveObjectClassId="1749063971047">
-			<Id>1752057274728</Id>
-			<Name><![CDATA[ParametersVariation1]]></Name>
-			<CommandLineArguments><![CDATA[]]></CommandLineArguments>
-			<MaximumMemory>4096</MaximumMemory>
-			<RandomNumberGenerationType>fixedSeed</RandomNumberGenerationType>
-			<CustomGeneratorCode>new Random()</CustomGeneratorCode>
-			<SeedValue>1</SeedValue>
-			<SelectionModeForSimultaneousEvents>LIFO</SelectionModeForSimultaneousEvents>
-			<VmArgs><![CDATA[]]></VmArgs>
-			<LoadRootFromSnapshot>false</LoadRootFromSnapshot>
-
-
-			<AllowParallelEvaluations>true</AllowParallelEvaluations>
-			<UseFreeformParameters>false</UseFreeformParameters>
-			<NumberOfRuns>10</NumberOfRuns>
-			<FreeformParamValue>	
-				<Id>1751318301300</Id>
-			</FreeformParamValue>
-			<FreeformParamValue>	
-				<Id>1751995712820</Id>
-			</FreeformParamValue>
-			<RangeVariationParamValue>	
-				<Id>1751318301300</Id>
-				<Type>FIXED</Type>
-			</RangeVariationParamValue>
-			<RangeVariationParamValue>	
-				<Id>1751995712820</Id>
-				<Type>FIXED</Type>
-			</RangeVariationParamValue>
-			<ModelTimeProperties>
-				<StopOption><![CDATA[Stop at specified date]]></StopOption>
-				<InitialDate><![CDATA[1451606400000]]></InitialDate>	
-				<InitialTime><![CDATA[0.0]]></InitialTime>	
-				<FinalDate><![CDATA[1483228800000]]></FinalDate>	
-				<FinalTime><![CDATA[3.16224E7]]></FinalTime>	
-			</ModelTimeProperties>
-			<PresentationProperties>
-				<EnableZoomAndPanning>true</EnableZoomAndPanning>
-				<Title><![CDATA[FirstProjectDraft : ParametersVariation1]]></Title>
-				<EnableDeveloperPanel>true</EnableDeveloperPanel>
-				<ShowDeveloperPanelOnStart>false</ShowDeveloperPanelOnStart>
-			</PresentationProperties>
-			<ReplicationsProperties>
-				<UseReplication>false</UseReplication>
-				<FixedReplicationsNumber>true</FixedReplicationsNumber>
-				<ReplicationPerIteration>10</ReplicationPerIteration>
-				<MinimumReplication>2</MinimumReplication>
-				<MaximumReplication>10</MaximumReplication>
-				<ConfidenceLevel>LEVEL_80</ConfidenceLevel>
-				<ErrorPercent>0.5</ErrorPercent>
-				<ExpressionForConfidenceComputation><![CDATA[0]]></ExpressionForConfidenceComputation>
-			</ReplicationsProperties>
-		</ParamVariationExperiment>
-		<!--   =========  Parameter Variation Experiment   ========  -->
-		<ParamVariationExperiment ActiveObjectClassId="1749063971047">
-			<Id>1752518180885</Id>
-			<Name><![CDATA[ParametersVariation2]]></Name>
-			<CommandLineArguments><![CDATA[]]></CommandLineArguments>
-			<MaximumMemory>512</MaximumMemory>
-			<RandomNumberGenerationType>fixedSeed</RandomNumberGenerationType>
-			<CustomGeneratorCode>new Random()</CustomGeneratorCode>
-			<SeedValue>1</SeedValue>
-			<SelectionModeForSimultaneousEvents>LIFO</SelectionModeForSimultaneousEvents>
-			<VmArgs><![CDATA[]]></VmArgs>
-			<LoadRootFromSnapshot>false</LoadRootFromSnapshot>
-
-
-			<AllowParallelEvaluations>true</AllowParallelEvaluations>
-			<UseFreeformParameters>false</UseFreeformParameters>
-			<NumberOfRuns>10</NumberOfRuns>
-			<FreeformParamValue>	
-				<Id>1751318301300</Id>
-			</FreeformParamValue>
-			<FreeformParamValue>	
-				<Id>1751995712820</Id>
-			</FreeformParamValue>
-			<RangeVariationParamValue>	
-				<Id>1751318301300</Id>
-				<Type>FIXED</Type>
-			</RangeVariationParamValue>
 			<RangeVariationParamValue>	
 				<Id>1751995712820</Id>
 				<Type>RANGE</Type>
-				<Expression Class="CodeValue">
-					<Code><![CDATA[204]]></Code>
-				</Expression>
 				<From Class="CodeValue">
-					<Code><![CDATA[204]]></Code>
+					<Code><![CDATA[86]]></Code>
 				</From>
 				<To Class="CodeValue">
-					<Code><![CDATA[207]]></Code>
+					<Code><![CDATA[88]]></Code>
 				</To>
 				<Step Class="CodeValue">
 					<Code><![CDATA[1]]></Code>
@@ -3227,7 +3095,7 @@ handler.messageIn(msg);]]></OnReceiveAction>
 			</ModelTimeProperties>
 			<PresentationProperties>
 				<EnableZoomAndPanning>true</EnableZoomAndPanning>
-				<Title><![CDATA[FirstProjectDraft : ParametersVariation2]]></Title>
+				<Title><![CDATA[FirstProjectDraft : ParametersVariation]]></Title>
 				<EnableDeveloperPanel>true</EnableDeveloperPanel>
 				<ShowDeveloperPanelOnStart>false</ShowDeveloperPanelOnStart>
 			</PresentationProperties>
@@ -3914,12 +3782,6 @@ public class PVJava implements Serializable
         return raw_kWh;
     }
     
-    //TODO Change location?
-    public double calculateTotalPVcost(int kWpInstalled)
-    {
-    	//Estimated costs: 1500 inverter + 3000 installation + 900 per installed kWp
-    	return 1500 + 3000 + 900 * kWpInstalled;
-    }
 
     @Override
     public String toString() {
@@ -4985,14 +4847,14 @@ public class ParamSetter {
     public PVJava initPV(int paramIndex, PV owner){
     	List<String> params = getParams(paramIndex);
     	double kWp = Double.parseDouble(params.get(5));
-    	int moduleCount = Integer.parseInt(params.get(21));
+    	int moduleCount = Integer.parseInt(params.get(26));
     	return new PVJava(owner, kWp, moduleCount);
     }
     public HouseControllerJava initHouseController(int paramIndex, HouseController owner){
     	List<String> params = getParams(paramIndex);
-    	int strategy = Integer.parseInt(params.get(20));
+    	int strategy = Integer.parseInt(params.get(25));
     	
-    	double numBatteries = Double.parseDouble(params.get(22));
+    	double numBatteries = Double.parseDouble(params.get(27));
     	double capacity = Double.parseDouble(params.get(13));
     	double maxChargePower = Double.parseDouble(params.get(14));
     	double maxDischargePower = Double.parseDouble(params.get(15));
@@ -5005,6 +4867,13 @@ public class ParamSetter {
     	List<String> params = getParams(paramIndex);
     	boolean activation = Boolean.parseBoolean(params.get(18));
     	return activation;
+    }
+    public EVJava initEV(int paramIndex, EV owner) {
+    	List<String> params = getParams(paramIndex);
+    	double kmPerYear = Double.parseDouble(params.get(20));
+    	double kWhPerKm = Double.parseDouble(params.get(21));
+    	
+    	return new EVJava(owner, kmPerYear, kWhPerKm);
     }
 }]]></Text>
 		</JavaClass>
