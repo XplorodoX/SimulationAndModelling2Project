@@ -3185,6 +3185,7 @@ public class HouseControllerJava implements Serializable
 	public double priceInThisStep;
 	public double evEnergyUsedToday;
 	public double[] forecastPV;
+	public double[] forecastHP;
 	public double[] forecastPC;
 	public double[] forecastPrice;
 	public double[] forecastevEnergyUsed;
@@ -3196,7 +3197,7 @@ public class HouseControllerJava implements Serializable
 	private int messageCounter = 0;
 	private int numMessagesPerStep = 4;
 	private int numMessagesBase = 4;
-	private int numMessagesChange = 9;//4 +5 Forecasts + EV normal TODO
+	private int numMessagesChange = 10;//4 +5 Forecasts + EV normal TODO
 	private double powerBalanceInThisStep;
 	
 	private Optimizer optimizer;
@@ -3294,6 +3295,16 @@ public class HouseControllerJava implements Serializable
 		{
 			//System.out.println("Das ist die PV forecast!");
 			this.forecastPV = ((DataMessageFromPVForecast) msg).productionForRange;
+			
+			//for(int x = 0; x < forecastPV.length; x++)
+			//{
+			//	System.out.println(forecastPV[x]);
+			//}
+		}
+		else if(msg instanceof DataMessageFromHPForecast)
+		{
+			//System.out.println("Das ist die PV forecast!");
+			this.forecastHP = ((DataMessageFromHPForecast) msg).consumptionForRange;
 			
 			//for(int x = 0; x < forecastPV.length; x++)
 			//{
@@ -3433,6 +3444,9 @@ public class HouseControllerJava implements Serializable
 		double[] powerbalance = new double[t];
 		for(int i = 0; i < t; i++) {
 			powerbalance[i] = this.forecastPV[i] - this.forecastPC[i];// Update after Heatpump and EV
+			if (owner.get_Main().heatPumpActivated) {
+				powerbalance[i] += forecastHP[i];
+			}
 		}
 		return powerbalance;
 	}
