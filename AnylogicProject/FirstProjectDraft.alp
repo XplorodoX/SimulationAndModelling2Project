@@ -3283,6 +3283,7 @@ public class HouseControllerJava implements Serializable
 		else if (msg instanceof DataMessageFromHP)
 		{
 			this.consumptionInThisStepHP = ((DataMessageFromHP) msg).consumptionInThisStep;
+			System.out.println(consumptionInThisStepHP);
 		}   
 		
 		else if (msg instanceof DataMessageFromBattery)
@@ -3446,7 +3447,6 @@ public class HouseControllerJava implements Serializable
 			powerbalance[i] = this.forecastPV[i] - this.forecastPC[i];// Update after Heatpump and EV
 			if (owner.get_Main().heatPumpActivated) {
 				powerbalance[i] += forecastHP[i];
-				System.out.println(forecastHP[i]);
 			}
 		}
 		return powerbalance;
