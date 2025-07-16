@@ -4466,12 +4466,12 @@ import java.time.*;
  */
 public class HeatPumpJava implements Serializable
 {
-    HeatPumpJava owner;
+    HeatPump owner;
     String table_name = "heatpump";
-    String timestamp_column = "timestamp";  // Korrigiert und konsistent
-    String data_column = "value";            // Hinzugefügt für Konsistenz
+    String timestamp_column = "timestamp";
+    String data_column = "value";
 
-    public HeatPumpJava(HeatPumpJava owner)
+    public HeatPumpJava(HeatPump owner)
     {
         this.owner = owner;
 
@@ -4482,30 +4482,19 @@ public class HeatPumpJava implements Serializable
 
         DBRequest.preloadTimeSeriesData(table_name, timestamp_column, data_column, simStart, simEnd);
     }
-
+    
     public void messageIn(MessageType msg)
     {
         if (msg instanceof DataResponseTriggerMessage)
         {
-            owner.port.send(new DataMessageFromHP(owner, owner.time(), db_communication()));
-        }else if (msg instanceof DataResponseTriggerMessageFuture)
+            owner.port.send(new DataMessageFromPV(owner, owner.time(), calculateCurrentConsumption(owner.time())));
+        }
+        else if (msg instanceof DataResponceTriggerMessageForForecast)
         {
-            //TODO set start and end
-            int start = 0;
-            int end = 0;
-            double[] futureProduction = forecastFutureProduction(start, end);
-            owner.port.send(new DataMessageFromHP(owner, owner.time(), futureProduction));
-    }
-        //TODO New type of msg for future production
-        //else if (msg instanceof DataResponseTriggerMessageFutureProduction)
-        //{
-        //TODO set start and end
-        // int start = 0;
-        // int end = 0;
-        //forecastFutureProduction(start,end);
-        //TODO maybe different msg type as a response
-        //owner.port.send(new DataMessageFromPV(owner, owner.time(), forecastFutureProduction(start,end);));
-        //}
+            double start = msg.timestampStart;
+            double end = msg.timestampEnd;
+            owner.port.send(new DataMessageFromHPForecast(owner, start, end, forecastFutureConsumption(start,end)));
+        }
     }
 
     public double db_communication(double lookUpTime)
@@ -4518,14 +4507,14 @@ public class HeatPumpJava implements Serializable
         return raw_consumption;
     }
 
-    public double calculateCurrentProduction(double lookUpTime)
+    public double calculateCurrentConsumption(double lookUpTime)
     {
         double base_kWh = db_communication(lookUpTime);
 
         return base_kWh;
     }
 
-    public double[] forecastFutureProduction(double start, double end )
+    public double[] forecastFutureConsumption(double start, double end )
     {
         int steps = (int) ((end - start) / 900) + 1;
         double[] result = new double[steps];
@@ -4533,7 +4522,7 @@ public class HeatPumpJava implements Serializable
         for(int x = 0; x < steps; x++)
         {
             double timestamp = start + x * 900.0;
-            result[x] = calculateCurrentProduction(timestamp);
+            result[x] = calculateCurrentConsumption(timestamp);
         }
 
         return result;
@@ -5323,6 +5312,43 @@ public class CsvWriter implements Serializable {
 	    }
 	}
 
+	private static final long serialVersionUID = 1L;
+
+}]]></Text>
+		</JavaClass>
+		<!--   =========   Java Class   ========  -->
+		<JavaClass>
+			<Id>1752673792216</Id>
+			<Name><![CDATA[DataMessageFromHPForecast]]></Name>
+			<Text><![CDATA[/**
+ * DataMessageFromHPForecast
+ */	
+public class DataMessageFromHPForecast extends firstprojectdraft.MessageType implements Serializable {
+
+
+	double[] consumptionForRange;
+
+    /**
+     * Constructor initializing the fields
+     */
+    public DataMessageFromHPForecast(Agent sender, double timestampStart, double timestampEnd, double[] consumptionForRange) 
+    {
+    	super(sender, timestampStart, timestampEnd);
+		this.consumptionForRange = consumptionForRange;
+    }
+
+	@Override
+	public String toString() 
+	{
+		return  
+			super.toString() + 	
+			"consumptionForRange = " + consumptionForRange +" ";
+	}
+
+	/**
+	 * This number is here for model snapshot storing purpose<br>
+	 * It needs to be changed when this class gets changed
+	 */ 
 	private static final long serialVersionUID = 1L;
 
 }]]></Text>
