@@ -77,4 +77,4 @@ if __name__ == "__main__":
     
     #write_dummy_csv(filename="raw_data.csv")
 
-    convert_raw_to_usable_csv(input_filename="raw_data.csv", output_filename="heatpumpDataFromModel.csv", valueMultiplier=1)
+    convert_raw_to_usable_csv(input_filename="time_series_heat_pump.csv", output_filename="heatpumpDataForSimFromModel.csv", valueMultiplier=1)
