@@ -4459,7 +4459,6 @@ public class DateTimeConversionJava implements Serializable {
 			<Id>1751301368144</Id>
 			<Name><![CDATA[HeatPumpJava]]></Name>
 			<Text><![CDATA[import java.io.Serializable;
-import java.sql.*;
 import java.time.*;
 
 /**
@@ -4467,20 +4466,20 @@ import java.time.*;
  */
 public class HeatPumpJava implements Serializable
 {
-    HeatPump owner;
+    HeatPumpJava owner;
     String table_name = "heatpump";
-    String timestamp_column = "utc_timestamp";  // Korrigiert und konsistent
-    String data_column = "Fraction";            // Hinzugefügt für Konsistenz
+    String timestamp_column = "timestamp";  // Korrigiert und konsistent
+    String data_column = "value";            // Hinzugefügt für Konsistenz
 
-    public HeatPumpJava(HeatPump owner)
+    public HeatPumpJava(HeatPumpJava owner)
     {
         this.owner = owner;
-        
+
         DBRequest.initializeConnectionPool();
 
         LocalDateTime simStart = LocalDateTime.of(2016, 1, 1, 0, 0);
         LocalDateTime simEnd = LocalDateTime.of(2016, 12, 31, 23, 59);
-        
+
         DBRequest.preloadTimeSeriesData(table_name, timestamp_column, data_column, simStart, simEnd);
     }
 
@@ -4488,8 +4487,15 @@ public class HeatPumpJava implements Serializable
     {
         if (msg instanceof DataResponseTriggerMessage)
         {
-            owner.port.send(new DataMessageFromHP(owner, owner.time(), 0.5 * db_communication()));
-        }
+            owner.port.send(new DataMessageFromHP(owner, owner.time(), db_communication()));
+        }else if (msg instanceof DataResponseTriggerMessageFuture)
+        {
+            //TODO set start and end
+            int start = 0;
+            int end = 0;
+            double[] futureProduction = forecastFutureProduction(start, end);
+            owner.port.send(new DataMessageFromHP(owner, owner.time(), futureProduction));
+    }
         //TODO New type of msg for future production
         //else if (msg instanceof DataResponseTriggerMessageFutureProduction)
         //{
@@ -4502,7 +4508,7 @@ public class HeatPumpJava implements Serializable
         //}
     }
 
-    public double db_communication()
+    public double db_communication(double lookUpTime)
     {
 
         LocalDateTime time = DateTimeConversionJava.getTimeNow(owner);
@@ -4510,6 +4516,27 @@ public class HeatPumpJava implements Serializable
         double raw_consumption = DBRequest.getValueAtTime(table_name, timestamp_column, data_column, time);
 
         return raw_consumption;
+    }
+
+    public double calculateCurrentProduction(double lookUpTime)
+    {
+        double base_kWh = db_communication(lookUpTime);
+
+        return base_kWh;
+    }
+
+    public double[] forecastFutureProduction(double start, double end )
+    {
+        int steps = (int) ((end - start) / 900) + 1;
+        double[] result = new double[steps];
+
+        for(int x = 0; x < steps; x++)
+        {
+            double timestamp = start + x * 900.0;
+            result[x] = calculateCurrentProduction(timestamp);
+        }
+
+        return result;
     }
 
     @Override
