@@ -1,0 +1,108 @@
+import java.time.;
+  DateTimeConversionJava
+ 	
+public class DateTimeConversionJava implements Serializable {
+
+      Default constructor
+     	
+	static LocalDateTime startDate = LocalDateTime.of(2016,1,1,0,0,0);
+    public DateTimeConversionJava() {
+    	 set startDate
+    }
+
+    public static LocalDateTime doubleToCurrentLocalDateTime(double secondsSinceStart)
+    {    	
+         Convert seconds to duration (you must castround double to long for Duration)
+        Duration duration = Duration.ofSeconds((long) secondsSinceStart);
+
+         Add duration to startDate
+        LocalDateTime resultDateTime = startDate.plusSeconds(duration.getSeconds());
+        
+         Extract components
+        int year = resultDateTime.getYear();
+        int month = resultDateTime.getMonthValue();
+        int day = resultDateTime.getDayOfMonth();
+        int hour = resultDateTime.getHour();
+        int min = resultDateTime.getMinute();
+        int sec = resultDateTime.getSecond();
+        int nano = resultDateTime.getNano();  optional
+                
+    	return LocalDateTime.of(year, month, day, hour, min, sec);
+    }
+    
+    public static LocalDateTime getTimeNow(Agent owner)
+    {
+    	int year = owner.getYear();
+    	int mounth = owner.getMonth() + 1;  because anylocig months are 0-11 and LocalDateTime months are 1-12
+    	int day = owner.getDayOfMonth();
+    	int hour = owner.getHourOfDay();
+    	int min = owner.getMinute();
+    	int sec = owner.getSecond();
+    	
+    	return LocalDateTime.of(year, mounth, day, hour, min, sec);    	
+    }
+    
+    public static LocalDateTime getValidTimeStamp(LocalDateTime now) 
+    {
+    	if (weDontHaveDataForThisTime(now))
+    	{
+    		LocalDateTime validTime = getDataFrom2016(now);
+    		return validTime;
+    	}
+    	else
+    	{
+    		return now;
+    	}
+    }
+
+
+    //todo todo todo todo todo todo todoooooooooooooooooooooooooooooo todododooooo
+
+
+    public static boolean weDontHaveDataForThisTime(LocalDateTime now)
+    {
+	// return boolean value if i have data for this time stamp or not // before the conversion
+	return now.getYear() != 2016; //agar 2016 na ho to return krna
+	// done
+    }
+    
+    public static LocalDateTime getDataFrom2016(LocalDateTime now)
+    {	// get the data for the converted date from the database, and return that data
+	// now.year = 2016;
+    	// return now;
+	int month = now.getMonthValue(); // date me se month alag krna
+    	int day = Math.min(now.getDayOfMonth(), Year.of(2016).atMonth(month).lengthOfMonth()); //date me se day alag krna
+    	return LocalDateTime.of(2016, month, day, now.getHour(), now.getMinute(), now.getSecond()); // same time date stamp se year ko change krna 2016 me aur baki sab as it is return kr dena
+	// pillij pillij pillij kam kr janaaaaaaaaaaaaaaa
+    }
+    
+    public static LocalDateTime getTimeIn15(Agent owner)
+    {
+    	int year = owner.getYear();
+    	int mounth = owner.getMonth() + 1;  // because anylogic months are 0-11 and LocalDateTime months are 1-12
+    	int day = owner.getDayOfMonth();
+    	int hour = owner.getHourOfDay();
+    	int min = owner.getMinute();
+    	int sec = owner.getSecond();
+    	
+    	LocalDateTime currentTime = LocalDateTime.of(year, mounth, day, hour, min, sec);    	
+        Duration duration = Duration.ofSeconds((long) 1560);
+
+        LocalDateTime timeIn15Min= currentTime.plusSeconds(duration.getSeconds());
+    	
+    	return timeIn15Min;
+    }
+    
+    
+	@Override
+	public String toString() {
+		return super.toString();
+	}
+
+	
+	  This number is here for model snapshot storing purposebr
+	  It needs to be changed when this class gets changed
+	  
+	private static final long serialVersionUID = 1L;
+
+}
