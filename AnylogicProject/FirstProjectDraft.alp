@@ -191,20 +191,29 @@ heatPumpActivated = initializer.heatPumpActivation(paramIndex);]]></StartupCode>
 						</InitialValue>
 					</Properties>
 				</Variable>
-				<Variable Class="PlainVariable">
-					<Id>1752573089819</Id>
+				<Variable Class="Parameter">
+					<Id>1751318301300</Id>
 					<Name><![CDATA[heatPumpActivated]]></Name>
 					<X>510</X><Y>1240</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
-					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
-						<Type><![CDATA[boolean]]></Type>        
-						<InitialValue Class="CodeValue">
+					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
+						<Type><![CDATA[boolean]]></Type>
+						<UnitType><![CDATA[NONE]]></UnitType>
+						<SdArray>false</SdArray>
+						<DefaultValue Class="CodeValue">
 							<Code><![CDATA[true]]></Code>
-						</InitialValue>
-					</Properties>
+						</DefaultValue>
+						<ParameterEditor>
+							<Id>1751318301298</Id>
+							<EditorContolType>CHECK_BOX</EditorContolType>
+							<MinSliderValue><![CDATA[0]]></MinSliderValue>
+							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
+							<DelimeterType>NO_DELIMETER</DelimeterType>
+						</ParameterEditor>
+					</Properties>                 
 				</Variable>
 				<Variable Class="Parameter">
 					<Id>1751995712820</Id>
@@ -219,7 +228,7 @@ heatPumpActivated = initializer.heatPumpActivation(paramIndex);]]></StartupCode>
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
 						<DefaultValue Class="CodeValue">
-							<Code><![CDATA[207 //86]]></Code>
+							<Code><![CDATA[65]]></Code>
 						</DefaultValue>
 						<ParameterEditor>
 							<Id>1751995712818</Id>
@@ -346,7 +355,7 @@ heatPumpActivated = initializer.heatPumpActivation(paramIndex);]]></StartupCode>
 					</SourceEmbeddedObjectReference>
 					<SourceConnectableItemReference>
 						<PackageName><![CDATA[firstprojectdraft]]></PackageName>
-						<ClassName><![CDATA[HeatPump]]></ClassName>
+						<ClassName><![CDATA[HeatPumpJava]]></ClassName>
 						<ItemName><![CDATA[port]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
@@ -687,12 +696,12 @@ heatPumpActivated = initializer.heatPumpActivation(paramIndex);]]></StartupCode>
 					<ShowLabel>true</ShowLabel>
 					<ActiveObjectClass>
 						<PackageName><![CDATA[firstprojectdraft]]></PackageName>
-						<ClassName><![CDATA[HeatPump]]></ClassName>
+						<ClassName><![CDATA[HeatPumpJava]]></ClassName>
 					</ActiveObjectClass>
 					<GenericParameterSubstitute>
 						<GenericParameterSubstituteReference>
 							<PackageName><![CDATA[firstprojectdraft]]></PackageName>
-							<ClassName><![CDATA[HeatPump]]></ClassName>
+							<ClassName><![CDATA[HeatPumpJava]]></ClassName>
 							<ItemName><![CDATA[1751302035000]]></ItemName>
 						</GenericParameterSubstituteReference>
 					</GenericParameterSubstitute>
@@ -903,7 +912,7 @@ heatPumpActivated = initializer.heatPumpActivation(paramIndex);]]></StartupCode>
 					<Id>1751238144205</Id>
 					<Expression><![CDATA[batteryDataSet]]></Expression>
 					<Color>-14774017</Color>
-					<Expression2><![CDATA[battery.handler.stateOfCharge]]></Expression2>
+					<Expression2><![CDATA[houseController.handler.stateOfChargeInThisStep //battery.handler.stateOfCharge]]></Expression2>
 					<Expression2Flag>true</Expression2Flag>
 						<PointStyle>NONE</PointStyle>
 						<LineWidth>1.0</LineWidth>
@@ -1376,7 +1385,7 @@ heatPumpActivated = initializer.heatPumpActivation(paramIndex);]]></StartupCode>
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
 						<DefaultValue Class="CodeValue">
-							<Code><![CDATA[new HouseControllerJava(this, 0, 1, 1, 1, 1)]]></Code>
+							<Code><![CDATA[new HouseControllerJava(this, 0)]]></Code>
 						</DefaultValue>
 						<ParameterEditor>
 							<Id>1749830588420</Id>
@@ -2246,7 +2255,7 @@ if (false && msg instanceof DataResponseTriggerMessage){
 		<!--   =========   Active Object Class   ========  -->
 		<ActiveObjectClass>
 			<Id>1751302034995</Id>
-			<Name><![CDATA[HeatPump]]></Name>
+			<Name><![CDATA[HeatPumpJava]]></Name>
 			<Generic>false</Generic>
 			<GenericParameter>
 				<Id>1751302035000</Id>
@@ -3033,6 +3042,9 @@ handler.messageIn(msg);]]></OnReceiveAction>
 
 			<Parameters>
 				<Parameter>
+					<ParameterName><![CDATA[heatPumpActivated]]></ParameterName>
+				</Parameter>
+				<Parameter>
 					<ParameterName><![CDATA[paramIndex]]></ParameterName>
 				</Parameter>
 			</Parameters>
@@ -3071,20 +3083,18 @@ handler.messageIn(msg);]]></OnReceiveAction>
 			<UseFreeformParameters>false</UseFreeformParameters>
 			<NumberOfRuns>10</NumberOfRuns>
 			<FreeformParamValue>	
+				<Id>1751318301300</Id>
+			</FreeformParamValue>
+			<FreeformParamValue>	
 				<Id>1751995712820</Id>
 			</FreeformParamValue>
 			<RangeVariationParamValue>	
+				<Id>1751318301300</Id>
+				<Type>FIXED</Type>
+			</RangeVariationParamValue>
+			<RangeVariationParamValue>	
 				<Id>1751995712820</Id>
-				<Type>RANGE</Type>
-				<From Class="CodeValue">
-					<Code><![CDATA[86]]></Code>
-				</From>
-				<To Class="CodeValue">
-					<Code><![CDATA[88]]></Code>
-				</To>
-				<Step Class="CodeValue">
-					<Code><![CDATA[1]]></Code>
-				</Step>
+				<Type>FIXED</Type>
 			</RangeVariationParamValue>
 			<ModelTimeProperties>
 				<StopOption><![CDATA[Stop at specified date]]></StopOption>
@@ -3096,6 +3106,61 @@ handler.messageIn(msg);]]></OnReceiveAction>
 			<PresentationProperties>
 				<EnableZoomAndPanning>true</EnableZoomAndPanning>
 				<Title><![CDATA[FirstProjectDraft : ParametersVariation]]></Title>
+				<EnableDeveloperPanel>true</EnableDeveloperPanel>
+				<ShowDeveloperPanelOnStart>false</ShowDeveloperPanelOnStart>
+			</PresentationProperties>
+			<ReplicationsProperties>
+				<UseReplication>false</UseReplication>
+				<FixedReplicationsNumber>true</FixedReplicationsNumber>
+				<ReplicationPerIteration>10</ReplicationPerIteration>
+				<MinimumReplication>2</MinimumReplication>
+				<MaximumReplication>10</MaximumReplication>
+				<ConfidenceLevel>LEVEL_80</ConfidenceLevel>
+				<ErrorPercent>0.5</ErrorPercent>
+				<ExpressionForConfidenceComputation><![CDATA[0]]></ExpressionForConfidenceComputation>
+			</ReplicationsProperties>
+		</ParamVariationExperiment>
+		<!--   =========  Parameter Variation Experiment   ========  -->
+		<ParamVariationExperiment ActiveObjectClassId="1749063971047">
+			<Id>1752057274728</Id>
+			<Name><![CDATA[ParametersVariation1]]></Name>
+			<CommandLineArguments><![CDATA[]]></CommandLineArguments>
+			<MaximumMemory>4096</MaximumMemory>
+			<RandomNumberGenerationType>fixedSeed</RandomNumberGenerationType>
+			<CustomGeneratorCode>new Random()</CustomGeneratorCode>
+			<SeedValue>1</SeedValue>
+			<SelectionModeForSimultaneousEvents>LIFO</SelectionModeForSimultaneousEvents>
+			<VmArgs><![CDATA[]]></VmArgs>
+			<LoadRootFromSnapshot>false</LoadRootFromSnapshot>
+
+
+			<AllowParallelEvaluations>true</AllowParallelEvaluations>
+			<UseFreeformParameters>false</UseFreeformParameters>
+			<NumberOfRuns>10</NumberOfRuns>
+			<FreeformParamValue>	
+				<Id>1751318301300</Id>
+			</FreeformParamValue>
+			<FreeformParamValue>	
+				<Id>1751995712820</Id>
+			</FreeformParamValue>
+			<RangeVariationParamValue>	
+				<Id>1751318301300</Id>
+				<Type>FIXED</Type>
+			</RangeVariationParamValue>
+			<RangeVariationParamValue>	
+				<Id>1751995712820</Id>
+				<Type>FIXED</Type>
+			</RangeVariationParamValue>
+			<ModelTimeProperties>
+				<StopOption><![CDATA[Stop at specified date]]></StopOption>
+				<InitialDate><![CDATA[1451606400000]]></InitialDate>	
+				<InitialTime><![CDATA[0.0]]></InitialTime>	
+				<FinalDate><![CDATA[1483228800000]]></FinalDate>	
+				<FinalTime><![CDATA[3.16224E7]]></FinalTime>	
+			</ModelTimeProperties>
+			<PresentationProperties>
+				<EnableZoomAndPanning>true</EnableZoomAndPanning>
+				<Title><![CDATA[FirstProjectDraft : ParametersVariation1]]></Title>
 				<EnableDeveloperPanel>true</EnableDeveloperPanel>
 				<ShowDeveloperPanelOnStart>false</ShowDeveloperPanelOnStart>
 			</PresentationProperties>
@@ -3178,23 +3243,13 @@ public class HouseControllerJava implements Serializable
 	public double priceInThisStep;
 	public double evEnergyUsedToday;
 	public double[] forecastPV;
-	public double[] forecastPC;
 	public double[] forecastPrice;
 	public double[] forecastevEnergyUsed;
-	public double[] forecastPowerbalance;
-	public double[] optimalStrategy;
-	public int strategyStepCounter = 0;
 	//private double powerBalanceInThisStep;
 	private double differenceInThisStep;
 	private int messageCounter = 0;
-	private int numMessagesPerStep = 4;
-	private int numMessagesBase = 4;
-	private int numMessagesChange = 9;//4 +5 Forecasts + EV normal TODO
+	private int numMessagesPerStep = 7;
 	private double powerBalanceInThisStep;
-	
-	private Optimizer optimizer;
-	
-	private int stepCounter;
 	
 	//private static final String PRICE_TABLE = "price";
 	//private static final String PRICE_TIMESTAMP_COLUMN = "Time";
@@ -3203,12 +3258,10 @@ public class HouseControllerJava implements Serializable
     /**
      * Constructor
      */
-    public HouseControllerJava(HouseController owner, int strategy, double f, double g, double d, double k) 
+    public HouseControllerJava(HouseController owner, int strategy) 
     {
     	this.owner = owner;
     	this.strategy = strategy;
-    	this.optimizer = new Optimizer(f, g, d, k);
-    	this.stepCounter = 96;
     	
 		DBRequest.initializeConnectionPool();
     	
@@ -3227,22 +3280,14 @@ public class HouseControllerJava implements Serializable
 	{
 		owner.port.send(new DataResponseTriggerMessage(owner, owner.time())); 
 		// should only trigger the sending of the data, so it doesnt be a specific message
-		if(stepCounter == 96) 
-		{
-			stepCounter = 0;
-			owner.port.send(new DataResponseTriggerMessageForEV(owner, owner.time())); 
-			owner.port.send(new DataResponceTriggerMessageForForecast(owner, owner.time(), owner.time() + 900 * 96));
-		}
-		stepCounter++;
+		
+		owner.port.send(new DataResponceTriggerMessageForForecast(owner, owner.time(), owner.time() + 900 * 20)); 
+		
 		return true;
 	}	
 	
 	public void messageIn(MessageType msg) 
 	{
-		//System.out.println(numMessagesPerStep);
-		if(stepCounter == 96) {
-			numMessagesPerStep = numMessagesChange;
-		}
 		//System.out.println("msg in HouseController: " + msg);
 		messageCounter++;
 		
@@ -3293,16 +3338,6 @@ public class HouseControllerJava implements Serializable
 			//	System.out.println(forecastPV[x]);
 			//}
 		}
-		else if(msg instanceof DataMessageFromPCForecast)
-		{
-			//System.out.println("Das ist die PC forecast!");
-			this.forecastPC = ((DataMessageFromPCForecast) msg).forecast;
-			
-			//for(int x = 0; x < forecastPC.length; x++)
-			//{
-			//	System.out.println(forecastPC[x]);
-			//}
-		}
 		else if (msg instanceof DataMessageFromPriceForecast)
 		{
 			//System.out.println("Das ist die price forecast!");
@@ -3336,24 +3371,11 @@ public class HouseControllerJava implements Serializable
 		else if (messageCounter == numMessagesPerStep)
 		{
 			powerBalanceInThisStep = productionInThisStepPV - consumptionInThisStepPC;
-			if(stepCounter == 0) {
-				if(strategy == 1) {
-					this.forecastPowerbalance = calculatePowerbalanceForecast();
-					this.optimalStrategy = optimizer.solve(this.forecastPrice, this.forecastPowerbalance, owner.get_Main().battery.handler.capacity, owner.get_Main().battery.handler.stateOfCharge);
-				}
-			}
 			
 			if (owner.get_Main().heatPumpActivated)
 				powerBalanceInThisStep -= consumptionInThisStepHP;
-			if(strategy == 1) {
-				// optimal strategy
-				followOptimalStrategy();
-			}else if(strategy == 2) {
-				// heuristic
-			}else {
-				// greedy
-				owner.port.send(new DataMessageToBattery(owner, owner.time(), powerBalanceInThisStep));
-			}
+			
+			owner.port.send(new DataMessageToBattery(owner, owner.time(), powerBalanceInThisStep));
 		}
 		else 
 		{
@@ -3366,9 +3388,6 @@ public class HouseControllerJava implements Serializable
 				simpleStrat();
 			}
 			messageCounter = 0;
-			if(stepCounter == 0) {
-				numMessagesPerStep = numMessagesBase;
-			}
 		}		
 	}	
 	
@@ -3402,32 +3421,6 @@ public class HouseControllerJava implements Serializable
 			owner.get_Main().totalEnergySaved -= differenceInThisStep;
 			owner.moneySaved -= differenceInThisStep * priceInThisStep;
 		}				
-	}
-	
-	public void followOptimalStrategy(){
-		//System.out.println(strategyStepCounter);
-		double difference = optimalStrategy[strategyStepCounter];
-		double chargeChange = difference + forecastPowerbalance[strategyStepCounter]; // TODO powerBalanceInThisStep
-		//System.out.println(productionInThisStepPV - consumptionInThisStepPC == forecastPowerbalance[strategyStepCounter]);
-		owner.port.send(new DataMessageToBattery(owner, owner.time(), chargeChange));
-		
-		owner.energy -= difference;
-		owner.get_Main().totalEnergySaved -= difference;
-		owner.moneySaved -= difference * priceInThisStep;
-		strategyStepCounter ++;
-		
-		if(strategyStepCounter == 96) {
-			strategyStepCounter = 0;
-		}
-	}
-	
-	public double[] calculatePowerbalanceForecast() {
-		int t = this.forecastPV.length;
-		double[] powerbalance = new double[t];
-		for(int i = 0; i < t; i++) {
-			powerbalance[i] = this.forecastPV[i] - this.forecastPC[i];// Update after Heatpump and EV
-		}
-		return powerbalance;
 	}
 	
 	public void tstFct1() 
@@ -3612,75 +3605,106 @@ public class DataMessageFromPC extends firstprojectdraft.MessageType implements 
 		<JavaClass>
 			<Id>1749855173213</Id>
 			<Name><![CDATA[PCJava]]></Name>
-			<Text><![CDATA[import java.io.Serializable;
+			<Text><![CDATA[import java.sql.*;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.io.Serializable;
 
-public class PCJava implements Serializable {
-
+public class PCJava implements Serializable
+{
     private static final long serialVersionUID = 1L;
 
     private PC owner;
-    private int numPeople;
+    private int numberOfPeople;
+
     private static final String TABLE_NAME = "household_data";
     private static final String TIME_COLUMN = "utc_timestamp";
     private static final String DATA_COLUMN = "average_per_person_consumption";
 
-    public PCJava(PC owner, int numPeople) {
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    // Constructor that sets owner and number of people
+    public PCJava(PC owner, int numberOfPeople) {
         this.owner = owner;
-        this.numPeople = numPeople;
-        DBRequest.initializeConnectionPool(); // Ensure connection is available
+        this.numberOfPeople = numberOfPeople;
         
+        DBRequest.initializeConnectionPool();
+
         LocalDateTime simStart = LocalDateTime.of(2016, 1, 1, 0, 0);
         LocalDateTime simEnd = LocalDateTime.of(2016, 12, 31, 23, 59);
         
         DBRequest.preloadTimeSeriesData(TABLE_NAME, TIME_COLUMN, DATA_COLUMN, simStart, simEnd);
     }
 
-    public void messageIn(MessageType msg) {
-        if (msg instanceof DataResponceTriggerMessageForForecast forecastMsg) {
-            double start = forecastMsg.timestampStart;
-            double end = forecastMsg.timestampEnd;
-
-            double[] forecast = getForecastUsingHistoricalData(start, end, numPeople);
-            owner.port.send(new DataMessageFromPCForecast(owner, start, end, forecast));
-        }
-
-        // Optional: If needed, handle current consumption:
-        else if (msg instanceof DataResponseTriggerMessage) {
-            LocalDateTime now = DateTimeConversionJava.getTimeNow(owner);
-            LocalDateTime mapped = convertTo2016Equivalent(now);
-            double avgPerPerson = DBRequest.getValueAtTime(TABLE_NAME, TIME_COLUMN, DATA_COLUMN, mapped);
-            double value = avgPerPerson * numPeople;
-
-            owner.port.send(new DataMessageFromPC(owner, value));
+    public void messageIn(MessageType msg)
+    {
+        if (msg instanceof DataResponseTriggerMessage)
+        {
+            double consumption = getPredictedConsumptionNow();
+            owner.port.send(new DataMessageFromPC(owner, owner.time(), consumption));
         }
     }
 
-    // Forecast future consumption using mapped historical data (e.g. Jan 5 2048 → Jan 5 2016)
-    public double[] getForecastUsingHistoricalData(double start, double end, int numberOfPeople) {
-        int steps = (int) ((end - start) / 900) + 1;  // 900 seconds = 15 min
-        double[] result = new double[steps];
+    // Returns predicted consumption for current time step using getActualValue
+    public double getPredictedConsumptionNow()
+    {
+        LocalDateTime now = DateTimeConversionJava.getTimeNow(owner);
 
-        for (int i = 0; i < steps; i++) {
-            double simTime = start + i * 900.0;
-            LocalDateTime actualTime = DateTimeConversionJava.doubleToCurrentLocalDateTime(simTime);
-            LocalDateTime mappedTime = convertTo2016Equivalent(actualTime);
+        double avgPerPerson = DBRequest.getValueAtTime(TABLE_NAME, TIME_COLUMN, DATA_COLUMN, now);
 
-            double avgPerPerson = DBRequest.getValueAtTime(TABLE_NAME, TIME_COLUMN, DATA_COLUMN, mappedTime);
-            result[i] = avgPerPerson * numberOfPeople;
-        }
-
-        return result;
+        return avgPerPerson * numberOfPeople;
     }
 
-    // If year is not 2016, map date to the same MM-DD hh:mm in 2016.
-    private LocalDateTime convertTo2016Equivalent(LocalDateTime time) {
-        int day = Math.min(
-            time.getDayOfMonth(),
-            Year.of(2016).atMonth(time.getMonth()).lengthOfMonth()
+    public List<Object[]> getPredictedConsumption(LocalDateTime startTime, LocalDateTime endTime) {
+        List<Object[]> results = new ArrayList<>();
+
+        LocalDateTime simStart = LocalDateTime.of(2016, 1, 1, 0, 0);
+        LocalDateTime simEnd = LocalDateTime.of(2016, 12, 31, 23, 59);
+        LocalDateTime now = DateTimeConversionJava.getTimeNow(owner);
+
+        // Korrektur: Duration.ofMinutes() statt int verwenden
+        Map<LocalDateTime, Double> data = DBRequest.getValuesForTimeRange(
+            TABLE_NAME, TIME_COLUMN, DATA_COLUMN,
+            startTime, endTime, Duration.ofMinutes(10) // 10 Minuten Intervall
         );
-        //System.out.println(LocalDateTime.of(2016, time.getMonth(), day, time.getHour(), time.getMinute()));
-        return LocalDateTime.of(2016, time.getMonth(), day, time.getHour(), time.getMinute());
+
+        // Korrektur: Über Map.Entry iterieren, nicht über Object[]
+        for (Map.Entry<LocalDateTime, Double> entry : data.entrySet()) {
+            LocalDateTime timestamp = entry.getKey();
+            Double avgPerPerson = entry.getValue();
+
+            if (avgPerPerson != null) {
+                double predicted = avgPerPerson * numberOfPeople;
+
+                // LocalDateTime zu Timestamp konvertieren für Rückgabe
+                Timestamp ts = Timestamp.valueOf(timestamp);
+                results.add(new Object[]{ts, predicted});
+            }
+        }
+
+        return results;
+    }
+
+    // Optional utility to test from console
+    public void testWithScanner() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter start datetime (YYYY-MM-DD HH:MM:SS): ");
+        String startInput = scanner.nextLine();
+
+        System.out.print("Enter end datetime (YYYY-MM-DD HH:MM:SS): ");
+        String endInput = scanner.nextLine();
+
+        LocalDateTime startTime = LocalDateTime.parse(startInput, FORMATTER);
+        LocalDateTime endTime = LocalDateTime.parse(endInput, FORMATTER);
+
+        List<Object[]> predictions = getPredictedConsumption(startTime, endTime);
+
+        System.out.println("Results for " + numberOfPeople + " people:");
+        for (Object[] row : predictions) {
+            System.out.println(row[0] + " → Predicted: " + row[1] + " kWh");
+        }
     }
 }]]></Text>
 		</JavaClass>
@@ -3776,12 +3800,18 @@ public class PVJava implements Serializable
     {
 
         LocalDateTime time = DateTimeConversionJava.doubleToCurrentLocalDateTime(loopUpTime);
-        //System.out.println(time);
+
         double raw_kWh = DBRequest.getValueAtTime(table_name, timestamp_column, data_column, time);
 
         return raw_kWh;
     }
     
+    //TODO Change location?
+    public double calculateTotalPVcost(int kWpInstalled)
+    {
+    	//Estimated costs: 1500 inverter + 3000 installation + 900 per installed kWp
+    	return 1500 + 3000 + 900 * kWpInstalled;
+    }
 
     @Override
     public String toString() {
@@ -3809,7 +3839,7 @@ public class BatteryJava implements Serializable
 	private Battery owner;
 	public double capacity;            // Capacity [kWh]
 	public double maxCapacity;         // maxCapacity [kWh]
-	public double stateOfCharge;       // Current charge [kWh]
+	private double stateOfCharge;       // Current charge [kWh]
     private double maxChargePower;      // Maximum charge in one timestep [kWh]
     private double maxDischargePower;   // Maximum discharge in one timestep [kWh]
     private double roundTripEfficiency; // Charge-Discharge efficiency (applied twice)
@@ -4460,12 +4490,12 @@ import java.time.*;
  */
 public class HeatPumpJava implements Serializable
 {
-    HeatPump owner;
+    HeatPumpJava owner;
     String table_name = "heatpump";
     String timestamp_column = "utc_timestamp";  // Korrigiert und konsistent
     String data_column = "Fraction";            // Hinzugefügt für Konsistenz
 
-    public HeatPumpJava(HeatPump owner)
+    public HeatPumpJava(HeatPumpJava owner)
     {
         this.owner = owner;
         
@@ -4847,33 +4877,18 @@ public class ParamSetter {
     public PVJava initPV(int paramIndex, PV owner){
     	List<String> params = getParams(paramIndex);
     	double kWp = Double.parseDouble(params.get(5));
-    	int moduleCount = Integer.parseInt(params.get(26));
+    	int moduleCount = Integer.parseInt(params.get(21));
     	return new PVJava(owner, kWp, moduleCount);
     }
     public HouseControllerJava initHouseController(int paramIndex, HouseController owner){
     	List<String> params = getParams(paramIndex);
-    	int strategy = Integer.parseInt(params.get(25));
-    	
-    	double numBatteries = Double.parseDouble(params.get(27));
-    	double capacity = Double.parseDouble(params.get(13));
-    	double maxChargePower = Double.parseDouble(params.get(14));
-    	double maxDischargePower = Double.parseDouble(params.get(15));
-    	double roundTripEfficiency = Double.parseDouble(params.get(16));
-    	double degradationPerCycle = Double.parseDouble(params.get(17));
-    	
-    	return new HouseControllerJava(owner, strategy, roundTripEfficiency, maxChargePower, degradationPerCycle, numBatteries * capacity);
+    	int strategy = Integer.parseInt(params.get(20));
+    	return new HouseControllerJava(owner, strategy);
     }
     public boolean heatPumpActivation(int paramIndex){
     	List<String> params = getParams(paramIndex);
     	boolean activation = Boolean.parseBoolean(params.get(18));
     	return activation;
-    }
-    public EVJava initEV(int paramIndex, EV owner) {
-    	List<String> params = getParams(paramIndex);
-    	double kmPerYear = Double.parseDouble(params.get(20));
-    	double kWhPerKm = Double.parseDouble(params.get(21));
-    	
-    	return new EVJava(owner, kmPerYear, kWhPerKm);
     }
 }]]></Text>
 		</JavaClass>
@@ -4892,7 +4907,7 @@ public class EVJava implements Serializable
 {
     public void messageIn(MessageType msg)
     {
-        if (msg instanceof DataResponseTriggerMessageForEV)
+        if (msg instanceof DataResponseTriggerMessage)
         {
             owner.port.send(new DataMessageFromEV(owner, owner.time(), getEnergyUsedToday(owner.time())));
         }
@@ -5044,203 +5059,6 @@ public class DataMessageFromEVForecast extends firstprojectdraft.MessageType imp
 	private static final long serialVersionUID = 1L;
 }]]></Text>
 		</JavaClass>
-		<!--   =========   Java Class   ========  -->
-		<JavaClass>
-			<Id>1752504817896</Id>
-			<Name><![CDATA[Optimizer]]></Name>
-			<Text><![CDATA[import com.gurobi.gurobi.*;
-
-public class Optimizer {
-
-    // fixed parameters
-    private final double f;  // round trip efficency
-    private final double g;  // max charge / discharge in 15 minutes
-    private final double d;  // degredation
-    private final double k;  // max battery capacity
-
-    // ––– justierbare technische Konstanten –––
-    private double M       = 1e6;   // Big M for nonlinearity
-    private double epsilon = 1e-6;  // epsilon for nonlinearity
-    private double xmin    = -10.0;   // lower bound on x
-    private double xmax    = 10.0;   // upper bound on x
-
-    public Optimizer(double f, double g, double d, double k) {
-        if (f <= 0 || f > 1) throw new IllegalArgumentException("f must be in (0,1]");
-        if (d < 0 || d > 1) throw new IllegalArgumentException("d must be in [0,1]");
-        if (k < 0) throw new IllegalArgumentException("k must be >= 0");
-        this.f = 1/f;
-        this.g = g;
-        this.d = d;
-        this.k = k;
-    }
-
-    // setters
-    public void setBounds(double xmin, double xmax){this.xmin = xmin; this.xmax = xmax;}
-    public void setBigM(double M){this.M = M;}
-    public void setEpsilon(double eps){this.epsilon = eps;}
-
-    /**
-     * Solve MILP for optimal x
-     * c: cost vector / energy prices
-     * p: powerbalance
-     * b: starting battery capacity
-     * s: starting state of charge
-     */
-    public double[] optimize(double[] c, double[] p, double b, double s) throws GRBException {
-        int n = p.length;                     // timesteps (one day should have 96)
-        if (c.length != n)
-            throw new IllegalArgumentException("c und p müssen gleich lang sein (t+1 Werte)");
-
-        GRBEnv env = new GRBEnv(false);
-        env.set(GRB.IntParam.OutputFlag, 0);
-        GRBModel model = new GRBModel(env);
-        model.set(GRB.StringAttr.ModelName, "SimMod2_Optimization");
-
-        GRBVar[] x = new GRBVar[n];            // buying / selling
-        GRBVar[] delta = new GRBVar[n];            // binary variable δ_i (for nonlinearity)
-        GRBVar[] z = new GRBVar[n];            // linearisation z_i = δ_i * x_i
-
-        for (int i = 0; i < n; i++) {
-            x[i] = model.addVar(xmin, xmax, 0, GRB.CONTINUOUS, "x_"+i);
-            delta[i] = model.addVar(0, 1,       0, GRB.BINARY,     "delta_"+i);
-            z[i] = model.addVar(-GRB.INFINITY, GRB.INFINITY, 0, GRB.CONTINUOUS, "z_"+i);
-        }
-
-        // Big M constraints
-        for (int i = 0; i < n; i++) {
-            // x_i + p_i ≤ M (1 - δ_i)
-            GRBLinExpr lhs1 = new GRBLinExpr(); lhs1.addTerm(1, x[i]); lhs1.addConstant(p[i]);
-            GRBLinExpr rhs1 = new GRBLinExpr(); rhs1.addConstant(M); rhs1.addTerm(-M, delta[i]);
-            model.addConstr(lhs1, GRB.LESS_EQUAL, rhs1, "bigM1_"+i);
-
-            // x_i + p_i ≥ ε - M δ_i
-            GRBLinExpr lhs2 = new GRBLinExpr(); lhs2.addTerm(1, x[i]); lhs2.addConstant(p[i]);
-            GRBLinExpr rhs2 = new GRBLinExpr(); rhs2.addConstant(epsilon); rhs2.addTerm(-M, delta[i]);
-            model.addConstr(lhs2, GRB.GREATER_EQUAL, rhs2, "bigM2_"+i);
-        }
-
-        // Linearisation z_i = δ_i * x_i
-        for (int i = 0; i < n; i++) {
-            // z_i ≤ x_i − xmin (1 − δ_i)
-            GRBLinExpr c3 = new GRBLinExpr(); c3.addTerm(1, x[i]); c3.addConstant(-xmin); c3.addTerm(xmin, delta[i]);
-            model.addConstr(z[i], GRB.LESS_EQUAL, c3, "lin3a_"+i);
-
-            // z_i ≥ x_i − xmax (1 − δ_i)
-            GRBLinExpr c4 = new GRBLinExpr(); c4.addTerm(1, x[i]); c4.addConstant(-xmax); c4.addTerm(xmax, delta[i]);
-            model.addConstr(z[i], GRB.GREATER_EQUAL, c4, "lin3b_"+i);
-
-            // z_i ≤ xmax · δ_i
-            GRBLinExpr c5 = new GRBLinExpr(); c5.addTerm(xmax, delta[i]);
-            model.addConstr(z[i], GRB.LESS_EQUAL, c5, "lin3c_"+i);
-
-            // z_i ≥ xmin · δ_i
-            GRBLinExpr c6 = new GRBLinExpr(); c6.addTerm(xmin, delta[i]);
-            model.addConstr(z[i], GRB.GREATER_EQUAL, c6, "lin3d_"+i);
-        }
-
-        // State of Charge (summed over timesteps)
-        double scale = 1 + d / k;
-
-        GRBLinExpr cumulative = new GRBLinExpr();
-
-        for (int i = 0; i < n; i++) {
-            GRBLinExpr term = new GRBLinExpr();
-            term.addTerm(1.0 / f, x[i]);
-            term.addTerm(f - 1.0 / f, z[i]);
-            term.addTerm((f - 1.0 / f) * p[i], delta[i]);
-            term.addConstant(p[i] / f);
-
-            cumulative.multAdd(scale, term);  // cumulative += scale * term
-
-            // Now add constraint: 0 ≤ cumulative ≤ b - s
-            model.addConstr(cumulative, GRB.GREATER_EQUAL, -s, "eq7_lower_" + i);
-            model.addConstr(cumulative, GRB.LESS_EQUAL, b - s, "eq7_upper_" + i);
-        }
-
-        // Max Charge / Discharge
-        for (int i = 0; i < n; i++) {
-            GRBLinExpr expr = new GRBLinExpr();
-            expr.addTerm(1.0 / f, x[i]);                    // (1/f) * x_i
-            expr.addTerm(f - 1.0 / f, z[i]);                // (f - 1/f) * z_i
-            expr.addTerm((f - 1.0 / f) * p[i], delta[i]);   // (f - 1/f) * p_i * δ_i
-            expr.addConstant(p[i] / f);                     // (1/f) * p_i
-
-            // -g ≤ expr ≤ g
-            GRBLinExpr plusG  = new GRBLinExpr(); plusG.addConstant(g);
-            GRBLinExpr minusG = new GRBLinExpr(); minusG.addConstant(-g);
-            model.addConstr(expr, GRB.LESS_EQUAL, plusG,  "gUpper_"+i);
-            model.addConstr(expr, GRB.GREATER_EQUAL, minusG, "gLower_"+i);
-        }
-
-        // cost function min c^T x
-        GRBLinExpr obj = new GRBLinExpr();
-        for (int i = 0; i < n; i++) obj.addTerm(c[i], x[i]);
-        model.setObjective(obj, GRB.MINIMIZE);
-
-        model.optimize();
-
-        double[] xOpt = new double[n];
-        for (int i = 0; i < n; i++) xOpt[i] = x[i].get(GRB.DoubleAttr.X);
-
-        model.dispose(); env.dispose();
-        return xOpt;
-    }
-    
-    public double[] solve(double[] c, double[] p, double b, double s){
-    	try {
-            return optimize(c, p, b, s);
-        } catch (GRBException e) {
-            e.printStackTrace();
-            return null; // oder: throw new RuntimeException(e);
-        }
-    }
-}
-]]></Text>
-		</JavaClass>
-		<!--   =========   Java Class   ========  -->
-		<JavaClass>
-			<Id>1752508961545</Id>
-			<Name><![CDATA[DataMessageFromPCForecast]]></Name>
-			<Text><![CDATA[public class DataMessageFromPCForecast extends MessageType {
-    public final double[] forecast;
-    public final double timestampStart;
-    public final double timestampEnd;
-
-    public DataMessageFromPCForecast(Agent sender, double timestampStart, double timestampEnd, double[] forecast) {
-    	super(sender, timestampStart, timestampEnd);
-        this.timestampStart = timestampStart;
-        this.timestampEnd = timestampEnd;
-        this.forecast = forecast;
-    }
-}]]></Text>
-		</JavaClass>
-		<!--   =========   Java Class   ========  -->
-		<JavaClass>
-			<Id>1752521308096</Id>
-			<Name><![CDATA[DataResponseTriggerMessageForEV]]></Name>
-			<Text><![CDATA[/**
- * DataResponseTriggerMessage
- */	
-public class DataResponseTriggerMessageForEV extends firstprojectdraft.MessageType implements Serializable {
-
-	
-	public DataResponseTriggerMessageForEV(Agent sender, double timestamp) {
-		super(sender, timestamp);				
-	}
-	
-	@Override
-	public String toString() {
-		return super.toString();
-	}
-
-	/**
-	 * This number is here for model snapshot storing purpose<br>
-	 * It needs to be changed when this class gets changed
-	 */ 
-	private static final long serialVersionUID = 1L;
-
-}]]></Text>
-		</JavaClass>
 	</JavaClasses>
 	<ModelResources>
 		<Resource>
@@ -5270,12 +5088,6 @@ public class DataResponseTriggerMessageForEV extends firstprojectdraft.MessageTy
 		<Resource>
 			<Id>1751995657544</Id>
 			<Path><![CDATA[init.csv]]></Path>
-			<ReferencedFromUserCode>false</ReferencedFromUserCode>
-			<Location>FILE_SYSTEM</Location>
-		</Resource>
-		<Resource>
-			<Id>1752503562903</Id>
-			<Path><![CDATA[gurobi.jar]]></Path>
 			<ReferencedFromUserCode>false</ReferencedFromUserCode>
 			<Location>FILE_SYSTEM</Location>
 		</Resource>
@@ -5312,14 +5124,6 @@ public class DataResponseTriggerMessageForEV extends firstprojectdraft.MessageTy
 		<ResourceReference>
 			<PackageName><![CDATA[firstprojectdraft]]></PackageName>
 			<ClassName><![CDATA[slf4j-api-2.0.9.jar]]></ClassName>
-		</ResourceReference>
-		<Imported>true</Imported>
-		<Folder>false</Folder>
-	</ClassPathEntry>
-	<ClassPathEntry>
-		<ResourceReference>
-			<PackageName><![CDATA[firstprojectdraft]]></PackageName>
-			<ClassName><![CDATA[gurobi.jar]]></ClassName>
 		</ResourceReference>
 		<Imported>true</Imported>
 		<Folder>false</Folder>
