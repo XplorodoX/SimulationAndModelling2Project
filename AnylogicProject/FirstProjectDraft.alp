@@ -4,7 +4,7 @@
 	         AnyLogic Project File
 *************************************************
 -->
-<AnyLogicWorkspace WorkspaceVersion="1.9" AnyLogicVersion="8.9.5.202506190548" AlpVersion="8.9.5">
+<AnyLogicWorkspace WorkspaceVersion="1.9" AnyLogicVersion="8.9.5.202506190538" AlpVersion="8.9.5">
 <Model>
 	<Id>1749063971044</Id>
 	<Name><![CDATA[FirstProjectDraft]]></Name>
@@ -5074,11 +5074,12 @@ public class Optimizer {
     public Optimizer(double f, double g, double d, double k) {
         if (f <= 0 || f > 1) throw new IllegalArgumentException("f must be in (0,1]");
         if (d < 0 || d > 1) throw new IllegalArgumentException("d must be in [0,1]");
+        System.out.println(k);
         if (k < 0) throw new IllegalArgumentException("k must be >= 0");
         this.f = 1/f;
         this.g = g;
         this.d = d;
-        this.k = k;
+        this.k = k + 1e-8;
     }
 
     // setters
