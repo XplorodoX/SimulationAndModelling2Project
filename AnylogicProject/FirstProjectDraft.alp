@@ -25,6 +25,10 @@ pV.handler = initializer.initPV(paramIndex, pV);
 person_Energy_Consumption.handler = initializer.initPC(paramIndex, person_Energy_Consumption);
 houseController.handler = initializer.initHouseController(paramIndex, houseController);
 heatPumpActivated = initializer.heatPumpActivation(paramIndex);]]></StartupCode>
+			<DestroyCode><![CDATA[CsvWriter writer = new CsvWriter();
+String[] headers = {"Index", "moneySaved"};
+double[] metrics = {paramIndex, houseController.moneySaved};
+writer.saveMetrics(headers, metrics);]]></DestroyCode>
 			<Generic>false</Generic>
 			<GenericParameter>
 				<Id>1749063971053</Id>
@@ -3034,6 +3038,9 @@ handler.messageIn(msg);]]></OnReceiveAction>
 			<Parameters>
 				<Parameter>
 					<ParameterName><![CDATA[paramIndex]]></ParameterName>
+					<ParameterValue Class="CodeValue">
+						<Code><![CDATA[0]]></Code>
+					</ParameterValue>
 				</Parameter>
 			</Parameters>
 			<PresentationProperties>
@@ -3058,7 +3065,7 @@ handler.messageIn(msg);]]></OnReceiveAction>
 			<Id>1751982608937</Id>
 			<Name><![CDATA[ParametersVariation]]></Name>
 			<CommandLineArguments><![CDATA[]]></CommandLineArguments>
-			<MaximumMemory>512</MaximumMemory>
+			<MaximumMemory>16384</MaximumMemory>
 			<RandomNumberGenerationType>fixedSeed</RandomNumberGenerationType>
 			<CustomGeneratorCode>new Random()</CustomGeneratorCode>
 			<SeedValue>1</SeedValue>
@@ -3077,10 +3084,10 @@ handler.messageIn(msg);]]></OnReceiveAction>
 				<Id>1751995712820</Id>
 				<Type>RANGE</Type>
 				<From Class="CodeValue">
-					<Code><![CDATA[86]]></Code>
+					<Code><![CDATA[350]]></Code>
 				</From>
 				<To Class="CodeValue">
-					<Code><![CDATA[88]]></Code>
+					<Code><![CDATA[351]]></Code>
 				</To>
 				<Step Class="CodeValue">
 					<Code><![CDATA[1]]></Code>
@@ -3231,7 +3238,7 @@ public class HouseControllerJava implements Serializable
 		{
 			stepCounter = 0;
 			owner.port.send(new DataResponseTriggerMessageForEV(owner, owner.time())); 
-			owner.port.send(new DataResponceTriggerMessageForForecast(owner, owner.time(), owner.time() + 900 * 96));
+			owner.port.send(new DataResponceTriggerMessageForForecast(owner, owner.time(), owner.time() + 900 * 96 * 1.5));
 		}
 		stepCounter++;
 		return true;
@@ -4831,7 +4838,7 @@ public class ParamSetter {
     }
     public BatteryJava initBattery(int paramIndex, Battery owner){
     	List<String> params = getParams(paramIndex);
-    	double numBatteries = Double.parseDouble(params.get(22));
+    	double numBatteries = Double.parseDouble(params.get(27));
     	double capacity = Double.parseDouble(params.get(13));
     	double maxChargePower = Double.parseDouble(params.get(14));
     	double maxDischargePower = Double.parseDouble(params.get(15));
@@ -5237,6 +5244,57 @@ public class DataResponseTriggerMessageForEV extends firstprojectdraft.MessageTy
 	 * This number is here for model snapshot storing purpose<br>
 	 * It needs to be changed when this class gets changed
 	 */ 
+	private static final long serialVersionUID = 1L;
+
+}]]></Text>
+		</JavaClass>
+		<!--   =========   Java Class   ========  -->
+		<JavaClass>
+			<Id>1752664365423</Id>
+			<Name><![CDATA[CsvWriter]]></Name>
+			<Text><![CDATA[import java.io.*;
+
+public class CsvWriter implements Serializable {
+    public CsvWriter() {
+    }
+
+	@Override
+	public String toString() {
+		return super.toString();
+	}
+
+
+	public void saveMetrics(String[] headers, double[] metrics) {
+	    try {
+	    	File file = new File("results.csv");
+	    	boolean fileExists = file.exists();
+
+	    	FileWriter writer = new FileWriter(file, true);
+
+	    	if (!fileExists || file.length() == 0) {
+	    		for (int i = 0; i < headers.length - 1; i++) {
+		            writer.append(String.valueOf(headers[i]));
+		            writer.append(";");
+		        }
+	    		writer.append(String.valueOf(headers[headers.length - 1]));
+	            writer.append("\n");
+	    	}
+
+            
+	        for (int i = 0; i < metrics.length - 1; i++) {
+	            writer.append(String.valueOf(metrics[i]));
+	            writer.append(";");
+	        }
+	        writer.append(String.valueOf(metrics[metrics.length - 1]));
+            writer.append("\n");
+
+	        writer.flush();
+	        writer.close();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+
 	private static final long serialVersionUID = 1L;
 
 }]]></Text>
