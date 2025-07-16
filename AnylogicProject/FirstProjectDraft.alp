@@ -26,8 +26,9 @@ person_Energy_Consumption.handler = initializer.initPC(paramIndex, person_Energy
 houseController.handler = initializer.initHouseController(paramIndex, houseController);
 heatPumpActivated = initializer.heatPumpActivation(paramIndex);]]></StartupCode>
 			<DestroyCode><![CDATA[CsvWriter writer = new CsvWriter();
-String[] headers = {"Index", "moneySaved"};
-double[] metrics = {paramIndex, houseController.moneySaved};
+String[] headers = {"Index", "year1", "year2", "year3", "year4", "year5", "year6", "year7", "year8", "year9"};
+houseController.yearlyMoney[0]=paramIndex;
+double[] metrics = houseController.yearlyMoney;
 writer.saveMetrics(headers, metrics);]]></DestroyCode>
 			<Generic>false</Generic>
 			<GenericParameter>
@@ -1207,6 +1208,7 @@ writer.saveMetrics(headers, metrics);]]></DestroyCode>
 		<ActiveObjectClass>
 			<Id>1749065069246</Id>
 			<Name><![CDATA[HouseController]]></Name>
+			<Import><![CDATA[import java.time.*;]]></Import>
 			<Generic>false</Generic>
 			<GenericParameter>
 				<Id>1749065069252</Id>
@@ -1343,6 +1345,36 @@ writer.saveMetrics(headers, metrics);]]></DestroyCode>
 						</InitialValue>
 					</Properties>
 				</Variable>
+				<Variable Class="PlainVariable">
+					<Id>1752682621127</Id>
+					<Name><![CDATA[yearlyMoney]]></Name>
+					<X>570</X><Y>250</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
+						<Type><![CDATA[double[]]]></Type>        
+						<InitialValue Class="CodeValue">
+							<Code><![CDATA[new double[10];]]></Code>
+						</InitialValue>
+					</Properties>
+				</Variable>
+				<Variable Class="PlainVariable">
+					<Id>1752682720628</Id>
+					<Name><![CDATA[count]]></Name>
+					<X>490</X><Y>350</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
+						<Type><![CDATA[int]]></Type>        
+						<InitialValue Class="CodeValue">
+							<Code><![CDATA[0]]></Code>
+						</InitialValue>
+					</Properties>
+				</Variable>
 				<Variable Class="Parameter">
 					<Id>1749066364626</Id>
 					<Name><![CDATA[simStepSize_in_min]]></Name>
@@ -1463,8 +1495,22 @@ handler.messageIn(msg);]]></OnReceiveAction>
 					</Points>
 					<IconOffset>50.0</IconOffset>
 					<Properties Source="1749066240613" Target="1749066240613" Trigger="timeout">
-						<Action><![CDATA[handler.sendMessagesToAll();
+						<Action><![CDATA[
 
+handler.sendMessagesToAll();
+LocalDateTime now = DateTimeConversionJava.doubleToCurrentLocalDateTime(time());
+int year = now.getYear();
+int month = now.getMonthValue();
+int day = now.getDayOfMonth();
+int hour = now.getHour();
+int min = now.getMinute();
+
+
+
+if (month == 12 && day == 31 && hour == 23 && min == 45)
+{
+	yearlyMoney[++count] = moneySaved;
+}
 
 get_Main().plotForPrices.updateData();
 get_Main().plotForBattery.updateData();
@@ -3039,7 +3085,7 @@ handler.messageIn(msg);]]></OnReceiveAction>
 				<Parameter>
 					<ParameterName><![CDATA[paramIndex]]></ParameterName>
 					<ParameterValue Class="CodeValue">
-						<Code><![CDATA[0]]></Code>
+						<Code><![CDATA[1]]></Code>
 					</ParameterValue>
 				</Parameter>
 			</Parameters>
@@ -3055,8 +3101,8 @@ handler.messageIn(msg);]]></OnReceiveAction>
 				<StopOption><![CDATA[Stop at specified date]]></StopOption>
 				<InitialDate><![CDATA[1451606400000]]></InitialDate>
 				<InitialTime><![CDATA[0.0]]></InitialTime>
-				<FinalDate><![CDATA[1483228800000]]></FinalDate>
-				<FinalTime><![CDATA[3.16224E7]]></FinalTime>
+				<FinalDate><![CDATA[1514764800000]]></FinalDate>
+				<FinalTime><![CDATA[6.31584E7]]></FinalTime>
 			</ModelTimeProperties>
 			<BypassInitialScreen>true</BypassInitialScreen>
 		</SimulationExperiment>
@@ -3084,10 +3130,10 @@ handler.messageIn(msg);]]></OnReceiveAction>
 				<Id>1751995712820</Id>
 				<Type>RANGE</Type>
 				<From Class="CodeValue">
-					<Code><![CDATA[350]]></Code>
+					<Code><![CDATA[107]]></Code>
 				</From>
 				<To Class="CodeValue">
-					<Code><![CDATA[351]]></Code>
+					<Code><![CDATA[110]]></Code>
 				</To>
 				<Step Class="CodeValue">
 					<Code><![CDATA[1]]></Code>
@@ -3097,8 +3143,8 @@ handler.messageIn(msg);]]></OnReceiveAction>
 				<StopOption><![CDATA[Stop at specified date]]></StopOption>
 				<InitialDate><![CDATA[1451606400000]]></InitialDate>	
 				<InitialTime><![CDATA[0.0]]></InitialTime>	
-				<FinalDate><![CDATA[1483228800000]]></FinalDate>	
-				<FinalTime><![CDATA[3.16224E7]]></FinalTime>	
+				<FinalDate><![CDATA[1514764800000]]></FinalDate>	
+				<FinalTime><![CDATA[6.31584E7]]></FinalTime>	
 			</ModelTimeProperties>
 			<PresentationProperties>
 				<EnableZoomAndPanning>true</EnableZoomAndPanning>
