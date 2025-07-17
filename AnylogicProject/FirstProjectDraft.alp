@@ -214,7 +214,7 @@ writer.saveMetrics(headers, metrics);]]></DestroyCode>
 				<Variable Class="Parameter">
 					<Id>1751995712820</Id>
 					<Name><![CDATA[paramIndex]]></Name>
-					<X>750</X><Y>190</Y>
+					<X>280</X><Y>190</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -224,7 +224,7 @@ writer.saveMetrics(headers, metrics);]]></DestroyCode>
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
 						<DefaultValue Class="CodeValue">
-							<Code><![CDATA[207 //86]]></Code>
+							<Code><![CDATA[188 //86]]></Code>
 						</DefaultValue>
 						<ParameterEditor>
 							<Id>1751995712818</Id>
@@ -440,7 +440,7 @@ writer.saveMetrics(headers, metrics);]]></DestroyCode>
 				<TextFile>
 					<Id>1751906009948</Id>
 					<Name><![CDATA[init]]></Name>
-					<X>750</X><Y>140</Y>
+					<X>280</X><Y>140</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -851,7 +851,7 @@ writer.saveMetrics(headers, metrics);]]></DestroyCode>
     			<TimePlot>
 					<Id>1751218131500</Id>
 					<Name><![CDATA[plotForBattery]]></Name>
-					<X>70</X><Y>330</Y>
+					<X>560</X><Y>240</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -872,14 +872,14 @@ writer.saveMetrics(headers, metrics);]]></DestroyCode>
 						</RecurrenceCode>
 					</RecurrenceProperties>
 					<EmbeddedIcon>false</EmbeddedIcon>
-					<Width>300.5947955390335</Width>
+					<Width>1720</Width>
 					<Height>300.59482444733425</Height>
 					<BackgroundColor/>
 					<BorderColor/>
 					<ChartArea>
 						<XOffset>50</XOffset>
 						<YOffset>30</YOffset>
-						<Width>220.5947955390335</Width>
+						<Width>1640</Width>
 						<Height>160.59482444733425</Height>
 						<BackgroundColor>-1</BackgroundColor>
 						<BorderColor>-16777216</BorderColor>
@@ -899,7 +899,7 @@ writer.saveMetrics(headers, metrics);]]></DestroyCode>
 					<TimeWindowsMovementType>MOVEMENT_WITH_TIME</TimeWindowsMovementType>		
 					<TimeWindowUnits>YEAR</TimeWindowUnits>
 					<VerScaleFromExpression><![CDATA[0]]></VerScaleFromExpression>
-					<VerScaleToExpression><![CDATA[80]]></VerScaleToExpression>
+					<VerScaleToExpression><![CDATA[30]]></VerScaleToExpression>
 					<VerScaleType>FIXED</VerScaleType>
 					<DrawLine>true</DrawLine>
 					<Interpolation>LINEAR</Interpolation>
@@ -913,15 +913,15 @@ writer.saveMetrics(headers, metrics);]]></DestroyCode>
 						<PointStyle>NONE</PointStyle>
 						<LineWidth>1.0</LineWidth>
 					</DatasetExpression>
-					<SamplesToKeep>40000</SamplesToKeep>
-					<TimeWindowExpression><![CDATA[1]]></TimeWindowExpression>
+					<SamplesToKeep>400000</SamplesToKeep>
+					<TimeWindowExpression><![CDATA[8]]></TimeWindowExpression>
 					<FillAreaUnderLine>false</FillAreaUnderLine>
 					<LabelFormat>dd_MM</LabelFormat>
     			</TimePlot>
     			<TimePlot>
 					<Id>1751238832732</Id>
 					<Name><![CDATA[plotForPV]]></Name>
-					<X>60</X><Y>580</Y>
+					<X>560</X><Y>620</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -942,14 +942,14 @@ writer.saveMetrics(headers, metrics);]]></DestroyCode>
 						</RecurrenceCode>
 					</RecurrenceProperties>
 					<EmbeddedIcon>false</EmbeddedIcon>
-					<Width>309.524</Width>
+					<Width>1720</Width>
 					<Height>250</Height>
 					<BackgroundColor/>
 					<BorderColor/>
 					<ChartArea>
 						<XOffset>50</XOffset>
 						<YOffset>30</YOffset>
-						<Width>229.524</Width>
+						<Width>1640</Width>
 						<Height>160</Height>
 						<BackgroundColor>-1</BackgroundColor>
 						<BorderColor>-16777216</BorderColor>
@@ -983,15 +983,15 @@ writer.saveMetrics(headers, metrics);]]></DestroyCode>
 						<PointStyle>NONE</PointStyle>
 						<LineWidth>1.0</LineWidth>
 					</DatasetExpression>
-					<SamplesToKeep>40000</SamplesToKeep>
-					<TimeWindowExpression><![CDATA[1]]></TimeWindowExpression>
+					<SamplesToKeep>400000</SamplesToKeep>
+					<TimeWindowExpression><![CDATA[8]]></TimeWindowExpression>
 					<FillAreaUnderLine>false</FillAreaUnderLine>
 					<LabelFormat>dd_MM</LabelFormat>
     			</TimePlot>
     			<TimePlot>
 					<Id>1751239592090</Id>
 					<Name><![CDATA[plotForPC]]></Name>
-					<X>60</X><Y>867.369</Y>
+					<X>560</X><Y>860</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1012,14 +1012,14 @@ writer.saveMetrics(headers, metrics);]]></DestroyCode>
 						</RecurrenceCode>
 					</RecurrenceProperties>
 					<EmbeddedIcon>false</EmbeddedIcon>
-					<Width>300.5947955390335</Width>
+					<Width>1720</Width>
 					<Height>242.7881274382315</Height>
 					<BackgroundColor/>
 					<BorderColor/>
 					<ChartArea>
 						<XOffset>50</XOffset>
 						<YOffset>30</YOffset>
-						<Width>220.5947955390335</Width>
+						<Width>1640</Width>
 						<Height>152.7881274382315</Height>
 						<BackgroundColor>-1</BackgroundColor>
 						<BorderColor>-16777216</BorderColor>
@@ -1053,15 +1053,15 @@ writer.saveMetrics(headers, metrics);]]></DestroyCode>
 						<PointStyle>NONE</PointStyle>
 						<LineWidth>1.0</LineWidth>
 					</DatasetExpression>
-					<SamplesToKeep>40000</SamplesToKeep>
-					<TimeWindowExpression><![CDATA[1]]></TimeWindowExpression>
+					<SamplesToKeep>400000</SamplesToKeep>
+					<TimeWindowExpression><![CDATA[8]]></TimeWindowExpression>
 					<FillAreaUnderLine>false</FillAreaUnderLine>
 					<LabelFormat>dd_MM</LabelFormat>
     			</TimePlot>
     			<TimePlot>
 					<Id>1751302317108</Id>
 					<Name><![CDATA[plotForHP]]></Name>
-					<X>60</X><Y>1120</Y>
+					<X>580</X><Y>1120</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1082,14 +1082,14 @@ writer.saveMetrics(headers, metrics);]]></DestroyCode>
 						</RecurrenceCode>
 					</RecurrenceProperties>
 					<EmbeddedIcon>false</EmbeddedIcon>
-					<Width>300.5947955390335</Width>
+					<Width>1700</Width>
 					<Height>242.7881274382315</Height>
 					<BackgroundColor/>
 					<BorderColor/>
 					<ChartArea>
 						<XOffset>50</XOffset>
 						<YOffset>30</YOffset>
-						<Width>220.5947955390335</Width>
+						<Width>1620</Width>
 						<Height>152.7881274382315</Height>
 						<BackgroundColor>-1</BackgroundColor>
 						<BorderColor>-16777216</BorderColor>
@@ -1123,15 +1123,15 @@ writer.saveMetrics(headers, metrics);]]></DestroyCode>
 						<PointStyle>NONE</PointStyle>
 						<LineWidth>1.0</LineWidth>
 					</DatasetExpression>
-					<SamplesToKeep>40000</SamplesToKeep>
-					<TimeWindowExpression><![CDATA[1]]></TimeWindowExpression>
+					<SamplesToKeep>400000</SamplesToKeep>
+					<TimeWindowExpression><![CDATA[8]]></TimeWindowExpression>
 					<FillAreaUnderLine>false</FillAreaUnderLine>
 					<LabelFormat>dd_MM</LabelFormat>
     			</TimePlot>
     			<TimePlot>
 					<Id>1751737144194</Id>
 					<Name><![CDATA[plotForPrices]]></Name>
-					<X>80</X><Y>80</Y>
+					<X>560</X><Y>40</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1152,14 +1152,14 @@ writer.saveMetrics(headers, metrics);]]></DestroyCode>
 						</RecurrenceCode>
 					</RecurrenceProperties>
 					<EmbeddedIcon>false</EmbeddedIcon>
-					<Width>260</Width>
+					<Width>1720</Width>
 					<Height>210</Height>
 					<BackgroundColor/>
 					<BorderColor/>
 					<ChartArea>
 						<XOffset>50</XOffset>
 						<YOffset>30</YOffset>
-						<Width>180</Width>
+						<Width>1640</Width>
 						<Height>120</Height>
 						<BackgroundColor>-1</BackgroundColor>
 						<BorderColor>-16777216</BorderColor>
@@ -1193,8 +1193,8 @@ writer.saveMetrics(headers, metrics);]]></DestroyCode>
 						<PointStyle>NONE</PointStyle>
 						<LineWidth>1.0</LineWidth>
 					</DatasetExpression>
-					<SamplesToKeep>40000</SamplesToKeep>
-					<TimeWindowExpression><![CDATA[1]]></TimeWindowExpression>
+					<SamplesToKeep>400000</SamplesToKeep>
+					<TimeWindowExpression><![CDATA[8]]></TimeWindowExpression>
 					<FillAreaUnderLine>false</FillAreaUnderLine>
 					<LabelFormat>dd_MM</LabelFormat>
     			</TimePlot>
@@ -3085,7 +3085,7 @@ handler.messageIn(msg);]]></OnReceiveAction>
 				<Parameter>
 					<ParameterName><![CDATA[paramIndex]]></ParameterName>
 					<ParameterValue Class="CodeValue">
-						<Code><![CDATA[171]]></Code>
+						<Code><![CDATA[160]]></Code>
 					</ParameterValue>
 				</Parameter>
 			</Parameters>
@@ -3101,8 +3101,8 @@ handler.messageIn(msg);]]></OnReceiveAction>
 				<StopOption><![CDATA[Stop at specified date]]></StopOption>
 				<InitialDate><![CDATA[1451606400000]]></InitialDate>
 				<InitialTime><![CDATA[0.0]]></InitialTime>
-				<FinalDate><![CDATA[1735689600000]]></FinalDate>
-				<FinalTime><![CDATA[2.840832E8]]></FinalTime>
+				<FinalDate><![CDATA[1704067200000]]></FinalDate>
+				<FinalTime><![CDATA[2.524608E8]]></FinalTime>
 			</ModelTimeProperties>
 			<BypassInitialScreen>true</BypassInitialScreen>
 		</SimulationExperiment>
@@ -3726,7 +3726,9 @@ public class PCJava implements Serializable {
         // Optional: If needed, handle current consumption:
         else if (msg instanceof DataResponseTriggerMessage) {
             LocalDateTime now = DateTimeConversionJava.doubleToCurrentLocalDateTime(owner.time());
-            LocalDateTime mapped = convertTo2016Equivalent(now);
+            //LocalDateTime mapped = convertTo2016Equivalent(now);
+            LocalDateTime mapped = DateTimeConversionJava.getDataFrom2016(now);
+
             double avgPerPerson = DBRequest.getValueAtTime(TABLE_NAME, TIME_COLUMN, DATA_COLUMN, mapped);
             double value = avgPerPerson  * numPeople * multiplier;
 
@@ -3736,15 +3738,13 @@ public class PCJava implements Serializable {
 
     // Forecast future consumption using mapped historical data (e.g. Jan 5 2048 → Jan 5 2016)
     public double[] getForecastUsingHistoricalData(double start, double end, int numberOfPeople) {
-        int steps = (int) ((end - start) / 900) + 1;  // 900 seconds = 15 min
+        int steps = (int) ((end - start) / 900) + 1;  // 15-minute steps
         double[] result = new double[steps];
 
         for (int i = 0; i < steps; i++) {
             double simTime = start + i * 900.0;
             LocalDateTime actualTime = DateTimeConversionJava.doubleToCurrentLocalDateTime(simTime);
-            LocalDateTime mappedTime = convertTo2016Equivalent(actualTime);
-            //if(actualTime!=mappedTime)System.out.println("ERROR");
-            
+            LocalDateTime mappedTime = DateTimeConversionJava.getDataFrom2016(actualTime);
 
             double avgPerPerson = DBRequest.getValueAtTime(TABLE_NAME, TIME_COLUMN, DATA_COLUMN, mappedTime);
             result[i] = avgPerPerson * numberOfPeople;
@@ -3754,14 +3754,14 @@ public class PCJava implements Serializable {
     }
 
     // If year is not 2016, map date to the same MM-DD hh:mm in 2016.
-    private LocalDateTime convertTo2016Equivalent(LocalDateTime time) {
-        int day = Math.min(
-            time.getDayOfMonth(),
-            Year.of(2016).atMonth(time.getMonth()).lengthOfMonth()
-        );
-        //System.out.println(LocalDateTime.of(2016, time.getMonth(), day, time.getHour(), time.getMinute()));
-        return LocalDateTime.of(2016, time.getMonth(), day, time.getHour(), time.getMinute());
-    }
+    //private LocalDateTime convertTo2016Equivalent(LocalDateTime time) {
+    //    int day = Math.min(
+    //        time.getDayOfMonth(),
+    //        Year.of(2016).atMonth(time.getMonth()).lengthOfMonth()
+    //    );
+    //    //System.out.println(LocalDateTime.of(2016, time.getMonth(), day, time.getHour(), time.getMinute()));
+    //    return LocalDateTime.of(2016, time.getMonth(), day, time.getHour(), time.getMinute());
+    //}
 }]]></Text>
 		</JavaClass>
 		<!--   =========   Java Class   ========  -->
@@ -4486,32 +4486,66 @@ public class DateTimeConversionJava implements Serializable {
     
     public static LocalDateTime getTimeNow(Agent owner)
     {
-    	int year = owner.getYear();
-    	int mounth = owner.getMonth() + 1; // because anylocig months are 0-11 and LocalDateTime months are 1-12
-    	int day = owner.getDayOfMonth();
-    	int hour = owner.getHourOfDay();
-    	int min = owner.getMinute();
-    	int sec = owner.getSecond();
+    	return doubleToCurrentLocalDateTime(owner.time());
     	
-    	return LocalDateTime.of(year, mounth, day, hour, min, sec);    	
+    	//int year = owner.getYear();
+    	//int mounth = owner.getMonth() + 1; // because anylocig months are 0-11 and LocalDateTime months are 1-12
+    	//int day = owner.getDayOfMonth();
+    	//int hour = owner.getHourOfDay();
+    	//int min = owner.getMinute();
+    	//int sec = owner.getSecond();
+    	
+    	//return LocalDateTime.of(year, mounth, day, hour, min, sec);    	
     }
     
     public static LocalDateTime getTimeIn15(Agent owner)
     {
-    	int year = owner.getYear();
-    	int mounth = owner.getMonth() + 1; // because anylocig months are 0-11 and LocalDateTime months are 1-12
-    	int day = owner.getDayOfMonth();
-    	int hour = owner.getHourOfDay();
-    	int min = owner.getMinute();
-    	int sec = owner.getSecond();
+    	return doubleToCurrentLocalDateTime(owner.time()+15);
+    	//int year = owner.getYear();
+    	//int mounth = owner.getMonth() + 1; // because anylocig months are 0-11 and LocalDateTime months are 1-12
+    	//int day = owner.getDayOfMonth();
+    	//int hour = owner.getHourOfDay();
+    	//int min = owner.getMinute();
+    	//int sec = owner.getSecond();
     	
-    	LocalDateTime currentTime = LocalDateTime.of(year, mounth, day, hour, min, sec);    	
-        Duration duration = Duration.ofSeconds((long) 15*60);
+    	//LocalDateTime currentTime = LocalDateTime.of(year, mounth, day, hour, min, sec);    	
+        //Duration duration = Duration.ofSeconds((long) 15*60);
 
-        LocalDateTime timeIn15Min= currentTime.plusSeconds(duration.getSeconds());
+        //LocalDateTime timeIn15Min= currentTime.plusSeconds(duration.getSeconds());
     	
-    	return timeIn15Min;
+    	//return timeIn15Min;
     }
+    
+    public static LocalDateTime getValidTimeStamp(LocalDateTime now) 
+    {
+    	if (weDontHaveDataForThisTime(now))
+    	{
+    		LocalDateTime validTime = getDataFrom2016(now);
+    		return validTime;
+    	}
+    	else
+    	{
+    		return now;
+    	}
+    }
+
+    public static boolean weDontHaveDataForThisTime(LocalDateTime now)
+    {
+    	// return boolean value if i have data for this time stamp or not // before the conversion
+    	return now.getYear() != 2016; //agar 2016 na ho to return krna
+    	// done
+    }
+    
+    public static LocalDateTime getDataFrom2016(LocalDateTime now)
+    {	// get the data for the converted date from the database, and return that data
+    	// now.year = 2016;
+    	// return now;
+    	int month = now.getMonthValue(); // date me se month alag krna
+    	int day = Math.min(now.getDayOfMonth(), Year.of(2016).atMonth(month).lengthOfMonth()); //date me se day alag krna
+    	return LocalDateTime.of(2016, month, day, now.getHour(), now.getMinute(), now.getSecond()); // same time date stamp se year ko change krna 2016 me aur baki sab as it is return kr dena
+    }
+    
+    
     
     
 	@Override
@@ -4541,10 +4575,10 @@ public class HeatPumpJava implements Serializable
 {
     HeatPump owner;
     String table_name = "heatpump";
-    //String timestamp_column = "timestamp";
-    //String data_column = "value";
-    String timestamp_column = "utc_timestamp";
-    String data_column = "Fraction";
+    String timestamp_column = "timestamp";
+    String data_column = "value";
+    //String timestamp_column = "utc_timestamp";
+    //String data_column = "Fraction";
 
     public HeatPumpJava(HeatPump owner)
     {
@@ -4553,7 +4587,7 @@ public class HeatPumpJava implements Serializable
         DBRequest.initializeConnectionPool();
 
         LocalDateTime simStart = LocalDateTime.of(2016, 1, 1, 0, 0);
-        LocalDateTime simEnd = LocalDateTime.of(2016, 12, 31, 23, 59);
+        LocalDateTime simEnd = LocalDateTime.of(2023, 12, 31, 23, 59);
 
         DBRequest.preloadTimeSeriesData(table_name, timestamp_column, data_column, simStart, simEnd);
     }

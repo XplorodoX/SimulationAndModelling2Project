@@ -48,7 +48,7 @@ def convert_raw_to_usable_csv(
     """
 
     # You can set the base date here
-    base_date = datetime(2024, 1, 1, 0, 0, 0)
+    base_date = datetime(2016, 1, 1, 0, 0, 0)
 
     input_path = os.path.join(os.path.dirname(__file__), input_filename)
     output_path = os.path.join(os.path.dirname(__file__), output_filename)
@@ -64,7 +64,8 @@ def convert_raw_to_usable_csv(
                 # Calculate the datetime
                 dt = base_date + timedelta(hours=timestamp)
                 # Format as Java LocalDateTime string
-                timestamp_str = dt.strftime("%Y-%m-%dT%H:%M:%S")
+                # timestamp_str = dt.strftime("%Y-%m-%dT%H:%M:%S")  # Old Java LocalDateTime format
+                timestamp_str = dt.strftime("%Y-%m-%d %H:%M:%S")
                 expanded_rows.append({'timestamp': timestamp_str, 'value': value})
         expanded_df = pd.DataFrame(expanded_rows)
         expanded_df.to_csv(output_path, index=False)
@@ -76,5 +77,4 @@ def convert_raw_to_usable_csv(
 if __name__ == "__main__":
     
     #write_dummy_csv(filename="raw_data.csv")
-
-    convert_raw_to_usable_csv(input_filename="time_series_heat_pump.csv", output_filename="heatpumpDataForSimFromModel.csv", valueMultiplier=1)
+    convert_raw_to_usable_csv(input_filename="time_series_heat_pump.csv", output_filename="heatpump.csv", valueMultiplier=1e-3)
