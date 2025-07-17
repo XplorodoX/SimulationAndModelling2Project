@@ -6,55 +6,56 @@ public class PCJava implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private PC owner;
-    private int numberOfPeople;
+    private int numPeople;
     private static final String TABLE_NAME = "household_data";
     private static final String TIME_COLUMN = "utc_timestamp";
     private static final String DATA_COLUMN = "average_per_person_consumption";
 
-    public PCJava(PC owner, int numberOfPeople) {
+    public PCJava(PC owner, int numPeople) {
         this.owner = owner;
-	this.numberOfPeople = numberOfPeople;
-        DBRequest.initializeConnectionPool(); // Ensure connection is available
+        this.numPeople = numPeople;
+        DBRequest.initializeConnectionPool(); // Ensure DB connection is available
+
+        LocalDateTime simStart = LocalDateTime.of(2016, 1, 1, 0, 0);
+        LocalDateTime simEnd = LocalDateTime.of(2016, 12, 31, 23, 59);
+        DBRequest.preloadTimeSeriesData(TABLE_NAME, TIME_COLUMN, DATA_COLUMN, simStart, simEnd);
     }
 
     public void messageIn(MessageType msg) {
+        int multiplier = 5;
+
         if (msg instanceof DataResponceTriggerMessageForForecast forecastMsg) {
             double start = forecastMsg.timestampStart;
             double end = forecastMsg.timestampEnd;
 
-            double[] forecast = getForecastUsingHistoricalData(start, end);
-            owner.port.send(new DataMessageFromPCForecast(owner, forecast));
+            double[] forecast = getForecastUsingHistoricalData(start, end, multiplier * numPeople);
+            owner.port.send(new DataMessageFromPCForecast(owner, start, end, forecast));
         }
 
-        // Optional: If needed, handle current consumption:
         else if (msg instanceof DataResponseTriggerMessage) {
-            LocalDateTime now = DateTimeConversionJava.getTimeNow(owner);
-            LocalDateTime mapped = convertTo2016Equivalent(now);
+            LocalDateTime now = DateTimeConversionJava.doubleToCurrentLocalDateTime(owner.time());
+            LocalDateTime mapped = DateTimeConversionJava.getDataFrom2016(now);
+
             double avgPerPerson = DBRequest.getValueAtTime(TABLE_NAME, TIME_COLUMN, DATA_COLUMN, mapped);
-            double value = avgPerPerson * numberOfPeople;
+            double value = avgPerPerson * numPeople * multiplier;
 
             owner.port.send(new DataMessageFromPC(owner, value));
         }
     }
 
-public double[] getForecastFromDatabase(double start, double end) {
-        List<Object[]> rows = DBRequest.getTimeSeriesData(
-            TABLE_NAME,
-            TIME_COLUMN,
-            DATA_COLUMN,
-            DateTimeConversionJava.doubleToCurrentLocalDateTime(start),
-            DateTimeConversionJava.doubleToCurrentLocalDateTime(end)
-            //todotodo, i want these to convert the given time stamp to 2016s time stamp
-        );
+    public double[] getForecastUsingHistoricalData(double start, double end, int numberOfPeople) {
+        int steps = (int) ((end - start) / 900) + 1;  // 15-minute steps
+        double[] result = new double[steps];
 
-        double[] result = new double[rows.size()];
-        for (int i = 0; i < rows.size(); i++) {
-            Object[] row = rows.get(i);
-            if (row[1] instanceof Number) {
-                double avg = ((Number) row[1]).doubleValue();
-                result[i] = avg * numberOfPeople;
-            }
+        for (int i = 0; i < steps; i++) {
+            double simTime = start + i * 900.0;
+            LocalDateTime actualTime = DateTimeConversionJava.doubleToCurrentLocalDateTime(simTime);
+            LocalDateTime mappedTime = DateTimeConversionJava.getDataFrom2016(actualTime);
+
+            double avgPerPerson = DBRequest.getValueAtTime(TABLE_NAME, TIME_COLUMN, DATA_COLUMN, mappedTime);
+            result[i] = avgPerPerson * numberOfPeople;
         }
+
         return result;
     }
 }
