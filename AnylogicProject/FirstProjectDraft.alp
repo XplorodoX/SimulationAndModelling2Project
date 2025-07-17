@@ -4,7 +4,7 @@
 	         AnyLogic Project File
 *************************************************
 -->
-<AnyLogicWorkspace WorkspaceVersion="1.9" AnyLogicVersion="8.9.5.202506190538" AlpVersion="8.9.5">
+<AnyLogicWorkspace WorkspaceVersion="1.9" AnyLogicVersion="8.9.5.202506190548" AlpVersion="8.9.5">
 <Model>
 	<Id>1749063971044</Id>
 	<Name><![CDATA[FirstProjectDraft]]></Name>
@@ -26,7 +26,7 @@ person_Energy_Consumption.handler = initializer.initPC(paramIndex, person_Energy
 houseController.handler = initializer.initHouseController(paramIndex, houseController);
 heatPumpActivated = initializer.heatPumpActivation(paramIndex);]]></StartupCode>
 			<DestroyCode><![CDATA[CsvWriter writer = new CsvWriter();
-String[] headers = {"Index", "year1", "year2", "year3", "year4", "year5", "year6", "year7", "year8", "year9"};
+String[] headers = {"Index", "year1", "year2", "year3", "year4", "year5", "year6", "year7", "year8"};
 houseController.yearlyMoney[0]=paramIndex;
 double[] metrics = houseController.yearlyMoney;
 writer.saveMetrics(headers, metrics);]]></DestroyCode>
@@ -1356,7 +1356,7 @@ writer.saveMetrics(headers, metrics);]]></DestroyCode>
 					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
 						<Type><![CDATA[double[]]]></Type>        
 						<InitialValue Class="CodeValue">
-							<Code><![CDATA[new double[10];]]></Code>
+							<Code><![CDATA[new double[9];]]></Code>
 						</InitialValue>
 					</Properties>
 				</Variable>
@@ -3045,10 +3045,10 @@ handler.messageIn(msg);]]></OnReceiveAction>
 			<Id>1749063971070</Id>
 			<Name><![CDATA[Simulation]]></Name>
 			<CommandLineArguments><![CDATA[]]></CommandLineArguments>
-			<MaximumMemory>16384</MaximumMemory>
+			<MaximumMemory>8192</MaximumMemory>
 			<RandomNumberGenerationType>fixedSeed</RandomNumberGenerationType>
 			<CustomGeneratorCode>new Random()</CustomGeneratorCode>
-			<AfterSimulationRunCode><![CDATA[System.out.println("capacity of battery at end: " + root.battery.handler.capacity + " / " + root.battery.handler.maxCapacity); 
+			<AfterSimulationRunCode><![CDATA[//System.out.println("capacity of battery at end: " + root.battery.handler.capacity + " / " + root.battery.handler.maxCapacity); 
 // without HP: 67
 // with HP: 26
 ]]></AfterSimulationRunCode>
@@ -3085,13 +3085,13 @@ handler.messageIn(msg);]]></OnReceiveAction>
 				<Parameter>
 					<ParameterName><![CDATA[paramIndex]]></ParameterName>
 					<ParameterValue Class="CodeValue">
-						<Code><![CDATA[1]]></Code>
+						<Code><![CDATA[171]]></Code>
 					</ParameterValue>
 				</Parameter>
 			</Parameters>
 			<PresentationProperties>
 				<EnableZoomAndPanning>true</EnableZoomAndPanning>
-				<ExecutionMode><![CDATA[realTimeScaled]]></ExecutionMode>
+				<ExecutionMode><![CDATA[virtualTime]]></ExecutionMode>
 				<Title><![CDATA[FirstProjectDraft : Simulation]]></Title>
 				<EnableDeveloperPanel>true</EnableDeveloperPanel>
 				<ShowDeveloperPanelOnStart>false</ShowDeveloperPanelOnStart>
@@ -3101,8 +3101,8 @@ handler.messageIn(msg);]]></OnReceiveAction>
 				<StopOption><![CDATA[Stop at specified date]]></StopOption>
 				<InitialDate><![CDATA[1451606400000]]></InitialDate>
 				<InitialTime><![CDATA[0.0]]></InitialTime>
-				<FinalDate><![CDATA[1514764800000]]></FinalDate>
-				<FinalTime><![CDATA[6.31584E7]]></FinalTime>
+				<FinalDate><![CDATA[1735689600000]]></FinalDate>
+				<FinalTime><![CDATA[2.840832E8]]></FinalTime>
 			</ModelTimeProperties>
 			<BypassInitialScreen>true</BypassInitialScreen>
 		</SimulationExperiment>
@@ -3114,12 +3114,15 @@ handler.messageIn(msg);]]></OnReceiveAction>
 			<MaximumMemory>16384</MaximumMemory>
 			<RandomNumberGenerationType>fixedSeed</RandomNumberGenerationType>
 			<CustomGeneratorCode>new Random()</CustomGeneratorCode>
+			<BeforeSimulationRunCode><![CDATA[System.out.println("Current Parameter Index: " + paramIndex);]]></BeforeSimulationRunCode>
 			<SeedValue>1</SeedValue>
 			<SelectionModeForSimultaneousEvents>LIFO</SelectionModeForSimultaneousEvents>
 			<VmArgs><![CDATA[]]></VmArgs>
 			<LoadRootFromSnapshot>false</LoadRootFromSnapshot>
 
 
+			<AfterExperimentCode><![CDATA[System.out.println(" ");
+System.out.println("Finished Simulation");]]></AfterExperimentCode>
 			<AllowParallelEvaluations>true</AllowParallelEvaluations>
 			<UseFreeformParameters>false</UseFreeformParameters>
 			<NumberOfRuns>10</NumberOfRuns>
@@ -3130,21 +3133,21 @@ handler.messageIn(msg);]]></OnReceiveAction>
 				<Id>1751995712820</Id>
 				<Type>RANGE</Type>
 				<From Class="CodeValue">
-					<Code><![CDATA[107]]></Code>
+					<Code><![CDATA[170]]></Code>
 				</From>
 				<To Class="CodeValue">
-					<Code><![CDATA[110]]></Code>
+					<Code><![CDATA[173]]></Code>
 				</To>
 				<Step Class="CodeValue">
-					<Code><![CDATA[1]]></Code>
+					<Code><![CDATA[2]]></Code>
 				</Step>
 			</RangeVariationParamValue>
 			<ModelTimeProperties>
 				<StopOption><![CDATA[Stop at specified date]]></StopOption>
 				<InitialDate><![CDATA[1451606400000]]></InitialDate>	
 				<InitialTime><![CDATA[0.0]]></InitialTime>	
-				<FinalDate><![CDATA[1514764800000]]></FinalDate>	
-				<FinalTime><![CDATA[6.31584E7]]></FinalTime>	
+				<FinalDate><![CDATA[1704067200000]]></FinalDate>	
+				<FinalTime><![CDATA[2.524608E8]]></FinalTime>	
 			</ModelTimeProperties>
 			<PresentationProperties>
 				<EnableZoomAndPanning>true</EnableZoomAndPanning>
@@ -5152,6 +5155,8 @@ public class Optimizer {
     private final double g;  // max charge / discharge in 15 minutes
     private final double d;  // degredation
     private final double k;  // max battery capacity
+    
+    private GRBEnv env;
 
     // ––– justierbare technische Konstanten –––
     private double M       = 1e6;   // Big M for nonlinearity
@@ -5162,12 +5167,21 @@ public class Optimizer {
     public Optimizer(double f, double g, double d, double k) {
         if (f <= 0 || f > 1) throw new IllegalArgumentException("f must be in (0,1]");
         if (d < 0 || d > 1) throw new IllegalArgumentException("d must be in [0,1]");
-        System.out.println(k);
         if (k < 0) throw new IllegalArgumentException("k must be >= 0");
         this.f = 1/f;
         this.g = g;
         this.d = d;
         this.k = k + 1e-8;
+        
+        try {
+        	this.env = new GRBEnv(false);
+            env.set(GRB.IntParam.OutputFlag, 0);
+        } catch (GRBException e) {
+            e.printStackTrace();
+            //System.out.println("Was here");
+            this.env = null;// oder: throw new RuntimeException(e);
+        }
+        
     }
 
     // setters
@@ -5187,8 +5201,6 @@ public class Optimizer {
         if (c.length != n)
             throw new IllegalArgumentException("c und p müssen gleich lang sein (t+1 Werte)");
 
-        GRBEnv env = new GRBEnv(false);
-        env.set(GRB.IntParam.OutputFlag, 0);
         GRBModel model = new GRBModel(env);
         model.set(GRB.StringAttr.ModelName, "SimMod2_Optimization");
 
@@ -5278,7 +5290,8 @@ public class Optimizer {
         double[] xOpt = new double[n];
         for (int i = 0; i < n; i++) xOpt[i] = x[i].get(GRB.DoubleAttr.X);
 
-        model.dispose(); env.dispose();
+        model.dispose(); 
+        //env.dispose();
         return xOpt;
     }
     
