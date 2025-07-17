@@ -3085,7 +3085,7 @@ handler.messageIn(msg);]]></OnReceiveAction>
 				<Parameter>
 					<ParameterName><![CDATA[paramIndex]]></ParameterName>
 					<ParameterValue Class="CodeValue">
-						<Code><![CDATA[160]]></Code>
+						<Code><![CDATA[167]]></Code>
 					</ParameterValue>
 				</Parameter>
 			</Parameters>
@@ -3476,17 +3476,21 @@ public class HouseControllerJava implements Serializable
 		double difference = optimalStrategy[strategyStepCounter];
 		double chargeChange = difference + forecastPowerbalance[strategyStepCounter]; // TODO powerBalanceInThisStep
 		//System.out.println(productionInThisStepPV == forecastPV[strategyStepCounter]);
-		if(powerBalanceInThisStep != forecastPowerbalance[strategyStepCounter])System.out.println("ERROR");
+		//if(powerBalanceInThisStep != forecastPowerbalance[strategyStepCounter])System.out.println(" First ERROR a");
+		if(powerBalanceInThisStep - forecastPowerbalance[strategyStepCounter] > 1e-12)System.out.println("First ERROR b");
 		//if(consumptionInThisStepPC != forecastPC[strategyStepCounter])System.out.println(owner.time());
 		//System.out.println("-----------");
-		//System.out.println(consumptionInThisStepPC);
-		//System.out.println(forecastPC[strategyStepCounter]);
+		//System.out.println("consumptionInThisStepPC: " + consumptionInThisStepPC);
+		//System.out.println("forecastPC[strategyStepCounter]" + forecastPC[strategyStepCounter]);
+		//if(consumptionInThisStepPC != forecastPC[strategyStepCounter])System.out.println(" Second ERROR a");
+		if(consumptionInThisStepPC - forecastPC[strategyStepCounter] > 1e-12)System.out.println("Second ERROR b");
+
 		owner.port.send(new DataMessageToBattery(owner, owner.time(), chargeChange));
 		
 		owner.energy -= difference;
 		owner.get_Main().totalEnergySaved -= difference;
 		owner.moneySaved -= difference * priceInThisStep;
-		strategyStepCounter ++;
+		strategyStepCounter++;
 		
 		if(strategyStepCounter == 96) {
 			strategyStepCounter = 0;
