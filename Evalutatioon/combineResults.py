@@ -33,39 +33,6 @@ else:
         # Alle DataFrames zusammenfügen (nebeneinander basierend auf dem Index)
         zusammengefuegter_df = pd.concat(dataframes_liste, axis=1)
 
-        # --- NEU 1: Doppelte Indexe entfernen ---
-        # Stellt sicher, dass jede Indexzeile nur einmal vorkommt.
-        # 'keep="first"' behält das erste Vorkommen.
-        zusammengefuegter_df = zusammengefuegter_df[~zusammengefuegter_df.index.duplicated(keep='first')]
-
-        # --- NEU 2: Index auf Vollständigkeit prüfen ---
-        print("\nPrüfe Index auf Vollständigkeit...")
-        try:
-            # Versuche, den Index in Zahlen umzuwandeln.
-            zusammengefuegter_df.index = pd.to_numeric(zusammengefuegter_df.index)
-
-            # Sortiere den DataFrame nach dem numerischen Index
-            zusammengefuegter_df.sort_index(inplace=True)
-
-            # Erstelle den erwarteten, vollständigen Indexbereich
-            erwarteter_index = set(range(zusammengefuegter_df.index.min(), zusammengefuegter_df.index.max() + 1))
-
-            # Hole den tatsächlichen Index
-            tatsaechlicher_index = set(zusammengefuegter_df.index)
-
-            # Vergleiche beide und finde die fehlenden Werte
-            fehlende_werte = erwarteter_index - tatsaechlicher_index
-
-            if not fehlende_werte:
-                print("✅ Der Index ist fortlaufend und vollständig.")
-            else:
-                print(f"❌ Warnung: Der Index ist nicht vollständig. Es fehlen {len(fehlende_werte)} Werte.")
-                # Zeige nur die ersten 10 fehlenden Werte an, um die Ausgabe nicht zu überfluten
-                print(f"   Fehlende Indexe (Beispiele): {sorted(list(fehlende_werte))[:10]}")
-
-        except ValueError:
-            print("❌ Fehler: Der Index konnte nicht in Zahlen umgewandelt werden. Prüfung abgebrochen.")
-
         # Speicherort für die Ausgabedatei (im selben Ordner wie das Skript)
         output_path = os.path.join(script_dir, 'finalResult.csv')
         zusammengefuegter_df.to_csv(output_path)
