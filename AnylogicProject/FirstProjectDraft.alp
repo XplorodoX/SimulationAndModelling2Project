@@ -4,7 +4,7 @@
 	         AnyLogic Project File
 *************************************************
 -->
-<AnyLogicWorkspace WorkspaceVersion="1.9" AnyLogicVersion="8.9.5.202506190548" AlpVersion="8.9.5">
+<AnyLogicWorkspace WorkspaceVersion="1.9" AnyLogicVersion="8.9.5.202506190538" AlpVersion="8.9.5">
 <Model>
 	<Id>1749063971044</Id>
 	<Name><![CDATA[FirstProjectDraft]]></Name>
@@ -3133,13 +3133,13 @@ System.out.println("Finished Simulation");]]></AfterExperimentCode>
 				<Id>1751995712820</Id>
 				<Type>RANGE</Type>
 				<From Class="CodeValue">
-					<Code><![CDATA[170]]></Code>
+					<Code><![CDATA[32]]></Code>
 				</From>
 				<To Class="CodeValue">
-					<Code><![CDATA[173]]></Code>
+					<Code><![CDATA[39]]></Code>
 				</To>
 				<Step Class="CodeValue">
-					<Code><![CDATA[2]]></Code>
+					<Code><![CDATA[1]]></Code>
 				</Step>
 			</RangeVariationParamValue>
 			<ModelTimeProperties>
