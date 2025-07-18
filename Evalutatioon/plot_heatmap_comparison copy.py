@@ -5,8 +5,9 @@ import numpy as np
 import plotly.io as pio
 pio.renderers.default = "browser"
 
+# CSV-Datei laden
+df = pd.read_csv('finalResultSubtracted.csv', sep=";")
 
-test = pd.read_csv('finalResultSubtracted.csv', sep=";")
 # Funktion zur Dekodierung des Index
 def decode_index(index):
     """
@@ -19,33 +20,12 @@ def decode_index(index):
     return strategy, pv_count, battery_count
 
 def costPV(kwp):
+
     if kwp == 0:
         return 0
     else:
         return 900*kwp + 4500
     
-def CalRow(bCount, pvCount, bCost):
-    d1 = 0.4
-    d2 = 0.2
-
-    c1 = bCost * bCount
-    c2 = costPV(pvCount*0.88)
-
-    return (d1*c1 + d2*c2) / (c1 + c2 + 1e-9), c1, c2
-
-solutions = np.zeros(len(test['Index']))
-for i in test['Index'].astype(int):
-    #print(i)
-    strategy, pv_count, battery_count = decode_index(int(i))
-    solution, c1, c2 = CalRow(battery_count, pv_count, 2500) 
-    print(c1, c2)
-    solutions[int(i)] = solution
-    #print(test.loc[int(i), 'year1':'year8'])
-    test.loc[int(i), 'year1':'year8'] = test.loc[int(i), 'year1':'year8']/(c1+c2+1e-9)
-test.to_csv('zwischen.csv', sep=';', index=False)
-
-# CSV-Datei laden
-df = pd.read_csv('zwischen.csv', sep=";")
 
 # Daten dekodieren
 decoded_data = []
@@ -138,6 +118,7 @@ fig.show()
 
 # Verbesserungsmatrix erstellen
 improvement_matrix = ((optimizer_heatmap - greedy_heatmap) / (abs(greedy_heatmap)+1e-9)) * 100
+
 improvement_matrix.iloc[:, 0] = np.inf
 
 # Verbesserungs-Heatmap erstellen

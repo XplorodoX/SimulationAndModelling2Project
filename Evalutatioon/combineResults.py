@@ -33,6 +33,8 @@ else:
         # Alle DataFrames zusammenfügen (nebeneinander basierend auf dem Index)
         zusammengefuegter_df = pd.concat(dataframes_liste, axis=1)
 
+        zusammengefuegter_df = zusammengefuegter_df[~zusammengefuegter_df.index.duplicated(keep='first')]
+
         # Speicherort für die Ausgabedatei (im selben Ordner wie das Skript)
         output_path = os.path.join(script_dir, 'finalResult.csv')
         zusammengefuegter_df.to_csv(output_path)
