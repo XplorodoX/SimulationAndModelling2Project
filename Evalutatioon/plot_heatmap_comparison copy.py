@@ -108,7 +108,8 @@ fig.update_layout(coloraxis = {'colorscale':'RdYlBu_r'})
 fig.update_layout(
     title='Money saved on electricity after 8 years',
     width=1200,
-    height=500
+    height=500,
+    title_x=0.5
 )
 
 # Achsen formatieren

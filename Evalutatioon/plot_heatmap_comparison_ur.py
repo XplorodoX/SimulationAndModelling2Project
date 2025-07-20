@@ -128,7 +128,8 @@ fig.update_layout(coloraxis = {'colorscale':'RdYlBu_r'})
 fig.update_layout(
     title='Percentage of investment regained after 8 years',
     width=1200,
-    height=500
+    height=500,
+    title_x=0.5
 )
 
 # Achsen formatieren

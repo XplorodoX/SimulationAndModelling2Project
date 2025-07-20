@@ -138,7 +138,8 @@ fig.add_trace(
 fig.update_layout(
     title='Value gained per Battery after 8 years',
     width=1200,
-    height=500
+    height=500,
+    title_x=0.5
 )
 
 # Achsen formatieren
