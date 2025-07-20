@@ -88,7 +88,7 @@ optimizer_heatmap = create_heatmap_data(optimizer_data, 'year8')
 # Subplot für Heatmaps erstellen
 fig = make_subplots(
     rows=1, cols=2,
-    subplot_titles=('Greedy Strategy - Year 8', 'Optimizer Strategy - Year 8'),
+    subplot_titles=('Greedy Strategy', 'Optimizer Strategy'),
     horizontal_spacing=0.1
 )
 
@@ -98,10 +98,11 @@ fig.add_trace(
         z=greedy_heatmap.values,
         x=greedy_heatmap.columns,
         y=greedy_heatmap.index,
-        colorscale='RdYlBu_r',
+        coloraxis = "coloraxis",
+        #colorscale='RdYlBu_r',
         name='Greedy',
         showscale=True,
-        colorbar=dict(x=0.45, len=0.8)
+        #colorbar=dict(x=0.45, len=0.8)
     ),
     row=1, col=1
 )
@@ -112,17 +113,20 @@ fig.add_trace(
         z=optimizer_heatmap.values,
         x=optimizer_heatmap.columns,
         y=optimizer_heatmap.index,
-        colorscale='RdYlBu_r',
+        coloraxis = "coloraxis",
+        #colorscale='RdYlBu_r',
         name='Optimizer',
         showscale=True,
-        colorbar=dict(x=1.02, len=0.8)
+        #colorbar=dict(x=1.02, len=0.8)
     ),
     row=1, col=2
 )
 
+fig.update_layout(coloraxis = {'colorscale':'RdYlBu_r'})
+
 # Layout anpassen
 fig.update_layout(
-    title='Financial Results Heatmap: Greedy vs Optimizer (Year 8)<br>X: PV Count, Y: Battery Count',
+    title='Percentage of investment regained after 8 years',
     width=1200,
     height=500
 )

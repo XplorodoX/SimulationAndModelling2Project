@@ -5,6 +5,8 @@ import numpy as np
 import plotly.io as pio
 pio.renderers.default = "browser"
 
+# Visualizes the money lost after 8 years per battery
+
 
 test = pd.read_csv('finalResultSubtracted.csv', sep=";")
 # Funktion zur Dekodierung des Index
@@ -39,10 +41,10 @@ for i in test['Index'].astype(int):
     solution, c1, c2, d1, d2 = CalRow(battery_count, pv_count, 2500)
     solutions[int(i)] = solution
     test.loc[int(i), 'year1':'year8'] = test.loc[int(i), 'year1':'year8']-(c1*d1+c2*d2)
-test.to_csv('zwischen3.csv', sep=';', index=False)
+test.to_csv('zwischen4.csv', sep=';', index=False)
 
 # CSV-Datei laden
-df = pd.read_csv('zwischen3.csv', sep=";")
+df = pd.read_csv('zwischen4.csv', sep=";")
 
 # Daten dekodieren
 decoded_data = []
@@ -82,6 +84,17 @@ def create_heatmap_data(data, year='year8'):
 greedy_heatmap = create_heatmap_data(greedy_data, 'year8')
 optimizer_heatmap = create_heatmap_data(optimizer_data, 'year8')
 
+greedy_heatmap -= greedy_heatmap.iloc[0, :]
+optimizer_heatmap -= optimizer_heatmap.iloc[0, :]
+
+for i in [0, 1, 2, 3, 4, 5]:
+    greedy_heatmap.iloc[i, :] /= i
+    optimizer_heatmap.iloc[i, :] /= i
+
+greedy_heatmap = greedy_heatmap.iloc[1:, :]
+optimizer_heatmap = optimizer_heatmap.iloc[1:, :]
+
+
 # Subplot für Heatmaps erstellen
 fig = make_subplots(
     rows=1, cols=2,
@@ -95,11 +108,11 @@ fig.add_trace(
         z=greedy_heatmap.values,
         x=greedy_heatmap.columns,
         y=greedy_heatmap.index,
-        coloraxis = "coloraxis",
-        #colorscale='RdYlBu_r',
+        #coloraxis = "coloraxis",
+        colorscale='RdYlBu_r',
         name='Greedy',
         showscale=True,
-        #colorbar=dict(x=0.45, len=0.8)
+        colorbar=dict(x=0.45, len=0.8)
     ),
     row=1, col=1
 )
@@ -110,20 +123,20 @@ fig.add_trace(
         z=optimizer_heatmap.values,
         x=optimizer_heatmap.columns,
         y=optimizer_heatmap.index,
-        coloraxis = "coloraxis",
-        #colorscale='RdYlBu_r',
+        #coloraxis="coloraxis",
+        colorscale='RdYlBu_r',
         name='Optimizer',
         showscale=True,
-        #colorbar=dict(x=1.02, len=0.8)
+        colorbar=dict(x=1.02, len=0.8)
     ),
     row=1, col=2
 )
 
-fig.update_layout(coloraxis = {'colorscale':'RdYlBu_r'})
+#fig.update_layout(coloraxis = {'colorscale':'RdYlBu_r'})
 
 # Layout anpassen
 fig.update_layout(
-    title='Value gained after 8 years',
+    title='Value gained per Battery after 8 years',
     width=1200,
     height=500
 )
