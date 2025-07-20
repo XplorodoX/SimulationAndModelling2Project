@@ -41,7 +41,7 @@ for i in test['Index'].astype(int):
     print(c1, c2)
     solutions[int(i)] = solution
     #print(test.loc[int(i), 'year1':'year8'])
-    test.loc[int(i), 'year1':'year8'] = test.loc[int(i), 'year1':'year8']/(c1+c2+1e-9)
+    test.loc[int(i), 'year1':'year8'] = test.loc[int(i), 'year1':'year8']/(c1+c2)
 test.to_csv('zwischen.csv', sep=';', index=False)
 
 # CSV-Datei laden

@@ -108,8 +108,8 @@ fig.add_trace(
         z=greedy_heatmap.values,
         x=greedy_heatmap.columns,
         y=greedy_heatmap.index,
-        #coloraxis = "coloraxis",
-        colorscale='RdYlBu_r',
+        coloraxis = "coloraxis",
+        #colorscale='RdYlBu_r',
         name='Greedy',
         showscale=True,
         colorbar=dict(x=0.45, len=0.8)
@@ -123,8 +123,8 @@ fig.add_trace(
         z=optimizer_heatmap.values,
         x=optimizer_heatmap.columns,
         y=optimizer_heatmap.index,
-        #coloraxis="coloraxis",
-        colorscale='RdYlBu_r',
+        coloraxis="coloraxis",
+        #colorscale='RdYlBu_r',
         name='Optimizer',
         showscale=True,
         colorbar=dict(x=1.02, len=0.8)
@@ -132,7 +132,7 @@ fig.add_trace(
     row=1, col=2
 )
 
-#fig.update_layout(coloraxis = {'colorscale':'RdYlBu_r'})
+fig.update_layout(coloraxis = {'colorscale':'RdYlBu_r'})
 
 # Layout anpassen
 fig.update_layout(
@@ -146,7 +146,7 @@ fig.update_layout(
 fig.update_xaxes(title_text="PV Count", row=1, col=1)
 fig.update_xaxes(title_text="PV Count", row=1, col=2)
 fig.update_yaxes(title_text="Battery Count", row=1, col=1)
-fig.update_yaxes(title_text="Battery Count", row=1, col=2)
+fig.update_yaxes(title_text="", row=1, col=2)
 
 # Anzeigen
 fig.show()
